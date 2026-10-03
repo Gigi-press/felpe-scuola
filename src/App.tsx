@@ -4,6 +4,8 @@ import {
   getAuth, 
   signInAnonymously, 
   signInWithCustomToken, 
+  signInWithEmailAndPassword,
+  signOut,
   onAuthStateChanged 
 } from 'firebase/auth';
 import { 
@@ -45,7 +47,13 @@ import {
   SlidersHorizontal,
   Info,
   Building2,
-  BookOpen
+  BookOpen,
+  Lock,
+  Key,
+  LogOut,
+  Eye,
+  EyeOff,
+  Mail
 } from 'lucide-react';
 
 // Configuration Config di Firebase dal tuo progetto felpescarti-as26-27
@@ -60,7 +68,6 @@ const firebaseConfig = {
 };
 
 let app, auth, db;
-const appId = 'felpescarti-as26-27';
 
 try {
   app = initializeApp(firebaseConfig);
@@ -151,6 +158,15 @@ export default function App() {
   const [currentView, setCurrentView] = useState('shop'); // 'shop' | 'admin'
   const [activeAdminTab, setActiveAdminTab] = useState('orders'); // 'orders' | 'inventory'
 
+  // Admin Authentication States
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
+  const [isAdminPasswordModalOpen, setIsAdminPasswordModalOpen] = useState(false);
+  const [adminEmailInput, setAdminEmailInput] = useState('');
+  const [adminPasswordInput, setAdminPasswordInput] = useState('');
+  const [adminPasswordError, setAdminPasswordError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+
   // Data States
   const [products, setProducts] = useState(INITIAL_PRODUCTS);
   const [orders, setOrders] = useState([]);
@@ -182,13 +198,58 @@ export default function App() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Admin Access Handlers
+  const handleOpenAdmin = () => {
+    if (isAdminAuthenticated) {
+      setCurrentView('admin');
+    } else {
+      setAdminPasswordError('');
+      setIsAdminPasswordModalOpen(true);
+    }
+  };
+
+  const handleAdminPasswordSubmit = async (e) => {
+    e.preventDefault();
+    if (!auth) {
+      setAdminPasswordError('Servizio Firebase non pronto. Riprova tra poco.');
+      return;
+    }
+
+    setIsLoggingIn(true);
+    setAdminPasswordError('');
+
+    try {
+      await signInWithEmailAndPassword(auth, adminEmailInput, adminPasswordInput);
+      setIsAdminAuthenticated(true);
+      setIsAdminPasswordModalOpen(false);
+      setCurrentView('admin');
+      setAdminPasswordInput('');
+    } catch (err: any) {
+      console.error("Login error:", err);
+      setAdminPasswordError('Credenziali non valide! Verifica Email e Password.');
+    } finally {
+      setIsLoggingIn(false);
+    }
+  };
+
+  const handleAdminLogout = async () => {
+    if (auth) {
+      await signOut(auth);
+      try {
+        await signInAnonymously(auth);
+      } catch (err) {}
+    }
+    setIsAdminAuthenticated(false);
+    setCurrentView('shop');
+  };
+
   useEffect(() => {
     if (!auth) return;
     const initAuth = async () => {
       try {
         if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
           await signInWithCustomToken(auth, __initial_auth_token);
-        } else {
+        } else if (!auth.currentUser) {
           await signInAnonymously(auth);
         }
       } catch (err) {
@@ -196,7 +257,17 @@ export default function App() {
       }
     };
     initAuth();
-    const unsubscribe = onAuthStateChanged(auth, setUser);
+
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      // Se l'utente è loggato e non è anonimo, è l'Admin autenticato!
+      if (currentUser && !currentUser.isAnonymous) {
+        setIsAdminAuthenticated(true);
+      } else {
+        setIsAdminAuthenticated(false);
+      }
+    });
+
     return () => unsubscribe();
   }, []);
 
@@ -462,7 +533,7 @@ export default function App() {
                 Negozio
               </button>
               <button
-                onClick={() => setCurrentView('admin')}
+                onClick={handleOpenAdmin}
                 className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                   currentView === 'admin'
                     ? 'bg-indigo-600 text-white shadow-md'
@@ -471,8 +542,12 @@ export default function App() {
               >
                 <SlidersHorizontal className="w-3.5 h-3.5" />
                 Pannello Admin
-                {orders.filter(o => o.status === 'In attesa').length > 0 && (
-                  <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
+                {isAdminAuthenticated ? (
+                  <span className="w-2 h-2 rounded-full bg-emerald-400" title="Autenticato" />
+                ) : (
+                  orders.filter(o => o.status === 'In attesa').length > 0 && (
+                    <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
+                  )
                 )}
               </button>
             </div>
@@ -683,7 +758,7 @@ export default function App() {
             </section>
 
           </div>
-        ) : (
+        ) : isAdminAuthenticated ? (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             
             {/* ADMIN HEADER & STATS BAR */}
@@ -694,31 +769,48 @@ export default function App() {
                     <ShieldCheck className="w-4 h-4" /> Gestione Scuola & Consegne
                   </div>
                   <h1 className="text-2xl font-black">Pannello Amministratore</h1>
+                  {auth?.currentUser?.email && (
+                    <p className="text-xs text-slate-400 mt-1">
+                      Connesso come: <span className="text-indigo-300 font-semibold">{auth.currentUser.email}</span>
+                    </p>
+                  )}
                 </div>
 
-                {/* Admin Tab Switcher */}
-                <div className="flex items-center bg-slate-800 p-1 rounded-xl border border-slate-700">
+                <div className="flex flex-wrap items-center gap-3">
+                  {/* Admin Tab Switcher */}
+                  <div className="flex items-center bg-slate-800 p-1 rounded-xl border border-slate-700">
+                    <button
+                      onClick={() => setActiveAdminTab('orders')}
+                      className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${
+                        activeAdminTab === 'orders'
+                          ? 'bg-indigo-600 text-white shadow-md'
+                          : 'text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      <Package className="w-4 h-4" />
+                      Gestione Ordini ({orders.length})
+                    </button>
+                    <button
+                      onClick={() => setActiveAdminTab('inventory')}
+                      className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${
+                        activeAdminTab === 'inventory'
+                          ? 'bg-indigo-600 text-white shadow-md'
+                          : 'text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      <SlidersHorizontal className="w-4 h-4" />
+                      Gestione Scorte
+                    </button>
+                  </div>
+
+                  {/* Admin Logout Button */}
                   <button
-                    onClick={() => setActiveAdminTab('orders')}
-                    className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${
-                      activeAdminTab === 'orders'
-                        ? 'bg-indigo-600 text-white shadow-md'
-                        : 'text-slate-400 hover:text-white'
-                    }`}
+                    onClick={handleAdminLogout}
+                    className="flex items-center gap-1.5 bg-red-600/20 hover:bg-red-600 text-red-300 hover:text-white border border-red-500/30 px-3 py-2 rounded-xl text-xs font-bold transition-all"
+                    title="Esci dalla sessione Amministratore"
                   >
-                    <Package className="w-4 h-4" />
-                    Gestione Ordini ({orders.length})
-                  </button>
-                  <button
-                    onClick={() => setActiveAdminTab('inventory')}
-                    className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${
-                      activeAdminTab === 'inventory'
-                        ? 'bg-indigo-600 text-white shadow-md'
-                        : 'text-slate-400 hover:text-white'
-                    }`}
-                  >
-                    <SlidersHorizontal className="w-4 h-4" />
-                    Gestione Scorte
+                    <LogOut className="w-4 h-4" />
+                    Esci
                   </button>
                 </div>
               </div>
@@ -1023,8 +1115,136 @@ export default function App() {
             )}
 
           </div>
+        ) : (
+          <div className="max-w-md mx-auto px-4 py-20 text-center">
+            <div className="w-16 h-16 bg-slate-200 text-slate-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <Lock className="w-8 h-8" />
+            </div>
+            <h2 className="text-xl font-black text-slate-900 mb-2">Accesso Non Autorizzato</h2>
+            <p className="text-xs text-slate-500 mb-6">
+              Devi inserire le credenziali da amministratore per accedere a questa sezione.
+            </p>
+            <button
+              onClick={handleOpenAdmin}
+              className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-2.5 rounded-xl text-xs shadow-md transition-all"
+            >
+              Accedi al Pannello Admin
+            </button>
+          </div>
         )}
       </main>
+
+      {/* MODAL: ADMIN FIREBASE AUTHENTICATION */}
+      {isAdminPasswordModalOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 relative animate-in fade-in zoom-in-95 duration-200">
+            <button
+              onClick={() => setIsAdminPasswordModalOpen(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mb-4">
+              <Lock className="w-6 h-6" />
+            </div>
+
+            <h3 className="text-xl font-black text-slate-900 mb-1">
+              Login Amministratore Firebase
+            </h3>
+            <p className="text-xs text-slate-500 mb-6">
+              Inserisci Email e Password configurate nella tua console Firebase per sbloccare la gestione.
+            </p>
+
+            <form onSubmit={handleAdminPasswordSubmit} className="space-y-4">
+              {/* Field 1: Email */}
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                  Email Admin
+                </label>
+                <div className="relative">
+                  <input
+                    type="email"
+                    required
+                    autoFocus
+                    placeholder="admin@scuola.it"
+                    value={adminEmailInput}
+                    onChange={(e) => {
+                      setAdminEmailInput(e.target.value);
+                      setAdminPasswordError('');
+                    }}
+                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                  <Mail className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                </div>
+              </div>
+
+              {/* Field 2: Password */}
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                  Password Admin
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    required
+                    placeholder="••••••••"
+                    value={adminPasswordInput}
+                    onChange={(e) => {
+                      setAdminPasswordInput(e.target.value);
+                      setAdminPasswordError('');
+                    }}
+                    className={`w-full pl-10 pr-10 py-2.5 bg-slate-50 border rounded-xl text-sm font-medium focus:outline-none focus:ring-2 ${
+                      adminPasswordError
+                        ? 'border-red-400 focus:ring-red-400'
+                        : 'border-slate-200 focus:ring-indigo-500'
+                    }`}
+                  />
+                  <Key className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+
+                {adminPasswordError && (
+                  <div className="flex items-center gap-1.5 text-xs text-red-600 font-bold mt-2">
+                    <AlertCircle className="w-4 h-4" />
+                    <span>{adminPasswordError}</span>
+                  </div>
+                )}
+              </div>
+
+              <div className="bg-indigo-50 border border-indigo-200 p-3 rounded-xl text-indigo-900 text-[11px] flex items-center gap-2">
+                <Info className="w-4 h-4 text-indigo-600 shrink-0" />
+                <span>Autenticazione sicura tramite <strong>Firebase Auth</strong>. La password non è salvata nel codice.</span>
+              </div>
+
+              <div className="flex gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setIsAdminPasswordModalOpen(false)}
+                  className="flex-1 py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-all"
+                >
+                  Annulla
+                </button>
+                <button
+                  type="submit"
+                  disabled={isLoggingIn}
+                  className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl text-xs shadow-md transition-all flex items-center justify-center gap-2"
+                >
+                  <Key className="w-4 h-4" />
+                  {isLoggingIn ? 'Verifica...' : 'Accedi'}
+                </button>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      )}
 
       {/* MODAL: SIZE SELECTION & QUICK ADD */}
       {selectedProductModal && (
