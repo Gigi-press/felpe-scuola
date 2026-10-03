@@ -77,79 +77,79 @@ try {
   console.warn("Firebase config error, using memory fallback mode:", err);
 }
 
-// 6 Exclusive School Hoodies Initial Catalog Data
+// Catalogo Ufficiale 6 Stili Felpe ITTS "E. Divini" (Tutte a 20€)
 const INITIAL_PRODUCTS = [
   {
-    id: 'hoodie-1',
-    name: 'Classic Heritage Hoodie',
-    tagline: 'Lo stile iconico scolastico con stemma ricamato',
-    description: 'Felpa unisex in cotone pettinato pesante 320g. Interno garzato ultra-morbido con stemma del liceo ad alta definizione sul petto.',
-    price: 35.00,
-    rating: 4.9,
+    id: 'hoodie-a',
+    name: 'Felpa Stile A - Classic Divini',
+    tagline: 'Lo stile iconico d\'istituto con logo ufficiale',
+    description: 'Felpa unisex in cotone pettinato pesante. Interno garzato caldo e morbido con stemma ufficiale ITTS E. Divini sul petto.',
+    price: 20.00,
+    rating: 5.0,
     reviewsCount: 42,
-    badge: 'Più Venduto',
+    badge: 'Stile A',
     image: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=800&q=80',
-    stock: { XS: 4, S: 10, M: 15, L: 8, XL: 3 }
+    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10 }
   },
   {
-    id: 'hoodie-2',
-    name: 'Vintage Washed Hoodie',
-    tagline: 'Effetto lavato retrò dal fascino atemporale',
-    description: 'Trattamento acid wash artigianale. Vestibilità leggermente boxy con bordi a coste rinforzati e tasca a marsupio anatomica.',
-    price: 38.00,
-    rating: 4.8,
+    id: 'hoodie-b',
+    name: 'Felpa Stile B - Varsity Edition',
+    tagline: 'Ispirazione campus con dettagli bicolore',
+    description: 'Design dinamico stile universitario con rifiniture a contrasto. Perfetta per rappresentare la scuola con stile.',
+    price: 20.00,
+    rating: 4.9,
     reviewsCount: 29,
-    badge: 'Edizione Limitata',
-    image: 'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=800&q=80',
-    stock: { XS: 2, S: 5, M: 8, L: 6, XL: 2 }
+    badge: 'Stile B',
+    image: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=800&q=80',
+    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10 }
   },
   {
-    id: 'hoodie-3',
-    name: 'Minimalist Logo Hoodie',
-    tagline: 'Design pulito ed essenziale con micro-logo',
-    description: 'Perfetta sia per gli studenti che per i docenti. Tessuto traspirante con cappuccio foderato e coulisse metalliche.',
-    price: 34.00,
-    rating: 4.7,
+    id: 'hoodie-c',
+    name: 'Felpa Stile C - Minimal Tech',
+    tagline: 'Linea pulita ed essenziale con micro-logo',
+    description: 'Design sobrio ed elegante, amato sia dagli studenti che dai docenti. Tessuto traspirante con cappuccio strutturato.',
+    price: 20.00,
+    rating: 4.8,
     reviewsCount: 35,
-    badge: 'Consigliato Prof',
+    badge: 'Stile C',
     image: 'https://images.unsplash.com/photo-1509967419530-da38b4704bc6?auto=format&fit=crop&w=800&q=80',
-    stock: { XS: 5, S: 12, M: 18, L: 12, XL: 6 }
+    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10 }
   },
   {
-    id: 'hoodie-4',
-    name: 'Zip-Up Heavyweight Hoodie',
-    tagline: 'Massimo comfort con cerniera full-zip metallica',
-    description: 'Zip ad alta resistenza YKK, cappuccio strutturato a 3 pannelli e cuciture a triplo ago per una durata garantita su più anni scolastici.',
-    price: 42.00,
+    id: 'hoodie-d',
+    name: 'Felpa Stile D - Streetwear Oversize',
+    tagline: 'Taglio oversize moderno a spalle scivolate',
+    description: 'Vestibilità comoda e di tendenza per il tempo libero e per le giornate a scuola. Tessuto calandrato anti-pilling.',
+    price: 20.00,
     rating: 4.9,
     reviewsCount: 18,
-    badge: 'Premium',
-    image: 'https://images.unsplash.com/photo-1548883354-7622d03aca27?auto=format&fit=crop&w=800&q=80',
-    stock: { XS: 3, S: 6, M: 10, L: 7, XL: 1 }
+    badge: 'Stile D',
+    image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80',
+    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10 }
   },
   {
-    id: 'hoodie-5',
-    name: 'College Varsity Edition',
-    tagline: 'Ispirazione campus americano con dettagli bicolore',
-    description: 'Dettagli a contrasto su cappuccio e maniche, ricamo in spugna morbida stile varsity. La preferita dagli studenti dell’ultimo anno.',
-    price: 39.00,
+    id: 'hoodie-e',
+    name: 'Felpa Stile E - Vintage Washed',
+    tagline: 'Effetto retrò con tasca a marsupio anatomica',
+    description: 'Particolare lavorazione del tessuto per un affascinante effetto vintage. Bordo e polsini a coste rinforzate.',
+    price: 20.00,
+    rating: 4.7,
+    reviewsCount: 24,
+    badge: 'Stile E',
+    image: 'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=800&q=80',
+    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10 }
+  },
+  {
+    id: 'hoodie-f',
+    name: 'Felpa Stile F - Full-Zip Heavyweight',
+    tagline: 'Massima praticità con zip metallica ad alta resistenza',
+    description: 'Versione con cerniera integrale, ideale per le mezze stagioni. Tasche frontali capienti e cuciture a triplo ago.',
+    price: 20.00,
     rating: 5.0,
     reviewsCount: 51,
-    badge: 'Trend 2026',
-    image: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=800&q=80',
-    stock: { XS: 1, S: 4, M: 9, L: 5, XL: 0 }
-  },
-  {
-    id: 'hoodie-6',
-    name: 'Streetwear Oversized Hoodie',
-    tagline: 'Spalle scivolate e taglio oversize ultra-moderno',
-    description: 'Vestibilità rilassata streetwear, tessuto pesante calandrato anti-pilling. Un capolavoro di stile per il tempo libero e la scuola.',
-    price: 36.00,
-    rating: 4.8,
-    reviewsCount: 24,
-    badge: 'Oversize',
-    image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80',
-    stock: { XS: 6, S: 8, M: 14, L: 9, XL: 4 }
+    badge: 'Stile F',
+    image: 'https://images.unsplash.com/photo-1548883354-7622d03aca27?auto=format&fit=crop&w=800&q=80',
+    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10 }
   }
 ];
 
@@ -186,7 +186,7 @@ export default function App() {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
-    studentClass: '',     // per Studente (es: 5^A Liceo)
+    studentClass: '',     // per Studente (es: 5F)
     teacherSubject: '',   // per Docente (es: Prof. Rossi - Matematica)
     ataOffice: '',        // per ATA (es: Segreteria Didattica)
     phone: '',
@@ -260,7 +260,6 @@ export default function App() {
 
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
-      // Se l'utente è loggato e non è anonimo, è l'Admin autenticato!
       if (currentUser && !currentUser.isAnonymous) {
         setIsAdminAuthenticated(true);
       } else {
@@ -294,7 +293,6 @@ export default function App() {
     // Subscribe to orders
     const unsubOrders = onSnapshot(ordersRef, (snapshot) => {
       const loadedOrders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      // Sort newest first
       loadedOrders.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
       setOrders(loadedOrders);
     }, (err) => console.warn("Orders sync error:", err));
@@ -315,7 +313,7 @@ export default function App() {
         const updated = [...prev];
         const newQty = updated[existingIndex].quantity + quantity;
         if (newQty > currentStock) {
-          updated[existingIndex].quantity = currentStock; // cap at stock
+          updated[existingIndex].quantity = currentStock;
         } else {
           updated[existingIndex].quantity = newQty;
         }
@@ -355,20 +353,19 @@ export default function App() {
     e.preventDefault();
     if (cart.length === 0) return;
 
-    // Build location string based on role
     let locationDetail = '';
     if (role === 'studente') locationDetail = formData.studentClass;
     else if (role === 'docente') locationDetail = formData.teacherSubject;
     else if (role === 'ata') locationDetail = formData.ataOffice;
 
-    const orderId = 'SCH-' + Math.floor(1000 + Math.random() * 9000);
+    const orderId = 'DIVINI-' + Math.floor(1000 + Math.random() * 9000);
     const newOrder = {
       orderCode: orderId,
       customer: {
         firstName: formData.firstName,
         lastName: formData.lastName,
         phone: formData.phone,
-        role: role, // 'studente', 'docente', 'ata'
+        role: role,
         location: locationDetail,
         notes: formData.notes
       },
@@ -381,11 +378,11 @@ export default function App() {
       })),
       totalAmount: cartTotal,
       paymentMethod: 'Contanti alla consegna',
-      status: 'In attesa', // 'In attesa' | 'Pronto per consegna' | 'Consegnato e Incassato' | 'Annullato'
+      status: 'In attesa',
       createdAt: Date.now()
     };
 
-    // 1. Update stock locally and in Firestore
+    // Update stock locally and in Firestore
     const updatedProducts = products.map(p => {
       const cartItemsForProduct = cart.filter(ci => ci.product.id === p.id);
       if (cartItemsForProduct.length === 0) return p;
@@ -395,7 +392,6 @@ export default function App() {
         newStock[ci.size] = Math.max(0, (newStock[ci.size] || 0) - ci.quantity);
       });
 
-      // Update Firestore product if connected
       if (db) {
         const prodDoc = doc(db, 'products', p.id);
         updateDoc(prodDoc, { stock: newStock }).catch(err => console.warn("Stock update err:", err));
@@ -406,7 +402,6 @@ export default function App() {
 
     setProducts(updatedProducts);
 
-    // 2. Add Order to Firestore or state
     if (db) {
       try {
         const ordersRef = collection(db, 'orders');
@@ -418,7 +413,6 @@ export default function App() {
       setOrders(prev => [newOrder, ...prev]);
     }
 
-    // 3. Clear Cart & Reset Form
     setCompletedOrder(newOrder);
     setCart([]);
     setIsCheckoutOpen(false);
@@ -478,11 +472,8 @@ export default function App() {
   // Filtered Orders for Admin View
   const filteredOrders = useMemo(() => {
     return orders.filter(order => {
-      // Role Filter
       if (roleFilter !== 'all' && order.customer.role !== roleFilter) return false;
-      // Status Filter
       if (statusFilter !== 'all' && order.status !== statusFilter) return false;
-      // Search Query
       if (searchQuery.trim() !== '') {
         const query = searchQuery.toLowerCase();
         const fullName = `${order.customer.firstName} ${order.customer.lastName}`.toLowerCase();
@@ -497,36 +488,34 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans flex flex-col antialiased">
       
-      {/* HEADER NAV */}
-      <header className="sticky top-0 z-40 bg-slate-900 text-white shadow-lg border-b border-slate-800">
+      {/* HEADER NAV - PALETTE ITTS E. DIVINI */}
+      <header className="sticky top-0 z-40 bg-blue-950 text-white shadow-xl border-b border-blue-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           
-          {/* Logo & School Title */}
+          {/* Logo & Divini Title */}
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => setCurrentView('shop')}>
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-indigo-400 flex items-center justify-center shadow-md">
-              <School className="w-6 h-6 text-white" />
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 flex items-center justify-center shadow-md">
+              <School className="w-6 h-6 text-blue-950" />
             </div>
             <div>
-              <span className="text-xl font-black tracking-tight bg-gradient-to-r from-white via-indigo-100 to-indigo-300 bg-clip-text text-transparent">
-                CAMPUS HOODIES
+              <span className="text-xl font-black tracking-tight text-white">
+                ITTS "E. DIVINI"
               </span>
-              <span className="block text-[10px] font-semibold tracking-wider text-indigo-400 uppercase">
-                Edizione Limitata Scuola
+              <span className="block text-[10px] font-bold tracking-wider text-amber-400 uppercase">
+                Felpe Ufficiali d'Istituto • 20€
               </span>
             </div>
           </div>
 
           {/* Navigation Controls */}
           <div className="flex items-center gap-3">
-            
-            {/* View Switcher: Shop vs Admin */}
-            <div className="bg-slate-800/80 p-1 rounded-xl border border-slate-700/60 flex items-center">
+            <div className="bg-blue-900/80 p-1 rounded-xl border border-blue-800 flex items-center">
               <button
                 onClick={() => setCurrentView('shop')}
                 className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                   currentView === 'shop'
-                    ? 'bg-indigo-600 text-white shadow-md'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-amber-500 text-blue-950 shadow-md'
+                    : 'text-slate-300 hover:text-white'
                 }`}
               >
                 <ShoppingBag className="w-3.5 h-3.5" />
@@ -536,8 +525,8 @@ export default function App() {
                 onClick={handleOpenAdmin}
                 className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                   currentView === 'admin'
-                    ? 'bg-indigo-600 text-white shadow-md'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-amber-500 text-blue-950 shadow-md'
+                    : 'text-slate-300 hover:text-white'
                 }`}
               >
                 <SlidersHorizontal className="w-3.5 h-3.5" />
@@ -561,7 +550,7 @@ export default function App() {
                 <ShoppingCart className="w-4 h-4" />
                 <span className="hidden sm:inline">Carrello</span>
                 {cartCount > 0 && (
-                  <span className="bg-white text-emerald-900 text-[11px] font-extrabold px-2 py-0.5 rounded-full">
+                  <span className="bg-white text-emerald-950 text-[11px] font-extrabold px-2 py-0.5 rounded-full">
                     {cartCount}
                   </span>
                 )}
@@ -577,52 +566,52 @@ export default function App() {
         {currentView === 'shop' ? (
           <div>
             
-            {/* HERO BANNER */}
-            <section className="relative bg-gradient-to-b from-slate-900 via-indigo-950 to-slate-900 text-white py-12 px-4 sm:px-6 lg:px-8 overflow-hidden">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(99,102,241,0.15),transparent_50%)]" />
+            {/* HERO BANNER - ITTS E. DIVINI */}
+            <section className="relative bg-gradient-to-b from-blue-950 via-blue-900 to-slate-900 text-white py-12 px-4 sm:px-6 lg:px-8 overflow-hidden">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(245,158,11,0.15),transparent_50%)]" />
               <div className="max-w-7xl mx-auto relative z-10 text-center">
                 
-                <div className="inline-flex items-center gap-2 bg-indigo-500/20 border border-indigo-500/30 px-3 py-1.5 rounded-full text-indigo-300 text-xs font-semibold mb-4">
+                <div className="inline-flex items-center gap-2 bg-amber-500/20 border border-amber-500/30 px-3 py-1.5 rounded-full text-amber-300 text-xs font-bold mb-4">
                   <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                  Drop Esclusivo A.S. 2025/2026
+                  Prenotazione Felpe Ufficiali ITTS "E. Divini"
                 </div>
 
                 <h1 className="text-3xl sm:text-5xl font-black tracking-tight mb-4">
-                  Le Felpe Ufficiali della Tua Scuola.
+                  Indossa l'Orgoglio del Divini.
                 </h1>
-                <p className="max-w-2xl mx-auto text-slate-300 text-sm sm:text-base mb-6">
-                  Ordina online, paga in <strong className="text-emerald-400 font-bold">contanti alla consegna</strong> e ritira la tua felpa direttamente in aula durante l'intervallo.
+                <p className="max-w-2xl mx-auto text-slate-200 text-sm sm:text-base mb-6">
+                  Ordina online, paga in <strong className="text-amber-400 font-bold">contanti alla consegna (20€)</strong> e ritira la tua felpa direttamente a scuola.
                 </p>
 
-                {/* Info Badges for School Roles */}
+                {/* Info Badges */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-3xl mx-auto text-left">
-                  <div className="bg-slate-800/60 backdrop-blur border border-slate-700/80 p-3 rounded-xl flex items-center gap-3">
-                    <div className="p-2 bg-blue-500/20 text-blue-400 rounded-lg">
+                  <div className="bg-blue-900/60 backdrop-blur border border-blue-700/80 p-3 rounded-xl flex items-center gap-3">
+                    <div className="p-2 bg-amber-500/20 text-amber-400 rounded-lg">
                       <GraduationCap className="w-5 h-5" />
                     </div>
                     <div>
-                      <div className="text-xs font-bold text-white">Per Studenti</div>
-                      <div className="text-[11px] text-slate-400">Consegna diretta in classe</div>
+                      <div className="text-xs font-bold text-white">Studenti</div>
+                      <div className="text-[11px] text-blue-200">Consegna in classe durante l'intervallo</div>
                     </div>
                   </div>
 
-                  <div className="bg-slate-800/60 backdrop-blur border border-slate-700/80 p-3 rounded-xl flex items-center gap-3">
-                    <div className="p-2 bg-purple-500/20 text-purple-400 rounded-lg">
+                  <div className="bg-blue-900/60 backdrop-blur border border-blue-700/80 p-3 rounded-xl flex items-center gap-3">
+                    <div className="p-2 bg-amber-500/20 text-amber-400 rounded-lg">
                       <BookOpen className="w-5 h-5" />
                     </div>
                     <div>
-                      <div className="text-xs font-bold text-white">Per Docenti</div>
-                      <div className="text-[11px] text-slate-400">Consegna in Sala Professori</div>
+                      <div className="text-xs font-bold text-white">Docenti</div>
+                      <div className="text-[11px] text-blue-200">Consegna in Sala Professori</div>
                     </div>
                   </div>
 
-                  <div className="bg-slate-800/60 backdrop-blur border border-slate-700/80 p-3 rounded-xl flex items-center gap-3">
+                  <div className="bg-blue-900/60 backdrop-blur border border-blue-700/80 p-3 rounded-xl flex items-center gap-3">
                     <div className="p-2 bg-amber-500/20 text-amber-400 rounded-lg">
                       <Building2 className="w-5 h-5" />
                     </div>
                     <div>
                       <div className="text-xs font-bold text-white">Personale ATA</div>
-                      <div className="text-[11px] text-slate-400">Consegna in Ufficio/Portineria</div>
+                      <div className="text-[11px] text-blue-200">Consegna in Portineria/Ufficio</div>
                     </div>
                   </div>
                 </div>
@@ -636,15 +625,15 @@ export default function App() {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 border-b border-slate-200 pb-4">
                 <div>
                   <h2 className="text-2xl font-black text-slate-900 tracking-tight">
-                    Collezione Felpe (6 Stili)
+                    Collezione Felpe Divini (6 Stili)
                   </h2>
                   <p className="text-xs text-slate-500">
-                    Giacenze limitate in tempo reale per le taglie XS, S, M, L, XL
+                    Scegli tra lo Stile A e lo Stile F • Tutte le taglie disponibili: XS, S, M, L, XL
                   </p>
                 </div>
-                <div className="inline-flex items-center gap-2 text-xs font-medium bg-emerald-50 text-emerald-800 px-3 py-1.5 rounded-lg border border-emerald-200">
-                  <DollarSign className="w-4 h-4 text-emerald-600" />
-                  Nessuna carta richiesta – Paghi solo in contanti
+                <div className="inline-flex items-center gap-2 text-xs font-bold bg-amber-50 text-amber-900 px-3 py-1.5 rounded-lg border border-amber-300">
+                  <DollarSign className="w-4 h-4 text-amber-600" />
+                  Prezzo Unico: 20,00€ in Contanti
                 </div>
               </div>
 
@@ -657,7 +646,7 @@ export default function App() {
                       key={product.id}
                       className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col group"
                     >
-                      {/* Image & Badge Container */}
+                      {/* Image Container */}
                       <div className="relative aspect-[4/3] bg-slate-100 overflow-hidden">
                         <img
                           src={product.image}
@@ -665,13 +654,13 @@ export default function App() {
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                         <div className="absolute top-3 left-3 flex flex-col gap-1">
-                          <span className="bg-slate-900/90 backdrop-blur text-white text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-md shadow">
+                          <span className="bg-blue-950/90 backdrop-blur text-amber-400 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-md shadow border border-amber-500/30">
                             {product.badge}
                           </span>
                         </div>
                         <div className="absolute top-3 right-3">
-                          <span className="bg-white/95 backdrop-blur text-slate-900 font-extrabold text-xs px-2.5 py-1 rounded-full shadow">
-                            €{product.price ? product.price.toFixed(2) : '0.00'}
+                          <span className="bg-amber-400 text-blue-950 font-black text-xs px-3 py-1 rounded-full shadow">
+                            €20,00
                           </span>
                         </div>
                       </div>
@@ -680,15 +669,12 @@ export default function App() {
                       <div className="p-5 flex-1 flex flex-col justify-between">
                         <div>
                           <div className="flex items-center justify-between mb-1">
-                            <h3 className="font-extrabold text-slate-900 text-lg group-hover:text-indigo-600 transition-colors">
+                            <h3 className="font-extrabold text-slate-900 text-lg group-hover:text-blue-900 transition-colors">
                               {product.name}
                             </h3>
-                            <div className="flex items-center gap-1 text-xs text-amber-500 font-bold">
-                              ★ {product.rating} <span className="text-slate-400 font-normal">({product.reviewsCount})</span>
-                            </div>
                           </div>
                           
-                          <p className="text-xs font-semibold text-indigo-600 mb-2">
+                          <p className="text-xs font-semibold text-blue-900 mb-2">
                             {product.tagline}
                           </p>
 
@@ -702,7 +688,7 @@ export default function App() {
                           <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 flex justify-between">
                             <span>Disponibilità Taglie:</span>
                             <span className={totalStock > 0 ? "text-emerald-600 font-bold" : "text-red-500 font-bold"}>
-                              {totalStock > 0 ? `${totalStock} pezzi rimasti` : 'Esaurito'}
+                              {totalStock > 0 ? `Disponibile` : 'Esaurito'}
                             </span>
                           </div>
 
@@ -718,12 +704,8 @@ export default function App() {
                                       ? 'border-slate-200 bg-slate-50 text-slate-800'
                                       : 'border-slate-100 bg-slate-100 text-slate-300 line-through'
                                   }`}
-                                  title={stk > 0 ? `${stk} disponibili` : 'Taglia esaurita'}
                                 >
                                   {sz}
-                                  <span className="block text-[9px] font-normal opacity-75">
-                                    {stk > 0 ? stk : '0'}
-                                  </span>
                                 </div>
                               );
                             })}
@@ -739,12 +721,12 @@ export default function App() {
                             disabled={totalStock <= 0}
                             className={`w-full py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all ${
                               totalStock > 0
-                                ? 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-md active:scale-95'
+                                ? 'bg-blue-950 hover:bg-blue-900 text-white shadow-md active:scale-95'
                                 : 'bg-slate-300 text-slate-500 cursor-not-allowed'
                             }`}
                           >
-                            <ShoppingCart className="w-4 h-4" />
-                            {totalStock > 0 ? 'Scegli Taglia e Ordina' : 'Esaurito'}
+                            <ShoppingCart className="w-4 h-4 text-amber-400" />
+                            {totalStock > 0 ? 'Scegli Taglia e Ordina (20€)' : 'Esaurito'}
                           </button>
 
                         </div>
@@ -762,29 +744,28 @@ export default function App() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             
             {/* ADMIN HEADER & STATS BAR */}
-            <div className="bg-slate-900 text-white rounded-2xl p-6 shadow-xl mb-8 border border-slate-800">
-              <div className="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-slate-800 gap-4">
+            <div className="bg-blue-950 text-white rounded-2xl p-6 shadow-xl mb-8 border border-blue-900">
+              <div className="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-blue-900 gap-4">
                 <div>
-                  <div className="flex items-center gap-2 text-indigo-400 text-xs font-bold uppercase tracking-wider mb-1">
-                    <ShieldCheck className="w-4 h-4" /> Gestione Scuola & Consegne
+                  <div className="flex items-center gap-2 text-amber-400 text-xs font-bold uppercase tracking-wider mb-1">
+                    <ShieldCheck className="w-4 h-4" /> Gestione ITTS "E. Divini"
                   </div>
-                  <h1 className="text-2xl font-black">Pannello Amministratore</h1>
+                  <h1 className="text-2xl font-black">Pannello Gestione Ordini & Incassi</h1>
                   {auth?.currentUser?.email && (
-                    <p className="text-xs text-slate-400 mt-1">
-                      Connesso come: <span className="text-indigo-300 font-semibold">{auth.currentUser.email}</span>
+                    <p className="text-xs text-blue-300 mt-1">
+                      Connesso come Admin: <span className="text-amber-400 font-semibold">{auth.currentUser.email}</span>
                     </p>
                   )}
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3">
-                  {/* Admin Tab Switcher */}
-                  <div className="flex items-center bg-slate-800 p-1 rounded-xl border border-slate-700">
+                  <div className="flex items-center bg-blue-900 p-1 rounded-xl border border-blue-800">
                     <button
                       onClick={() => setActiveAdminTab('orders')}
                       className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${
                         activeAdminTab === 'orders'
-                          ? 'bg-indigo-600 text-white shadow-md'
-                          : 'text-slate-400 hover:text-white'
+                          ? 'bg-amber-500 text-blue-950 shadow-md'
+                          : 'text-blue-200 hover:text-white'
                       }`}
                     >
                       <Package className="w-4 h-4" />
@@ -794,8 +775,8 @@ export default function App() {
                       onClick={() => setActiveAdminTab('inventory')}
                       className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${
                         activeAdminTab === 'inventory'
-                          ? 'bg-indigo-600 text-white shadow-md'
-                          : 'text-slate-400 hover:text-white'
+                          ? 'bg-amber-500 text-blue-950 shadow-md'
+                          : 'text-blue-200 hover:text-white'
                       }`}
                     >
                       <SlidersHorizontal className="w-4 h-4" />
@@ -803,11 +784,9 @@ export default function App() {
                     </button>
                   </div>
 
-                  {/* Admin Logout Button */}
                   <button
                     onClick={handleAdminLogout}
                     className="flex items-center gap-1.5 bg-red-600/20 hover:bg-red-600 text-red-300 hover:text-white border border-red-500/30 px-3 py-2 rounded-xl text-xs font-bold transition-all"
-                    title="Esci dalla sessione Amministratore"
                   >
                     <LogOut className="w-4 h-4" />
                     Esci
@@ -818,28 +797,28 @@ export default function App() {
               {/* STATS CARDS */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-6">
                 
-                <div className="bg-slate-800/80 p-4 rounded-xl border border-slate-700">
-                  <div className="text-slate-400 text-xs font-medium">Totale Ordini</div>
+                <div className="bg-blue-900/80 p-4 rounded-xl border border-blue-800">
+                  <div className="text-blue-300 text-xs font-medium">Totale Ordini</div>
                   <div className="text-2xl font-black text-white mt-1">{adminStats.totalOrdersCount}</div>
-                  <div className="text-[10px] text-indigo-400 mt-1">studenti, prof e ATA</div>
+                  <div className="text-[10px] text-amber-400 mt-1">studenti, prof e ATA</div>
                 </div>
 
-                <div className="bg-slate-800/80 p-4 rounded-xl border border-slate-700">
-                  <div className="text-slate-400 text-xs font-medium">Contanti Incassati</div>
+                <div className="bg-blue-900/80 p-4 rounded-xl border border-blue-800">
+                  <div className="text-blue-300 text-xs font-medium">Contanti Incassati</div>
                   <div className="text-2xl font-black text-emerald-400 mt-1">€{adminStats.collectedCash.toFixed(2)}</div>
-                  <div className="text-[10px] text-emerald-500/80 mt-1">ordini consegnati</div>
+                  <div className="text-[10px] text-emerald-300 mt-1">ordini consegnati</div>
                 </div>
 
-                <div className="bg-slate-800/80 p-4 rounded-xl border border-slate-700">
-                  <div className="text-slate-400 text-xs font-medium">Contanti da Incassare</div>
+                <div className="bg-blue-900/80 p-4 rounded-xl border border-blue-800">
+                  <div className="text-blue-300 text-xs font-medium">Contanti da Incassare</div>
                   <div className="text-2xl font-black text-amber-400 mt-1">€{adminStats.pendingCash.toFixed(2)}</div>
-                  <div className="text-[10px] text-amber-500/80 mt-1">in attesa di ritiro</div>
+                  <div className="text-[10px] text-amber-300 mt-1">in attesa di ritiro</div>
                 </div>
 
-                <div className="bg-slate-800/80 p-4 rounded-xl border border-slate-700">
-                  <div className="text-slate-400 text-xs font-medium">Felpe Prenotate</div>
-                  <div className="text-2xl font-black text-indigo-300 mt-1">{adminStats.totalHoodiesSold}</div>
-                  <div className="text-[10px] text-slate-400 mt-1">unità totali</div>
+                <div className="bg-blue-900/80 p-4 rounded-xl border border-blue-800">
+                  <div className="text-blue-300 text-xs font-medium">Felpe Prenotate</div>
+                  <div className="text-2xl font-black text-white mt-1">{adminStats.totalHoodiesSold}</div>
+                  <div className="text-[10px] text-blue-300 mt-1">unità totali</div>
                 </div>
 
               </div>
@@ -849,24 +828,21 @@ export default function App() {
             {activeAdminTab === 'orders' && (
               <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
                 
-                {/* Filters and Search Bar */}
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-6 border-b border-slate-100">
                   
-                  {/* Search Bar */}
                   <div className="relative flex-1 max-w-md">
                     <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                     <input
                       type="text"
-                      placeholder="Cerca per Nome, Classe, Ufficio o Codice (#SCH)..."
+                      placeholder="Cerca per Nome, Classe, Ufficio o Codice (#DIVINI)..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-900"
                     />
                   </div>
 
                   <div className="flex flex-wrap items-center gap-3">
                     
-                    {/* Role Filter */}
                     <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl text-xs font-medium">
                       <span className="text-slate-400 text-[10px] uppercase font-bold px-2">Ruolo:</span>
                       {['all', 'studente', 'docente', 'ata'].map((r) => (
@@ -884,7 +860,6 @@ export default function App() {
                       ))}
                     </div>
 
-                    {/* Status Filter */}
                     <select
                       value={statusFilter}
                       onChange={(e) => setStatusFilter(e.target.value)}
@@ -897,12 +872,11 @@ export default function App() {
                       <option value="Annullato">Annullato</option>
                     </select>
 
-                    {/* Print Button */}
                     <button
                       onClick={() => setPrintOrdersModal(true)}
-                      className="flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-3 py-2 rounded-xl transition-all shadow-sm"
+                      className="flex items-center gap-1.5 bg-blue-950 hover:bg-blue-900 text-white font-bold text-xs px-3 py-2 rounded-xl transition-all shadow-sm"
                     >
-                      <Printer className="w-3.5 h-3.5" />
+                      <Printer className="w-3.5 h-3.5 text-amber-400" />
                       Stampa Lista
                     </button>
 
@@ -910,7 +884,7 @@ export default function App() {
 
                 </div>
 
-                {/* Orders List Table */}
+                {/* Orders Table */}
                 {filteredOrders.length === 0 ? (
                   <div className="text-center py-12 text-slate-400">
                     <Package className="w-12 h-12 mx-auto mb-3 opacity-30" />
@@ -919,19 +893,16 @@ export default function App() {
                 ) : (
                   <div className="space-y-4">
                     {filteredOrders.map((order) => {
-                      
-                      // Role styling badge
-                      let roleBadgeClass = "bg-blue-100 text-blue-800 border-blue-200";
+                      let roleBadgeClass = "bg-blue-100 text-blue-900 border-blue-200";
                       let RoleIcon = GraduationCap;
                       if (order.customer.role === 'docente') {
-                        roleBadgeClass = "bg-purple-100 text-purple-800 border-purple-200";
+                        roleBadgeClass = "bg-purple-100 text-purple-900 border-purple-200";
                         RoleIcon = BookOpen;
                       } else if (order.customer.role === 'ata') {
-                        roleBadgeClass = "bg-amber-100 text-amber-800 border-amber-200";
+                        roleBadgeClass = "bg-amber-100 text-amber-900 border-amber-200";
                         RoleIcon = Building2;
                       }
 
-                      // Status Badge Styling
                       let statusBadge = "bg-yellow-100 text-yellow-800 border-yellow-300";
                       if (order.status === 'Pronto per consegna') statusBadge = "bg-blue-100 text-blue-800 border-blue-300";
                       else if (order.status === 'Consegnato e Incassato') statusBadge = "bg-emerald-100 text-emerald-800 border-emerald-300";
@@ -940,11 +911,10 @@ export default function App() {
                       return (
                         <div
                           key={order.orderCode}
-                          className="border border-slate-200 rounded-xl p-5 hover:border-indigo-300 transition-all bg-white shadow-sm"
+                          className="border border-slate-200 rounded-xl p-5 hover:border-blue-300 transition-all bg-white shadow-sm"
                         >
                           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-slate-100">
                             
-                            {/* Customer & Role Information */}
                             <div className="flex items-start gap-3">
                               <div className={`p-2.5 rounded-xl border ${roleBadgeClass}`}>
                                 <RoleIcon className="w-5 h-5" />
@@ -964,7 +934,7 @@ export default function App() {
 
                                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-600 mt-1">
                                   <span className="font-bold text-slate-800 flex items-center gap-1">
-                                    <School className="w-3.5 h-3.5 text-indigo-600" />
+                                    <School className="w-3.5 h-3.5 text-blue-900" />
                                     {order.customer.location || 'N/D'}
                                   </span>
                                   {order.customer.phone && (
@@ -972,7 +942,7 @@ export default function App() {
                                       href={`https://wa.me/${order.customer.phone.replace(/[^0-9]/g, '')}`}
                                       target="_blank"
                                       rel="noreferrer"
-                                      className="text-indigo-600 hover:underline flex items-center gap-1 font-semibold"
+                                      className="text-blue-900 hover:underline flex items-center gap-1 font-semibold"
                                     >
                                       <Phone className="w-3.5 h-3.5" />
                                       {order.customer.phone}
@@ -985,7 +955,6 @@ export default function App() {
                               </div>
                             </div>
 
-                            {/* Status & Actions Dropdown */}
                             <div className="flex items-center gap-3">
                               <div className="text-right">
                                 <span className="block text-[10px] text-slate-400 font-bold uppercase">Totale Contanti</span>
@@ -1006,12 +975,11 @@ export default function App() {
 
                           </div>
 
-                          {/* Ordered Items Summary */}
                           <div className="pt-3 flex flex-wrap items-center justify-between gap-2 text-xs">
                             <div className="flex flex-wrap gap-2">
                               {order.items.map((item, idx) => (
                                 <span key={idx} className="bg-slate-100 text-slate-800 px-2.5 py-1 rounded-lg border border-slate-200 font-medium">
-                                  <strong>{item.quantity}x</strong> {item.productName} <span className="text-indigo-600 font-bold">({item.size})</span>
+                                  <strong>{item.quantity}x</strong> {item.productName} <span className="text-blue-900 font-bold">({item.size})</span>
                                 </span>
                               ))}
                             </div>
@@ -1031,15 +999,15 @@ export default function App() {
               </div>
             )}
 
-            {/* TAB 2: INVENTORY & STOCK MANAGEMENT */}
+            {/* TAB 2: INVENTORY */}
             {activeAdminTab === 'inventory' && (
               <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
                 <div className="mb-6 pb-4 border-b border-slate-100">
                   <h2 className="text-lg font-extrabold text-slate-900">
-                    Gestione Giacenze Magazzino (6 Stili)
+                    Gestione Giacenze Magazzino ITTS Divini
                   </h2>
                   <p className="text-xs text-slate-500">
-                    Modifica direttamente la disponibilità di ciascuna taglia per bloccare/sbloccare gli ordini in tempo reale su Firebase.
+                    Modifica le disponibilità delle taglie per i 6 stili.
                   </p>
                 </div>
 
@@ -1052,27 +1020,24 @@ export default function App() {
                           <img src={product.image} alt={product.name} className="w-12 h-12 rounded-lg object-cover border" />
                           <div>
                             <h3 className="font-extrabold text-slate-900 text-base">{product.name}</h3>
-                            <span className="text-xs font-bold text-indigo-600">€{product.price ? product.price.toFixed(2) : '0.00'}</span>
+                            <span className="text-xs font-bold text-amber-600">€20,00</span>
                           </div>
                         </div>
 
-                        {/* Quick stock refill buttons */}
                         <div className="flex items-center gap-2">
-                          <span className="text-xs text-slate-500 font-semibold">Riassortimento Rapido:</span>
                           <button
                             onClick={() => {
                               ['XS', 'S', 'M', 'L', 'XL'].forEach(sz => {
                                 handleUpdateStock(product.id, sz, ((product.stock && product.stock[sz]) || 0) + 5);
                               });
                             }}
-                            className="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs px-2.5 py-1 rounded-lg border border-indigo-200"
+                            className="bg-blue-50 hover:bg-blue-100 text-blue-900 font-bold text-xs px-2.5 py-1 rounded-lg border border-blue-200"
                           >
                             +5 su tutte
                           </button>
                         </div>
                       </div>
 
-                      {/* Size Controls Grid */}
                       <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
                         {['XS', 'S', 'M', 'L', 'XL'].map((size) => {
                           const qty = (product.stock && product.stock[size]) || 0;
@@ -1120,13 +1085,13 @@ export default function App() {
             <div className="w-16 h-16 bg-slate-200 text-slate-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <Lock className="w-8 h-8" />
             </div>
-            <h2 className="text-xl font-black text-slate-900 mb-2">Accesso Non Autorizzato</h2>
+            <h2 className="text-xl font-black text-slate-900 mb-2">Accesso Riservato ITTS Divini</h2>
             <p className="text-xs text-slate-500 mb-6">
               Devi inserire le credenziali da amministratore per accedere a questa sezione.
             </p>
             <button
               onClick={handleOpenAdmin}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-2.5 rounded-xl text-xs shadow-md transition-all"
+              className="bg-blue-950 hover:bg-blue-900 text-white font-bold px-6 py-2.5 rounded-xl text-xs shadow-md transition-all"
             >
               Accedi al Pannello Admin
             </button>
@@ -1136,7 +1101,7 @@ export default function App() {
 
       {/* MODAL: ADMIN FIREBASE AUTHENTICATION */}
       {isAdminPasswordModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-blue-950/80 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 relative animate-in fade-in zoom-in-95 duration-200">
             <button
               onClick={() => setIsAdminPasswordModalOpen(false)}
@@ -1145,19 +1110,18 @@ export default function App() {
               <X className="w-5 h-5" />
             </button>
 
-            <div className="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mb-4">
+            <div className="w-12 h-12 bg-blue-100 text-blue-900 rounded-2xl flex items-center justify-center mb-4">
               <Lock className="w-6 h-6" />
             </div>
 
             <h3 className="text-xl font-black text-slate-900 mb-1">
-              Login Amministratore Firebase
+              Login Admin ITTS Divini
             </h3>
             <p className="text-xs text-slate-500 mb-6">
-              Inserisci Email e Password configurate nella tua console Firebase per sbloccare la gestione.
+              Inserisci Email e Password configurate nella tua console Firebase.
             </p>
 
             <form onSubmit={handleAdminPasswordSubmit} className="space-y-4">
-              {/* Field 1: Email */}
               <div>
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
                   Email Admin
@@ -1173,13 +1137,12 @@ export default function App() {
                       setAdminEmailInput(e.target.value);
                       setAdminPasswordError('');
                     }}
-                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-900"
                   />
                   <Mail className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                 </div>
               </div>
 
-              {/* Field 2: Password */}
               <div>
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
                   Password Admin
@@ -1197,7 +1160,7 @@ export default function App() {
                     className={`w-full pl-10 pr-10 py-2.5 bg-slate-50 border rounded-xl text-sm font-medium focus:outline-none focus:ring-2 ${
                       adminPasswordError
                         ? 'border-red-400 focus:ring-red-400'
-                        : 'border-slate-200 focus:ring-indigo-500'
+                        : 'border-slate-200 focus:ring-blue-900'
                     }`}
                   />
                   <Key className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -1218,11 +1181,6 @@ export default function App() {
                 )}
               </div>
 
-              <div className="bg-indigo-50 border border-indigo-200 p-3 rounded-xl text-indigo-900 text-[11px] flex items-center gap-2">
-                <Info className="w-4 h-4 text-indigo-600 shrink-0" />
-                <span>Autenticazione sicura tramite <strong>Firebase Auth</strong>. La password non è salvata nel codice.</span>
-              </div>
-
               <div className="flex gap-2 pt-2">
                 <button
                   type="button"
@@ -1234,9 +1192,9 @@ export default function App() {
                 <button
                   type="submit"
                   disabled={isLoggingIn}
-                  className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl text-xs shadow-md transition-all flex items-center justify-center gap-2"
+                  className="flex-1 bg-blue-950 hover:bg-blue-900 text-white font-bold py-2.5 rounded-xl text-xs shadow-md transition-all flex items-center justify-center gap-2"
                 >
-                  <Key className="w-4 h-4" />
+                  <Key className="w-4 h-4 text-amber-400" />
                   {isLoggingIn ? 'Verifica...' : 'Accedi'}
                 </button>
               </div>
@@ -1246,9 +1204,9 @@ export default function App() {
         </div>
       )}
 
-      {/* MODAL: SIZE SELECTION & QUICK ADD */}
+      {/* MODAL: SIZE SELECTION */}
       {selectedProductModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-blue-950/80 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 relative animate-in fade-in zoom-in-95 duration-200">
             <button
               onClick={() => setSelectedProductModal(null)}
@@ -1264,14 +1222,14 @@ export default function App() {
                 className="w-20 h-20 rounded-xl object-cover border"
               />
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
                   {selectedProductModal.badge}
                 </span>
                 <h3 className="font-extrabold text-slate-900 text-lg mt-1">
                   {selectedProductModal.name}
                 </h3>
-                <span className="text-base font-black text-slate-900">
-                  €{selectedProductModal.price ? selectedProductModal.price.toFixed(2) : '0.00'}
+                <span className="text-lg font-black text-blue-950">
+                  €20,00
                 </span>
               </div>
             </div>
@@ -1280,7 +1238,6 @@ export default function App() {
               {selectedProductModal.description}
             </p>
 
-            {/* Size selector */}
             <div className="mb-6">
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
                 Seleziona Taglia:
@@ -1298,16 +1255,13 @@ export default function App() {
                       onClick={() => setModalSize(sz)}
                       className={`py-2.5 rounded-xl border text-xs font-bold transition-all flex flex-col items-center justify-center ${
                         isSelected
-                          ? 'border-indigo-600 bg-indigo-600 text-white shadow-md scale-105'
+                          ? 'border-blue-950 bg-blue-950 text-white shadow-md scale-105'
                           : isAvailable
-                          ? 'border-slate-200 bg-slate-50 text-slate-800 hover:border-indigo-300'
+                          ? 'border-slate-200 bg-slate-50 text-slate-800 hover:border-blue-300'
                           : 'border-slate-100 bg-slate-100 text-slate-300 cursor-not-allowed line-through'
                       }`}
                     >
                       <span>{sz}</span>
-                      <span className={`text-[9px] ${isSelected ? 'text-indigo-200' : 'text-slate-400'}`}>
-                        {isAvailable ? `${stk} rimanenti` : '0'}
-                      </span>
                     </button>
                   );
                 })}
@@ -1319,11 +1273,10 @@ export default function App() {
                 addToCart(selectedProductModal, modalSize, 1);
                 setSelectedProductModal(null);
               }}
-              disabled={((selectedProductModal.stock && selectedProductModal.stock[modalSize]) || 0) <= 0}
               className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-sm"
             >
               <ShoppingCart className="w-4 h-4" />
-              Aggiungi al Carrello (Taglia {modalSize})
+              Aggiungi al Carrello (Taglia {modalSize} - 20€)
             </button>
           </div>
         </div>
@@ -1331,30 +1284,28 @@ export default function App() {
 
       {/* CART DRAWER */}
       {isCartOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex justify-end">
+        <div className="fixed inset-0 z-50 bg-blue-950/80 backdrop-blur-sm flex justify-end">
           <div className="bg-white w-full max-w-md h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
             
-            {/* Drawer Header */}
-            <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-900 text-white">
+            <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-blue-950 text-white">
               <div className="flex items-center gap-2">
-                <ShoppingCart className="w-5 h-5 text-emerald-400" />
-                <h2 className="font-extrabold text-base">Il tuo Carrello Scuola</h2>
+                <ShoppingCart className="w-5 h-5 text-amber-400" />
+                <h2 className="font-extrabold text-base">Carrello ITTS Divini</h2>
               </div>
               <button
                 onClick={() => setIsCartOpen(false)}
-                className="text-slate-400 hover:text-white p-1"
+                className="text-slate-300 hover:text-white p-1"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Cart Items List */}
             <div className="flex-1 overflow-y-auto p-5 space-y-4">
               {cart.length === 0 ? (
                 <div className="text-center py-12 text-slate-400">
                   <ShoppingBag className="w-12 h-12 mx-auto mb-3 opacity-30" />
                   <p className="text-sm font-semibold">Il carrello è vuoto.</p>
-                  <p className="text-xs text-slate-400 mt-1">Scegli una delle 6 felpe per iniziare.</p>
+                  <p className="text-xs text-slate-400 mt-1">Scegli uno dei 6 stili per prenotare.</p>
                 </div>
               ) : (
                 cart.map((item, idx) => (
@@ -1367,9 +1318,9 @@ export default function App() {
                     <div className="flex-1">
                       <h4 className="font-bold text-slate-900 text-sm">{item.product.name}</h4>
                       <div className="flex items-center gap-2 text-xs text-slate-500 my-1">
-                        <span>Taglia: <strong className="text-indigo-600 uppercase font-black">{item.size}</strong></span>
+                        <span>Taglia: <strong className="text-blue-900 uppercase font-black">{item.size}</strong></span>
                         <span>•</span>
-                        <span className="font-bold text-slate-900">€{item.product.price ? item.product.price.toFixed(2) : '0.00'}</span>
+                        <span className="font-bold text-slate-900">€20,00</span>
                       </div>
 
                       <div className="flex items-center justify-between mt-2">
@@ -1383,7 +1334,7 @@ export default function App() {
                           <span className="text-xs font-bold text-slate-900">{item.quantity}</span>
                           <button
                             onClick={() => updateCartQty(item.product.id, item.size, 1)}
-                            className="text-slate-600 font-bold hover:text-indigo-600"
+                            className="text-slate-600 font-bold hover:text-blue-900"
                           >
                             +
                           </button>
@@ -1402,7 +1353,6 @@ export default function App() {
               )}
             </div>
 
-            {/* Cart Footer */}
             {cart.length > 0 && (
               <div className="p-5 border-t border-slate-100 bg-slate-50 space-y-3">
                 <div className="flex items-center justify-between text-sm">
@@ -1410,9 +1360,9 @@ export default function App() {
                   <span className="text-2xl font-black text-slate-900">€{cartTotal.toFixed(2)}</span>
                 </div>
 
-                <div className="bg-emerald-50 border border-emerald-200 p-2.5 rounded-xl text-emerald-800 text-[11px] flex items-center gap-2">
-                  <DollarSign className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Pagamento esclusivamente in contanti alla consegna durante la ricreazione.</span>
+                <div className="bg-amber-50 border border-amber-200 p-2.5 rounded-xl text-amber-900 text-[11px] flex items-center gap-2">
+                  <DollarSign className="w-4 h-4 text-amber-600 shrink-0" />
+                  <span>Pagamento esclusivamente in contanti alla consegna a scuola.</span>
                 </div>
 
                 <button
@@ -1420,10 +1370,10 @@ export default function App() {
                     setIsCartOpen(false);
                     setIsCheckoutOpen(true);
                   }}
-                  className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-sm"
+                  className="w-full bg-blue-950 hover:bg-blue-900 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-sm"
                 >
                   Procedi all'Ordine
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronRight className="w-4 h-4 text-amber-400" />
                 </button>
               </div>
             )}
@@ -1432,9 +1382,9 @@ export default function App() {
         </div>
       )}
 
-      {/* CHECKOUT MODAL WITH SCHOOL ROLE SELECTOR */}
+      {/* CHECKOUT MODAL */}
       {isCheckoutOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div className="fixed inset-0 z-50 bg-blue-950/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
           <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 my-8 relative animate-in fade-in zoom-in-95 duration-200">
             <button
               onClick={() => setIsCheckoutOpen(false)}
@@ -1444,44 +1394,41 @@ export default function App() {
             </button>
 
             <div className="flex items-center gap-2 mb-1">
-              <School className="w-5 h-5 text-indigo-600" />
-              <h2 className="text-xl font-black text-slate-900">Checkout Ordine Scolastico</h2>
+              <School className="w-5 h-5 text-blue-950" />
+              <h2 className="text-xl font-black text-slate-900">Checkout Ordine ITTS "E. Divini"</h2>
             </div>
             <p className="text-xs text-slate-500 mb-6">
-              Inserisci i tuoi dati per la consegna direttamente a scuola.
+              Inserisci i tuoi dati per il ritiro e la consegna a scuola.
             </p>
 
             <form onSubmit={handlePlaceOrder} className="space-y-5">
               
-              {/* ROLE SELECTOR CARDS */}
               <div>
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                  1. Chi sei? (Seleziona Ruolo):
+                  1. Seleziona Ruolo:
                 </label>
 
                 <div className="grid grid-cols-3 gap-2">
                   
-                  {/* Studente */}
                   <button
                     type="button"
                     onClick={() => setRole('studente')}
                     className={`p-3 rounded-xl border text-left transition-all flex flex-col items-center justify-center gap-1.5 ${
                       role === 'studente'
-                        ? 'border-blue-600 bg-blue-50/80 text-blue-900 ring-2 ring-blue-500/20'
+                        ? 'border-blue-900 bg-blue-50 text-blue-950 ring-2 ring-blue-900/20'
                         : 'border-slate-200 hover:border-slate-300 text-slate-700'
                     }`}
                   >
-                    <GraduationCap className="w-5 h-5 text-blue-600" />
+                    <GraduationCap className="w-5 h-5 text-blue-900" />
                     <span className="text-xs font-extrabold">Studente</span>
                   </button>
 
-                  {/* Docente */}
                   <button
                     type="button"
                     onClick={() => setRole('docente')}
                     className={`p-3 rounded-xl border text-left transition-all flex flex-col items-center justify-center gap-1.5 ${
                       role === 'docente'
-                        ? 'border-purple-600 bg-purple-50/80 text-purple-900 ring-2 ring-purple-500/20'
+                        ? 'border-purple-600 bg-purple-50 text-purple-900 ring-2 ring-purple-500/20'
                         : 'border-slate-200 hover:border-slate-300 text-slate-700'
                     }`}
                   >
@@ -1489,13 +1436,12 @@ export default function App() {
                     <span className="text-xs font-extrabold">Docente</span>
                   </button>
 
-                  {/* ATA */}
                   <button
                     type="button"
                     onClick={() => setRole('ata')}
                     className={`p-3 rounded-xl border text-left transition-all flex flex-col items-center justify-center gap-1.5 ${
                       role === 'ata'
-                        ? 'border-amber-600 bg-amber-50/80 text-amber-900 ring-2 ring-amber-500/20'
+                        ? 'border-amber-600 bg-amber-50 text-amber-900 ring-2 ring-amber-500/20'
                         : 'border-slate-200 hover:border-slate-300 text-slate-700'
                     }`}
                   >
@@ -1506,7 +1452,6 @@ export default function App() {
                 </div>
               </div>
 
-              {/* DYNAMIC FORM FIELDS BASED ON ROLE */}
               <div className="space-y-3">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
@@ -1517,7 +1462,7 @@ export default function App() {
                       placeholder="es. Mario"
                       value={formData.firstName}
                       onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-900"
                     />
                   </div>
                   <div>
@@ -1528,38 +1473,36 @@ export default function App() {
                       placeholder="es. Rossi"
                       value={formData.lastName}
                       onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-900"
                     />
                   </div>
                 </div>
 
-                {/* Specific field for Studente */}
                 {role === 'studente' && (
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1">
-                      Classe e Sezione * (es. 5^A Liceo, 3^B Tech)
+                      Classe e Sezione * (es. 5F)
                     </label>
                     <input
                       type="text"
                       required
-                      placeholder="es. 5^A Scientifico"
+                      placeholder="es. 5F Informatica"
                       value={formData.studentClass}
                       onChange={(e) => setFormData({ ...formData, studentClass: e.target.value })}
-                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-900"
                     />
                   </div>
                 )}
 
-                {/* Specific field for Docente */}
                 {role === 'docente' && (
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1">
-                      Materia / Sala Professori * (es. Prof. Rossi - Matematica)
+                      Materia / Sala Professori *
                     </label>
                     <input
                       type="text"
                       required
-                      placeholder="es. Matematica (Sala Professori)"
+                      placeholder="es. Prof. Rossi - Informatica"
                       value={formData.teacherSubject}
                       onChange={(e) => setFormData({ ...formData, teacherSubject: e.target.value })}
                       className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-purple-500"
@@ -1567,11 +1510,10 @@ export default function App() {
                   </div>
                 )}
 
-                {/* Specific field for ATA */}
                 {role === 'ata' && (
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1">
-                      Ufficio / Postazione * (es. Segreteria, Portineria)
+                      Ufficio / Postazione *
                     </label>
                     <input
                       type="text"
@@ -1584,10 +1526,9 @@ export default function App() {
                   </div>
                 )}
 
-                {/* Phone/WhatsApp for coordination */}
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">
-                    Cellulare / WhatsApp * (per avvisarti della consegna)
+                    Cellulare / WhatsApp * (per la consegna)
                   </label>
                   <input
                     type="tel"
@@ -1595,32 +1536,30 @@ export default function App() {
                     placeholder="es. 333 1234567"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-900"
                   />
                 </div>
 
-                {/* Extra Notes */}
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">Note Opzionali</label>
                   <input
                     type="text"
-                    placeholder="es. Consegna preferita durante il 2° intervallo"
+                    placeholder="es. Consegna durante l'intervallo"
                     value={formData.notes}
                     onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-900"
                   />
                 </div>
 
               </div>
 
-              {/* PAYMENT RECAP BANNER */}
               <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-emerald-900 text-xs space-y-1">
                 <div className="font-extrabold flex items-center gap-1.5">
                   <CheckCircle className="w-4 h-4 text-emerald-600" />
                   Pagamento: Contanti alla Consegna
                 </div>
                 <p className="text-[11px] text-emerald-700">
-                  Importo totale di <strong>€{cartTotal.toFixed(2)}</strong> da consegnare in contanti al momento del ritiro della felpa.
+                  Importo totale di <strong>€{cartTotal.toFixed(2)}</strong> da consegnare in contanti al momento del ritiro.
                 </p>
               </div>
 
@@ -1638,7 +1577,7 @@ export default function App() {
 
       {/* CONFIRMATION MODAL */}
       {completedOrder && (
-        <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-blue-950/80 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 text-center relative animate-in zoom-in-95 duration-200">
             
             <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -1646,16 +1585,16 @@ export default function App() {
             </div>
 
             <h3 className="text-2xl font-black text-slate-900 mb-1">
-              Ordine Ricevuto!
+              Ordine Registrato!
             </h3>
             <p className="text-xs text-slate-500 mb-4">
-              La tua richiesta è stata registrata con successo nel database Firebase della scuola.
+              La tua richiesta per l'ITTS "E. Divini" è stata salvata con successo.
             </p>
 
             <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl text-left space-y-2 mb-6">
               <div className="flex justify-between items-center text-xs border-b pb-2">
                 <span className="text-slate-500 font-semibold">Codice Ordine:</span>
-                <span className="font-extrabold text-indigo-600 text-sm">{completedOrder.orderCode}</span>
+                <span className="font-extrabold text-blue-950 text-sm">{completedOrder.orderCode}</span>
               </div>
               <div className="flex justify-between items-center text-xs border-b pb-2">
                 <span className="text-slate-500 font-semibold">Cliente:</span>
@@ -1673,7 +1612,7 @@ export default function App() {
 
             <button
               onClick={() => setCompletedOrder(null)}
-              className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl shadow transition-all text-xs"
+              className="w-full bg-blue-950 hover:bg-blue-900 text-white font-bold py-3 rounded-xl shadow transition-all text-xs"
             >
               Torna al Negozio
             </button>
@@ -1682,9 +1621,9 @@ export default function App() {
         </div>
       )}
 
-      {/* PRINTABLE ORDERS LIST MODAL FOR DELIVERIES */}
+      {/* PRINTABLE ORDERS LIST */}
       {printOrdersModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div className="fixed inset-0 z-50 bg-blue-950/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
           <div className="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl my-8 relative">
             <button
               onClick={() => setPrintOrdersModal(false)}
@@ -1695,14 +1634,14 @@ export default function App() {
 
             <div className="flex items-center justify-between mb-6 pb-4 border-b">
               <div>
-                <h3 className="text-xl font-black text-slate-900">Lista Consegne Scuola</h3>
-                <p className="text-xs text-slate-500">Stampa da portare durante l'intervallo per la consegna e l'incasso.</p>
+                <h3 className="text-xl font-black text-slate-900">Lista Consegne ITTS "E. Divini"</h3>
+                <p className="text-xs text-slate-500">Stampa da portare a scuola per consegne e incassi.</p>
               </div>
               <button
                 onClick={() => window.print()}
-                className="bg-indigo-600 text-white text-xs font-bold px-3 py-2 rounded-xl flex items-center gap-1.5 shadow"
+                className="bg-blue-950 text-white text-xs font-bold px-3 py-2 rounded-xl flex items-center gap-1.5 shadow"
               >
-                <Printer className="w-4 h-4" /> Stampa Foglio
+                <Printer className="w-4 h-4 text-amber-400" /> Stampa Foglio
               </button>
             </div>
 
@@ -1728,14 +1667,14 @@ export default function App() {
       )}
 
       {/* FOOTER */}
-      <footer className="bg-slate-900 text-slate-400 border-t border-slate-800 py-8 px-4 text-center text-xs">
+      <footer className="bg-blue-950 text-blue-200 border-t border-blue-900 py-8 px-4 text-center text-xs">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <School className="w-4 h-4 text-indigo-400" />
-            <span className="font-bold text-white">Merchandising Scolastico Ufficiale</span>
+            <School className="w-4 h-4 text-amber-400" />
+            <span className="font-bold text-white">ITTS "E. Divini" • Merchandising Ufficiale</span>
           </div>
           <div>
-            A.S. 2025/2026 • Tutti gli ordini sono gestiti ed incassati direttamente a scuola.
+            A.S. 2025/2026 • Ordini gestiti ed incassati direttamente a scuola.
           </div>
         </div>
       </footer>
