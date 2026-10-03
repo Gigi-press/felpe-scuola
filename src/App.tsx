@@ -45,12 +45,7 @@ import {
   SlidersHorizontal,
   Info,
   Building2,
-  BookOpen,
-  Lock,
-  Key,
-  LogOut,
-  Eye,
-  EyeOff
+  BookOpen
 } from 'lucide-react';
 
 // Configuration Config di Firebase dal tuo progetto felpescarti-as26-27
@@ -63,9 +58,6 @@ const firebaseConfig = {
   appId: "1:730372682315:web:256c227f461b1cc5b713ce",
   measurementId: "G-7QZSSME7VB"
 };
-
-// Password di default per il Pannello Admin
-const ADMIN_PASSWORD = "admin";
 
 let app, auth, db;
 const appId = 'felpescarti-as26-27';
@@ -159,13 +151,6 @@ export default function App() {
   const [currentView, setCurrentView] = useState('shop'); // 'shop' | 'admin'
   const [activeAdminTab, setActiveAdminTab] = useState('orders'); // 'orders' | 'inventory'
 
-  // Admin Authentication States
-  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
-  const [isAdminPasswordModalOpen, setIsAdminPasswordModalOpen] = useState(false);
-  const [adminPasswordInput, setAdminPasswordInput] = useState('');
-  const [adminPasswordError, setAdminPasswordError] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-
   // Data States
   const [products, setProducts] = useState(INITIAL_PRODUCTS);
   const [orders, setOrders] = useState([]);
@@ -196,34 +181,6 @@ export default function App() {
   const [roleFilter, setRoleFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-
-  // Admin Access Handlers
-  const handleOpenAdmin = () => {
-    if (isAdminAuthenticated) {
-      setCurrentView('admin');
-    } else {
-      setAdminPasswordInput('');
-      setAdminPasswordError('');
-      setIsAdminPasswordModalOpen(true);
-    }
-  };
-
-  const handleAdminPasswordSubmit = (e) => {
-    e.preventDefault();
-    if (adminPasswordInput === ADMIN_PASSWORD) {
-      setIsAdminAuthenticated(true);
-      setIsAdminPasswordModalOpen(false);
-      setCurrentView('admin');
-      setAdminPasswordError('');
-    } else {
-      setAdminPasswordError('Password errata. Riprova.');
-    }
-  };
-
-  const handleAdminLogout = () => {
-    setIsAdminAuthenticated(false);
-    setCurrentView('shop');
-  };
 
   useEffect(() => {
     if (!auth) return;
@@ -505,7 +462,7 @@ export default function App() {
                 Negozio
               </button>
               <button
-                onClick={handleOpenAdmin}
+                onClick={() => setCurrentView('admin')}
                 className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                   currentView === 'admin'
                     ? 'bg-indigo-600 text-white shadow-md'
@@ -514,12 +471,8 @@ export default function App() {
               >
                 <SlidersHorizontal className="w-3.5 h-3.5" />
                 Pannello Admin
-                {isAdminAuthenticated ? (
-                  <span className="w-2 h-2 rounded-full bg-emerald-400" title="Autenticato" />
-                ) : (
-                  orders.filter(o => o.status === 'In attesa').length > 0 && (
-                    <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
-                  )
+                {orders.filter(o => o.status === 'In attesa').length > 0 && (
+                  <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
                 )}
               </button>
             </div>
@@ -730,7 +683,7 @@ export default function App() {
             </section>
 
           </div>
-        ) : isAdminAuthenticated ? (
+        ) : (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             
             {/* ADMIN HEADER & STATS BAR */}
@@ -743,41 +696,29 @@ export default function App() {
                   <h1 className="text-2xl font-black">Pannello Amministratore</h1>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-3">
-                  {/* Admin Tab Switcher */}
-                  <div className="flex items-center bg-slate-800 p-1 rounded-xl border border-slate-700">
-                    <button
-                      onClick={() => setActiveAdminTab('orders')}
-                      className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${
-                        activeAdminTab === 'orders'
-                          ? 'bg-indigo-600 text-white shadow-md'
-                          : 'text-slate-400 hover:text-white'
-                      }`}
-                    >
-                      <Package className="w-4 h-4" />
-                      Gestione Ordini ({orders.length})
-                    </button>
-                    <button
-                      onClick={() => setActiveAdminTab('inventory')}
-                      className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${
-                        activeAdminTab === 'inventory'
-                          ? 'bg-indigo-600 text-white shadow-md'
-                          : 'text-slate-400 hover:text-white'
-                      }`}
-                    >
-                      <SlidersHorizontal className="w-4 h-4" />
-                      Gestione Scorte
-                    </button>
-                  </div>
-
-                  {/* Admin Logout Button */}
+                {/* Admin Tab Switcher */}
+                <div className="flex items-center bg-slate-800 p-1 rounded-xl border border-slate-700">
                   <button
-                    onClick={handleAdminLogout}
-                    className="flex items-center gap-1.5 bg-red-600/20 hover:bg-red-600 text-red-300 hover:text-white border border-red-500/30 px-3 py-2 rounded-xl text-xs font-bold transition-all"
-                    title="Esci dalla sessione Amministratore"
+                    onClick={() => setActiveAdminTab('orders')}
+                    className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${
+                      activeAdminTab === 'orders'
+                        ? 'bg-indigo-600 text-white shadow-md'
+                        : 'text-slate-400 hover:text-white'
+                    }`}
                   >
-                    <LogOut className="w-4 h-4" />
-                    Esci
+                    <Package className="w-4 h-4" />
+                    Gestione Ordini ({orders.length})
+                  </button>
+                  <button
+                    onClick={() => setActiveAdminTab('inventory')}
+                    className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${
+                      activeAdminTab === 'inventory'
+                        ? 'bg-indigo-600 text-white shadow-md'
+                        : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    <SlidersHorizontal className="w-4 h-4" />
+                    Gestione Scorte
                   </button>
                 </div>
               </div>
@@ -1082,112 +1023,8 @@ export default function App() {
             )}
 
           </div>
-        ) : (
-          <div className="max-w-md mx-auto px-4 py-20 text-center">
-            <div className="w-16 h-16 bg-slate-200 text-slate-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <Lock className="w-8 h-8" />
-            </div>
-            <h2 className="text-xl font-black text-slate-900 mb-2">Accesso Non Autorizzato</h2>
-            <p className="text-xs text-slate-500 mb-6">
-              Devi inserire la password da amministratore per accedere a questa sezione.
-            </p>
-            <button
-              onClick={handleOpenAdmin}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-2.5 rounded-xl text-xs shadow-md transition-all"
-            >
-              Inserisci Password Admin
-            </button>
-          </div>
         )}
       </main>
-
-      {/* MODAL: ADMIN PASSWORD VERIFICATION */}
-      {isAdminPasswordModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 relative animate-in fade-in zoom-in-95 duration-200">
-            <button
-              onClick={() => setIsAdminPasswordModalOpen(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mb-4">
-              <Lock className="w-6 h-6" />
-            </div>
-
-            <h3 className="text-xl font-black text-slate-900 mb-1">
-              Accesso Riservato Admin
-            </h3>
-            <p className="text-xs text-slate-500 mb-6">
-              Inserisci la password di amministrazione per accedere alla gestione degli ordini e delle giacenze.
-            </p>
-
-            <form onSubmit={handleAdminPasswordSubmit} className="space-y-4">
-              <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                  Password Amministratore
-                </label>
-                <div className="relative">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    required
-                    autoFocus
-                    placeholder="Inserisci password..."
-                    value={adminPasswordInput}
-                    onChange={(e) => {
-                      setAdminPasswordInput(e.target.value);
-                      setAdminPasswordError('');
-                    }}
-                    className={`w-full pl-4 pr-10 py-2.5 bg-slate-50 border rounded-xl text-sm font-medium focus:outline-none focus:ring-2 ${
-                      adminPasswordError
-                        ? 'border-red-400 focus:ring-red-400'
-                        : 'border-slate-200 focus:ring-indigo-500'
-                    }`}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
-                  >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-
-                {adminPasswordError && (
-                  <div className="flex items-center gap-1.5 text-xs text-red-600 font-bold mt-2">
-                    <AlertCircle className="w-4 h-4" />
-                    <span>{adminPasswordError}</span>
-                  </div>
-                )}
-              </div>
-
-              <div className="bg-amber-50 border border-amber-200 p-3 rounded-xl text-amber-800 text-[11px] flex items-center gap-2">
-                <Info className="w-4 h-4 text-amber-600 shrink-0" />
-                <span>Password predefinita: <strong className="font-extrabold">{ADMIN_PASSWORD}</strong></span>
-              </div>
-
-              <div className="flex gap-2 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setIsAdminPasswordModalOpen(false)}
-                  className="flex-1 py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-all"
-                >
-                  Annulla
-                </button>
-                <button
-                  type="submit"
-                  className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl text-xs shadow-md transition-all flex items-center justify-center gap-2"
-                >
-                  <Key className="w-4 h-4" />
-                  Accedi
-                </button>
-              </div>
-            </form>
-
-          </div>
-        </div>
-      )}
 
       {/* MODAL: SIZE SELECTION & QUICK ADD */}
       {selectedProductModal && (
