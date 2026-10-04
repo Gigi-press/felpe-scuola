@@ -81,7 +81,7 @@ try {
 const INITIAL_PRODUCTS = [
   {
     id: 'hoodie-a',
-    name: 'Felpa Stile A - Classic Divini',
+    name: 'Felpa Stile A',
     tagline: 'Lo stile iconico d\'istituto con logo ufficiale',
     description: 'Felpa unisex in cotone pettinato pesante. Interno garzato caldo e morbido con stemma ufficiale ITTS E. Divini sul petto.',
     price: 20.00,
@@ -93,7 +93,7 @@ const INITIAL_PRODUCTS = [
   },
   {
     id: 'hoodie-b',
-    name: 'Felpa Stile B - Varsity Edition',
+    name: 'Felpa Stile B',
     tagline: 'Ispirazione campus con dettagli bicolore',
     description: 'Design dinamico stile universitario con rifiniture a contrasto. Perfetta per rappresentare la scuola con stile.',
     price: 20.00,
@@ -105,7 +105,7 @@ const INITIAL_PRODUCTS = [
   },
   {
     id: 'hoodie-c',
-    name: 'Felpa Stile C - Minimal Tech',
+    name: 'Felpa Stile C',
     tagline: 'Linea pulita ed essenziale con micro-logo',
     description: 'Design sobrio ed elegante, amato sia dagli studenti che dai docenti. Tessuto traspirante con cappuccio strutturato.',
     price: 20.00,
@@ -117,7 +117,7 @@ const INITIAL_PRODUCTS = [
   },
   {
     id: 'hoodie-d',
-    name: 'Felpa Stile D - Streetwear Oversize',
+    name: 'Felpa Stile D',
     tagline: 'Taglio oversize moderno a spalle scivolate',
     description: 'Vestibilità comoda e di tendenza per il tempo libero e per le giornate a scuola. Tessuto calandrato anti-pilling.',
     price: 20.00,
@@ -129,7 +129,7 @@ const INITIAL_PRODUCTS = [
   },
   {
     id: 'hoodie-e',
-    name: 'Felpa Stile E - Vintage Washed',
+    name: 'Felpa Stile E',
     tagline: 'Effetto retrò con tasca a marsupio anatomica',
     description: 'Particolare lavorazione del tessuto per un affascinante effetto vintage. Bordo e polsini a coste rinforzate.',
     price: 20.00,
@@ -141,7 +141,7 @@ const INITIAL_PRODUCTS = [
   },
   {
     id: 'hoodie-f',
-    name: 'Felpa Stile F - Full-Zip Heavyweight',
+    name: 'Felpa Stile F',
     tagline: 'Massima praticità con zip metallica ad alta resistenza',
     description: 'Versione con cerniera integrale, ideale per le mezze stagioni. Tasche frontali capienti e cuciture a triplo ago.',
     price: 20.00,
@@ -494,14 +494,14 @@ export default function App() {
           
           {/* Logo & Divini Title */}
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => setCurrentView('shop')}>
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 flex items-center justify-center shadow-md">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-orange-500 to-orange-400 flex items-center justify-center shadow-md">
               <School className="w-6 h-6 text-blue-950" />
             </div>
             <div>
               <span className="text-xl font-black tracking-tight text-white">
                 ITTS "E. DIVINI"
               </span>
-              <span className="block text-[10px] font-bold tracking-wider text-amber-400 uppercase">
+              <span className="block text-[10px] font-bold tracking-wider text-orange-400 uppercase">
                 Felpe Ufficiali d'Istituto • 20€
               </span>
             </div>
@@ -514,7 +514,7 @@ export default function App() {
                 onClick={() => setCurrentView('shop')}
                 className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                   currentView === 'shop'
-                    ? 'bg-amber-500 text-blue-950 shadow-md'
+                    ? 'bg-orange-500 text-blue-950 shadow-md'
                     : 'text-slate-300 hover:text-white'
                 }`}
               >
@@ -525,7 +525,7 @@ export default function App() {
                 onClick={handleOpenAdmin}
                 className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                   currentView === 'admin'
-                    ? 'bg-amber-500 text-blue-950 shadow-md'
+                    ? 'bg-orange-500 text-blue-950 shadow-md'
                     : 'text-slate-300 hover:text-white'
                 }`}
               >
@@ -535,7 +535,7 @@ export default function App() {
                   <span className="w-2 h-2 rounded-full bg-emerald-400" title="Autenticato" />
                 ) : (
                   orders.filter(o => o.status === 'In attesa').length > 0 && (
-                    <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
+                    <span className="w-2 h-2 rounded-full bg-orange-400 animate-ping" />
                   )
                 )}
               </button>
@@ -568,11 +568,11 @@ export default function App() {
             
             {/* HERO BANNER - ITTS E. DIVINI */}
             <section className="relative bg-gradient-to-b from-blue-950 via-blue-900 to-slate-900 text-white py-12 px-4 sm:px-6 lg:px-8 overflow-hidden">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(245,158,11,0.15),transparent_50%)]" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(249,115,22,0.15),transparent_50%)]" />
               <div className="max-w-7xl mx-auto relative z-10 text-center">
                 
-                <div className="inline-flex items-center gap-2 bg-amber-500/20 border border-amber-500/30 px-3 py-1.5 rounded-full text-amber-300 text-xs font-bold mb-4">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <div className="inline-flex items-center gap-2 bg-orange-500/20 border border-orange-500/30 px-3 py-1.5 rounded-full text-orange-300 text-xs font-bold mb-4">
+                  <Sparkles className="w-3.5 h-3.5 text-orange-400" />
                   Prenotazione Felpe Ufficiali ITTS "E. Divini"
                 </div>
 
@@ -580,13 +580,13 @@ export default function App() {
                   Indossa l'Orgoglio del Divini.
                 </h1>
                 <p className="max-w-2xl mx-auto text-slate-200 text-sm sm:text-base mb-6">
-                  Ordina online, paga in <strong className="text-amber-400 font-bold">contanti alla consegna (20€)</strong> e ritira la tua felpa direttamente a scuola.
+                  Ordina online, paga in <strong className="text-orange-400 font-bold">contanti alla consegna (20€)</strong> e ritira la tua felpa direttamente a scuola.
                 </p>
 
                 {/* Info Badges */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-3xl mx-auto text-left">
                   <div className="bg-blue-900/60 backdrop-blur border border-blue-700/80 p-3 rounded-xl flex items-center gap-3">
-                    <div className="p-2 bg-amber-500/20 text-amber-400 rounded-lg">
+                    <div className="p-2 bg-orange-500/20 text-orange-400 rounded-lg">
                       <GraduationCap className="w-5 h-5" />
                     </div>
                     <div>
@@ -596,7 +596,7 @@ export default function App() {
                   </div>
 
                   <div className="bg-blue-900/60 backdrop-blur border border-blue-700/80 p-3 rounded-xl flex items-center gap-3">
-                    <div className="p-2 bg-amber-500/20 text-amber-400 rounded-lg">
+                    <div className="p-2 bg-orange-500/20 text-orange-400 rounded-lg">
                       <BookOpen className="w-5 h-5" />
                     </div>
                     <div>
@@ -606,7 +606,7 @@ export default function App() {
                   </div>
 
                   <div className="bg-blue-900/60 backdrop-blur border border-blue-700/80 p-3 rounded-xl flex items-center gap-3">
-                    <div className="p-2 bg-amber-500/20 text-amber-400 rounded-lg">
+                    <div className="p-2 bg-orange-500/20 text-orange-400 rounded-lg">
                       <Building2 className="w-5 h-5" />
                     </div>
                     <div>
@@ -631,8 +631,8 @@ export default function App() {
                     Scegli tra lo Stile A e lo Stile F • Tutte le taglie disponibili: XS, S, M, L, XL
                   </p>
                 </div>
-                <div className="inline-flex items-center gap-2 text-xs font-bold bg-amber-50 text-amber-900 px-3 py-1.5 rounded-lg border border-amber-300">
-                  <DollarSign className="w-4 h-4 text-amber-600" />
+                <div className="inline-flex items-center gap-2 text-xs font-bold bg-orange-50 text-orange-900 px-3 py-1.5 rounded-lg border border-orange-200">
+                  <DollarSign className="w-4 h-4 text-orange-600" />
                   Prezzo Unico: 20,00€ in Contanti
                 </div>
               </div>
@@ -654,12 +654,12 @@ export default function App() {
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                         <div className="absolute top-3 left-3 flex flex-col gap-1">
-                          <span className="bg-blue-950/90 backdrop-blur text-amber-400 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-md shadow border border-amber-500/30">
+                          <span className="bg-blue-950/90 backdrop-blur text-orange-400 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-md shadow border border-orange-500/30">
                             {product.badge}
                           </span>
                         </div>
                         <div className="absolute top-3 right-3">
-                          <span className="bg-amber-400 text-blue-950 font-black text-xs px-3 py-1 rounded-full shadow">
+                          <span className="bg-orange-500 text-white font-black text-xs px-3 py-1 rounded-full shadow">
                             €20,00
                           </span>
                         </div>
@@ -725,7 +725,7 @@ export default function App() {
                                 : 'bg-slate-300 text-slate-500 cursor-not-allowed'
                             }`}
                           >
-                            <ShoppingCart className="w-4 h-4 text-amber-400" />
+                            <ShoppingCart className="w-4 h-4 text-orange-400" />
                             {totalStock > 0 ? 'Scegli Taglia e Ordina (20€)' : 'Esaurito'}
                           </button>
 
@@ -747,13 +747,13 @@ export default function App() {
             <div className="bg-blue-950 text-white rounded-2xl p-6 shadow-xl mb-8 border border-blue-900">
               <div className="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-blue-900 gap-4">
                 <div>
-                  <div className="flex items-center gap-2 text-amber-400 text-xs font-bold uppercase tracking-wider mb-1">
+                  <div className="flex items-center gap-2 text-orange-400 text-xs font-bold uppercase tracking-wider mb-1">
                     <ShieldCheck className="w-4 h-4" /> Gestione ITTS "E. Divini"
                   </div>
                   <h1 className="text-2xl font-black">Pannello Gestione Ordini & Incassi</h1>
                   {auth?.currentUser?.email && (
                     <p className="text-xs text-blue-300 mt-1">
-                      Connesso come Admin: <span className="text-amber-400 font-semibold">{auth.currentUser.email}</span>
+                      Connesso come Admin: <span className="text-orange-400 font-semibold">{auth.currentUser.email}</span>
                     </p>
                   )}
                 </div>
@@ -764,7 +764,7 @@ export default function App() {
                       onClick={() => setActiveAdminTab('orders')}
                       className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${
                         activeAdminTab === 'orders'
-                          ? 'bg-amber-500 text-blue-950 shadow-md'
+                          ? 'bg-orange-500 text-blue-950 shadow-md'
                           : 'text-blue-200 hover:text-white'
                       }`}
                     >
@@ -775,7 +775,7 @@ export default function App() {
                       onClick={() => setActiveAdminTab('inventory')}
                       className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${
                         activeAdminTab === 'inventory'
-                          ? 'bg-amber-500 text-blue-950 shadow-md'
+                          ? 'bg-orange-500 text-blue-950 shadow-md'
                           : 'text-blue-200 hover:text-white'
                       }`}
                     >
@@ -800,7 +800,7 @@ export default function App() {
                 <div className="bg-blue-900/80 p-4 rounded-xl border border-blue-800">
                   <div className="text-blue-300 text-xs font-medium">Totale Ordini</div>
                   <div className="text-2xl font-black text-white mt-1">{adminStats.totalOrdersCount}</div>
-                  <div className="text-[10px] text-amber-400 mt-1">studenti, prof e ATA</div>
+                  <div className="text-[10px] text-orange-400 mt-1">studenti, prof e ATA</div>
                 </div>
 
                 <div className="bg-blue-900/80 p-4 rounded-xl border border-blue-800">
@@ -811,8 +811,8 @@ export default function App() {
 
                 <div className="bg-blue-900/80 p-4 rounded-xl border border-blue-800">
                   <div className="text-blue-300 text-xs font-medium">Contanti da Incassare</div>
-                  <div className="text-2xl font-black text-amber-400 mt-1">€{adminStats.pendingCash.toFixed(2)}</div>
-                  <div className="text-[10px] text-amber-300 mt-1">in attesa di ritiro</div>
+                  <div className="text-2xl font-black text-orange-400 mt-1">€{adminStats.pendingCash.toFixed(2)}</div>
+                  <div className="text-[10px] text-orange-300 mt-1">in attesa di ritiro</div>
                 </div>
 
                 <div className="bg-blue-900/80 p-4 rounded-xl border border-blue-800">
@@ -876,7 +876,7 @@ export default function App() {
                       onClick={() => setPrintOrdersModal(true)}
                       className="flex items-center gap-1.5 bg-blue-950 hover:bg-blue-900 text-white font-bold text-xs px-3 py-2 rounded-xl transition-all shadow-sm"
                     >
-                      <Printer className="w-3.5 h-3.5 text-amber-400" />
+                      <Printer className="w-3.5 h-3.5 text-orange-400" />
                       Stampa Lista
                     </button>
 
@@ -899,7 +899,7 @@ export default function App() {
                         roleBadgeClass = "bg-purple-100 text-purple-900 border-purple-200";
                         RoleIcon = BookOpen;
                       } else if (order.customer.role === 'ata') {
-                        roleBadgeClass = "bg-amber-100 text-amber-900 border-amber-200";
+                        roleBadgeClass = "bg-orange-100 text-orange-900 border-orange-200";
                         RoleIcon = Building2;
                       }
 
@@ -1020,7 +1020,7 @@ export default function App() {
                           <img src={product.image} alt={product.name} className="w-12 h-12 rounded-lg object-cover border" />
                           <div>
                             <h3 className="font-extrabold text-slate-900 text-base">{product.name}</h3>
-                            <span className="text-xs font-bold text-amber-600">€20,00</span>
+                            <span className="text-xs font-bold text-orange-600">€20,00</span>
                           </div>
                         </div>
 
@@ -1194,7 +1194,7 @@ export default function App() {
                   disabled={isLoggingIn}
                   className="flex-1 bg-blue-950 hover:bg-blue-900 text-white font-bold py-2.5 rounded-xl text-xs shadow-md transition-all flex items-center justify-center gap-2"
                 >
-                  <Key className="w-4 h-4 text-amber-400" />
+                  <Key className="w-4 h-4 text-orange-400" />
                   {isLoggingIn ? 'Verifica...' : 'Accedi'}
                 </button>
               </div>
@@ -1222,7 +1222,7 @@ export default function App() {
                 className="w-20 h-20 rounded-xl object-cover border"
               />
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-orange-600 bg-orange-50 px-2 py-0.5 rounded border border-orange-200">
                   {selectedProductModal.badge}
                 </span>
                 <h3 className="font-extrabold text-slate-900 text-lg mt-1">
@@ -1289,7 +1289,7 @@ export default function App() {
             
             <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-blue-950 text-white">
               <div className="flex items-center gap-2">
-                <ShoppingCart className="w-5 h-5 text-amber-400" />
+                <ShoppingCart className="w-5 h-5 text-orange-400" />
                 <h2 className="font-extrabold text-base">Carrello ITTS Divini</h2>
               </div>
               <button
@@ -1360,8 +1360,8 @@ export default function App() {
                   <span className="text-2xl font-black text-slate-900">€{cartTotal.toFixed(2)}</span>
                 </div>
 
-                <div className="bg-amber-50 border border-amber-200 p-2.5 rounded-xl text-amber-900 text-[11px] flex items-center gap-2">
-                  <DollarSign className="w-4 h-4 text-amber-600 shrink-0" />
+                <div className="bg-orange-50 border border-orange-200 p-2.5 rounded-xl text-orange-900 text-[11px] flex items-center gap-2">
+                  <DollarSign className="w-4 h-4 text-orange-600 shrink-0" />
                   <span>Pagamento esclusivamente in contanti alla consegna a scuola.</span>
                 </div>
 
@@ -1373,7 +1373,7 @@ export default function App() {
                   className="w-full bg-blue-950 hover:bg-blue-900 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-sm"
                 >
                   Procedi all'Ordine
-                  <ChevronRight className="w-4 h-4 text-amber-400" />
+                  <ChevronRight className="w-4 h-4 text-orange-400" />
                 </button>
               </div>
             )}
@@ -1441,11 +1441,11 @@ export default function App() {
                     onClick={() => setRole('ata')}
                     className={`p-3 rounded-xl border text-left transition-all flex flex-col items-center justify-center gap-1.5 ${
                       role === 'ata'
-                        ? 'border-amber-600 bg-amber-50 text-amber-900 ring-2 ring-amber-500/20'
+                        ? 'border-orange-600 bg-orange-50 text-orange-900 ring-2 ring-orange-500/20'
                         : 'border-slate-200 hover:border-slate-300 text-slate-700'
                     }`}
                   >
-                    <Building2 className="w-5 h-5 text-amber-600" />
+                    <Building2 className="w-5 h-5 text-orange-600" />
                     <span className="text-xs font-extrabold">Personale ATA</span>
                   </button>
 
@@ -1521,7 +1521,7 @@ export default function App() {
                       placeholder="es. Portineria Principale / Segreteria"
                       value={formData.ataOffice}
                       onChange={(e) => setFormData({ ...formData, ataOffice: e.target.value })}
-                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-amber-500"
+                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-orange-500"
                     />
                   </div>
                 )}
@@ -1641,7 +1641,7 @@ export default function App() {
                 onClick={() => window.print()}
                 className="bg-blue-950 text-white text-xs font-bold px-3 py-2 rounded-xl flex items-center gap-1.5 shadow"
               >
-                <Printer className="w-4 h-4 text-amber-400" /> Stampa Foglio
+                <Printer className="w-4 h-4 text-orange-400" /> Stampa Foglio
               </button>
             </div>
 
@@ -1670,7 +1670,7 @@ export default function App() {
       <footer className="bg-blue-950 text-blue-200 border-t border-blue-900 py-8 px-4 text-center text-xs">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <School className="w-4 h-4 text-amber-400" />
+            <School className="w-4 h-4 text-orange-400" />
             <span className="font-bold text-white">ITTS "E. Divini" • Merchandising Ufficiale</span>
           </div>
           <div>
