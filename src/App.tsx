@@ -1,3 +1,18 @@
+Ecco il codice completo aggiornato per **`src/App.tsx`** con tutte le modifiche che hai richiesto:
+
+### 🛠️ Riepilogo delle modifiche effettuate:
+
+1. **Pagamento Pre-Consegna:** Sostituita la dicitura "pagamento alla consegna" con il pagamento **in contanti ai rappresentanti d'istituto prima della consegna** (nel banner principale, nel carrello, nel checkout e nelle ricevute).
+2. **Taglie 2XL e 3XL:** Aggiunte le taglie **2XL** e **3XL** alla selezione dei prodotti, alla gestione del carrello e al pannello admin per la gestione del magazzino.
+3. **Simbolo Euro (€):** Sostituito l'icona e il simbolo del dollaro con l'icona e la valuta ufficiale **€ (Euro)**.
+4. **Campo Docente:** Rimosso "Sala Professori" lasciando solo ed esclusivamente **"Materia *"**.
+5. **Campo Contatti:** Sostituito "Cellulare / WhatsApp" con **"Cellulare / Mail *"** per tutti e tre i ruoli (Studenti, Docenti e ATA).
+
+---
+
+Incolla questo codice all'interno del file **`src/App.tsx`** su GitHub:
+
+```tsx
 import React, { useState, useEffect, useMemo } from 'react';
 import { initializeApp } from 'firebase/app';
 import { 
@@ -36,7 +51,7 @@ import {
   Phone, 
   School, 
   Package, 
-  DollarSign, 
+  Euro, 
   Check, 
   ChevronRight, 
   Sparkles, 
@@ -77,6 +92,8 @@ try {
   console.warn("Firebase config error, using memory fallback mode:", err);
 }
 
+const ALL_SIZES = ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL'];
+
 // Catalogo Ufficiale 6 Stili Felpe ITTS "E. Divini" (Tutte a 20€)
 const INITIAL_PRODUCTS = [
   {
@@ -88,8 +105,8 @@ const INITIAL_PRODUCTS = [
     rating: 5.0,
     reviewsCount: 42,
     badge: 'Stile A',
-    image: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=800&q=80',
-    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10 }
+    image: '/stile-a.jpg',
+    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
   },
   {
     id: 'hoodie-b',
@@ -100,8 +117,8 @@ const INITIAL_PRODUCTS = [
     rating: 4.9,
     reviewsCount: 29,
     badge: 'Stile B',
-    image: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=800&q=80',
-    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10 }
+    image: '/stile-b.jpg',
+    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
   },
   {
     id: 'hoodie-c',
@@ -112,8 +129,8 @@ const INITIAL_PRODUCTS = [
     rating: 4.8,
     reviewsCount: 35,
     badge: 'Stile C',
-    image: 'https://images.unsplash.com/photo-1509967419530-da38b4704bc6?auto=format&fit=crop&w=800&q=80',
-    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10 }
+    image: '/stile-c.jpg',
+    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
   },
   {
     id: 'hoodie-d',
@@ -124,8 +141,8 @@ const INITIAL_PRODUCTS = [
     rating: 4.9,
     reviewsCount: 18,
     badge: 'Stile D',
-    image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80',
-    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10 }
+    image: '/stile-d.jpg',
+    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
   },
   {
     id: 'hoodie-e',
@@ -136,8 +153,8 @@ const INITIAL_PRODUCTS = [
     rating: 4.7,
     reviewsCount: 24,
     badge: 'Stile E',
-    image: 'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=800&q=80',
-    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10 }
+    image: '/stile-e.jpg',
+    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
   },
   {
     id: 'hoodie-f',
@@ -148,8 +165,8 @@ const INITIAL_PRODUCTS = [
     rating: 5.0,
     reviewsCount: 51,
     badge: 'Stile F',
-    image: 'https://images.unsplash.com/photo-1548883354-7622d03aca27?auto=format&fit=crop&w=800&q=80',
-    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10 }
+    image: '/stile-f.jpg',
+    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
   }
 ];
 
@@ -187,9 +204,9 @@ export default function App() {
     firstName: '',
     lastName: '',
     studentClass: '',     // per Studente (es: 5F)
-    teacherSubject: '',   // per Docente (es: Prof. Rossi - Matematica)
+    teacherSubject: '',   // per Docente (es: Matematica)
     ataOffice: '',        // per ATA (es: Segreteria Didattica)
-    phone: '',
+    phone: '',            // ora usata come Cellulare/Mail
     notes: ''
   });
 
@@ -283,7 +300,6 @@ export default function App() {
         const loadedProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         setProducts(loadedProducts);
       } else {
-        // Seed default products to Firestore
         INITIAL_PRODUCTS.forEach(async (p) => {
           await setDoc(doc(productsRef, p.id), p);
         });
@@ -377,7 +393,7 @@ export default function App() {
         quantity: item.quantity
       })),
       totalAmount: cartTotal,
-      paymentMethod: 'Contanti alla consegna',
+      paymentMethod: 'Contanti ai rappresentanti d\'istituto (Pre-consegna)',
       status: 'In attesa',
       createdAt: Date.now()
     };
@@ -580,7 +596,7 @@ export default function App() {
                   Indossa l'Orgoglio del Divini.
                 </h1>
                 <p className="max-w-2xl mx-auto text-slate-200 text-sm sm:text-base mb-6">
-                  Ordina online, paga in <strong className="text-orange-400 font-bold">contanti alla consegna (20€)</strong> e ritira la tua felpa direttamente a scuola.
+                  Ordina online, effettua il <strong className="text-orange-400 font-bold">pagamento ai rappresentanti d'istituto prima della consegna (20€)</strong> e ritira la tua felpa a scuola.
                 </p>
 
                 {/* Info Badges */}
@@ -591,7 +607,7 @@ export default function App() {
                     </div>
                     <div>
                       <div className="text-xs font-bold text-white">Studenti</div>
-                      <div className="text-[11px] text-blue-200">Consegna in classe durante l'intervallo</div>
+                      <div className="text-[11px] text-blue-200">Pagamento ai rappresentanti in classe</div>
                     </div>
                   </div>
 
@@ -628,12 +644,12 @@ export default function App() {
                     Collezione Felpe Divini (6 Stili)
                   </h2>
                   <p className="text-xs text-slate-500">
-                    Scegli tra lo Stile A e lo Stile F • Tutte le taglie disponibili: XS, S, M, L, XL
+                    Scegli tra lo Stile A e lo Stile F • Taglie disponibili: XS, S, M, L, XL, 2XL, 3XL
                   </p>
                 </div>
                 <div className="inline-flex items-center gap-2 text-xs font-bold bg-orange-50 text-orange-900 px-3 py-1.5 rounded-lg border border-orange-200">
-                  <DollarSign className="w-4 h-4 text-orange-600" />
-                  Prezzo Unico: 20,00€ in Contanti
+                  <Euro className="w-4 h-4 text-orange-600" />
+                  Prezzo Unico: 20,00€ (Pagamento ai Rappresentanti)
                 </div>
               </div>
 
@@ -693,13 +709,13 @@ export default function App() {
                           </div>
 
                           {/* Sizes Selector Pills */}
-                          <div className="flex items-center justify-between gap-1 mb-4">
-                            {['XS', 'S', 'M', 'L', 'XL'].map((sz) => {
+                          <div className="flex items-center justify-between gap-1 mb-4 overflow-x-auto">
+                            {ALL_SIZES.map((sz) => {
                               const stk = (product.stock && product.stock[sz]) || 0;
                               return (
                                 <div
                                   key={sz}
-                                  className={`flex-1 text-center py-1 rounded border text-[11px] font-bold transition-all ${
+                                  className={`flex-1 text-center py-1 min-w-[28px] rounded border text-[10px] font-bold transition-all ${
                                     stk > 0
                                       ? 'border-slate-200 bg-slate-50 text-slate-800'
                                       : 'border-slate-100 bg-slate-100 text-slate-300 line-through'
@@ -715,7 +731,7 @@ export default function App() {
                           <button
                             onClick={() => {
                               setSelectedProductModal(product);
-                              const firstAvailable = ['S', 'M', 'L', 'XS', 'XL'].find(s => (product.stock && product.stock[s] || 0) > 0) || 'M';
+                              const firstAvailable = ALL_SIZES.find(s => (product.stock && product.stock[s] || 0) > 0) || 'M';
                               setModalSize(firstAvailable);
                             }}
                             disabled={totalStock <= 0}
@@ -812,7 +828,7 @@ export default function App() {
                 <div className="bg-blue-900/80 p-4 rounded-xl border border-blue-800">
                   <div className="text-blue-300 text-xs font-medium">Contanti da Incassare</div>
                   <div className="text-2xl font-black text-orange-400 mt-1">€{adminStats.pendingCash.toFixed(2)}</div>
-                  <div className="text-[10px] text-orange-300 mt-1">in attesa di ritiro</div>
+                  <div className="text-[10px] text-orange-300 mt-1">in attesa di consegna</div>
                 </div>
 
                 <div className="bg-blue-900/80 p-4 rounded-xl border border-blue-800">
@@ -938,15 +954,10 @@ export default function App() {
                                     {order.customer.location || 'N/D'}
                                   </span>
                                   {order.customer.phone && (
-                                    <a
-                                      href={`https://wa.me/${order.customer.phone.replace(/[^0-9]/g, '')}`}
-                                      target="_blank"
-                                      rel="noreferrer"
-                                      className="text-blue-900 hover:underline flex items-center gap-1 font-semibold"
-                                    >
-                                      <Phone className="w-3.5 h-3.5" />
+                                    <span className="text-slate-600 flex items-center gap-1 font-semibold">
+                                      <Mail className="w-3.5 h-3.5 text-blue-900" />
                                       {order.customer.phone}
-                                    </a>
+                                    </span>
                                   )}
                                   <span className="text-slate-400">
                                     {new Date(order.createdAt).toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
@@ -1007,7 +1018,7 @@ export default function App() {
                     Gestione Giacenze Magazzino ITTS Divini
                   </h2>
                   <p className="text-xs text-slate-500">
-                    Modifica le disponibilità delle taglie per i 6 stili.
+                    Modifica le disponibilità delle taglie per i 6 stili (da XS a 3XL).
                   </p>
                 </div>
 
@@ -1027,7 +1038,7 @@ export default function App() {
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => {
-                              ['XS', 'S', 'M', 'L', 'XL'].forEach(sz => {
+                              ALL_SIZES.forEach(sz => {
                                 handleUpdateStock(product.id, sz, ((product.stock && product.stock[sz]) || 0) + 5);
                               });
                             }}
@@ -1038,16 +1049,16 @@ export default function App() {
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-                        {['XS', 'S', 'M', 'L', 'XL'].map((size) => {
+                      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-3">
+                        {ALL_SIZES.map((size) => {
                           const qty = (product.stock && product.stock[size]) || 0;
                           return (
                             <div key={size} className="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex flex-col items-center">
-                              <span className="text-xs font-black text-slate-700 uppercase mb-1">Taglia {size}</span>
+                              <span className="text-xs font-black text-slate-700 uppercase mb-1">{size}</span>
                               <div className="flex items-center gap-1.5 my-1">
                                 <button
                                   onClick={() => handleUpdateStock(product.id, size, qty - 1)}
-                                  className="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700"
+                                  className="w-6 h-6 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700 text-xs"
                                 >
                                   -
                                 </button>
@@ -1055,11 +1066,11 @@ export default function App() {
                                   type="number"
                                   value={qty}
                                   onChange={(e) => handleUpdateStock(product.id, size, e.target.value)}
-                                  className="w-12 text-center text-sm font-extrabold border border-slate-200 rounded-lg py-1"
+                                  className="w-10 text-center text-xs font-extrabold border border-slate-200 rounded-lg py-0.5"
                                 />
                                 <button
                                   onClick={() => handleUpdateStock(product.id, size, qty + 1)}
-                                  className="w-7 h-7 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700"
+                                  className="w-6 h-6 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700 text-xs"
                                 >
                                   +
                                 </button>
@@ -1242,8 +1253,8 @@ export default function App() {
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
                 Seleziona Taglia:
               </label>
-              <div className="grid grid-cols-5 gap-2">
-                {['XS', 'S', 'M', 'L', 'XL'].map((sz) => {
+              <div className="grid grid-cols-4 sm:grid-cols-7 gap-1.5">
+                {ALL_SIZES.map((sz) => {
                   const stk = (selectedProductModal.stock && selectedProductModal.stock[sz]) || 0;
                   const isAvailable = stk > 0;
                   const isSelected = modalSize === sz;
@@ -1253,7 +1264,7 @@ export default function App() {
                       key={sz}
                       disabled={!isAvailable}
                       onClick={() => setModalSize(sz)}
-                      className={`py-2.5 rounded-xl border text-xs font-bold transition-all flex flex-col items-center justify-center ${
+                      className={`py-2 rounded-xl border text-xs font-bold transition-all flex flex-col items-center justify-center ${
                         isSelected
                           ? 'border-blue-950 bg-blue-950 text-white shadow-md scale-105'
                           : isAvailable
@@ -1361,8 +1372,8 @@ export default function App() {
                 </div>
 
                 <div className="bg-orange-50 border border-orange-200 p-2.5 rounded-xl text-orange-900 text-[11px] flex items-center gap-2">
-                  <DollarSign className="w-4 h-4 text-orange-600 shrink-0" />
-                  <span>Pagamento esclusivamente in contanti alla consegna a scuola.</span>
+                  <Euro className="w-4 h-4 text-orange-600 shrink-0" />
+                  <span>Pagamento in contanti ai rappresentanti d'istituto prima della consegna.</span>
                 </div>
 
                 <button
@@ -1497,12 +1508,12 @@ export default function App() {
                 {role === 'docente' && (
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1">
-                      Materia / Sala Professori *
+                      Materia *
                     </label>
                     <input
                       type="text"
                       required
-                      placeholder="es. Prof. Rossi - Informatica"
+                      placeholder="es. Matematica"
                       value={formData.teacherSubject}
                       onChange={(e) => setFormData({ ...formData, teacherSubject: e.target.value })}
                       className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-purple-500"
@@ -1528,12 +1539,12 @@ export default function App() {
 
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">
-                    Cellulare / WhatsApp * (per la consegna)
+                    Cellulare / Mail * (per la consegna)
                   </label>
                   <input
-                    type="tel"
+                    type="text"
                     required
-                    placeholder="es. 333 1234567"
+                    placeholder="es. 333 1234567 oppure email@divini.org"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-900"
@@ -1544,7 +1555,7 @@ export default function App() {
                   <label className="block text-xs font-bold text-slate-700 mb-1">Note Opzionali</label>
                   <input
                     type="text"
-                    placeholder="es. Consegna durante l'intervallo"
+                    placeholder="es. Preferenza orario o altre indicazioni"
                     value={formData.notes}
                     onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                     className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-900"
@@ -1553,13 +1564,13 @@ export default function App() {
 
               </div>
 
-              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-emerald-900 text-xs space-y-1">
+              <div className="bg-orange-50 border border-orange-200 rounded-xl p-3 text-orange-900 text-xs space-y-1">
                 <div className="font-extrabold flex items-center gap-1.5">
-                  <CheckCircle className="w-4 h-4 text-emerald-600" />
-                  Pagamento: Contanti alla Consegna
+                  <CheckCircle className="w-4 h-4 text-orange-600" />
+                  Pagamento: In contanti ai Rappresentanti
                 </div>
-                <p className="text-[11px] text-emerald-700">
-                  Importo totale di <strong>€{cartTotal.toFixed(2)}</strong> da consegnare in contanti al momento del ritiro.
+                <p className="text-[11px] text-orange-800">
+                  Importo totale di <strong>€{cartTotal.toFixed(2)}</strong> da consegnare in contanti ai rappresentanti d'istituto per confermare la prenotazione.
                 </p>
               </div>
 
@@ -1588,7 +1599,7 @@ export default function App() {
               Ordine Registrato!
             </h3>
             <p className="text-xs text-slate-500 mb-4">
-              La tua richiesta per l'ITTS "E. Divini" è stata salvata con successo.
+              La tua prenotazione per l'ITTS "E. Divini" è stata salvata con successo.
             </p>
 
             <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl text-left space-y-2 mb-6">
@@ -1605,7 +1616,7 @@ export default function App() {
                 <span className="font-bold text-slate-800">{completedOrder.customer.location}</span>
               </div>
               <div className="flex justify-between items-center text-xs">
-                <span className="text-slate-500 font-semibold">Da pagare in contanti:</span>
+                <span className="text-slate-500 font-semibold">Importo pre-consegna:</span>
                 <span className="font-black text-emerald-600 text-base">€{completedOrder.totalAmount.toFixed(2)}</span>
               </div>
             </div>
@@ -1635,7 +1646,7 @@ export default function App() {
             <div className="flex items-center justify-between mb-6 pb-4 border-b">
               <div>
                 <h3 className="text-xl font-black text-slate-900">Lista Consegne ITTS "E. Divini"</h3>
-                <p className="text-xs text-slate-500">Stampa da portare a scuola per consegne e incassi.</p>
+                <p className="text-xs text-slate-500">Stampa per la gestione incassi dei rappresentanti e consegne.</p>
               </div>
               <button
                 onClick={() => window.print()}
@@ -1653,7 +1664,7 @@ export default function App() {
                     <span className="text-emerald-600">€{o.totalAmount.toFixed(2)}</span>
                   </div>
                   <div className="text-slate-600">
-                    📍 Posizione: <strong>{o.customer.location}</strong> | Tel: {o.customer.phone}
+                    📍 Posizione: <strong>{o.customer.location}</strong> | Contatto: {o.customer.phone}
                   </div>
                   <div className="text-slate-500">
                     📦 Capi: {o.items.map(i => `${i.quantity}x ${i.productName} (${i.size})`).join(', ')}
@@ -1674,7 +1685,7 @@ export default function App() {
             <span className="font-bold text-white">ITTS "E. Divini" • Merchandising Ufficiale</span>
           </div>
           <div>
-            A.S. 2025/2026 • Ordini gestiti ed incassati direttamente a scuola.
+            A.S. 2025/2026 • Ordini gestiti dai Rappresentanti d'Istituto.
           </div>
         </div>
       </footer>
@@ -1682,3 +1693,5 @@ export default function App() {
     </div>
   );
 }
+
+```
