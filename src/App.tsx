@@ -79,7 +79,7 @@ try {
 
 const ALL_SIZES = ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL'];
 
-// Catalogo Ufficiale 6 Stili Felpe ITTS "E. Divini" (Tutte a 20€)
+// Catalogo Ufficiale 11 Stili Felpe ITTS "E. Divini" (Tutte a 20€)
 const INITIAL_PRODUCTS = [
   {
     id: 'hoodie-a',
@@ -152,6 +152,66 @@ const INITIAL_PRODUCTS = [
     badge: 'Stile F',
     image: '/stile-f.jpg',
     stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
+  },
+  {
+    id: 'hoodie-g',
+    name: 'Felpa Stile G',
+    tagline: 'Edizione Speciale Divini Sport',
+    description: 'Felpa tecnica ad alta vestibilità per le attività sportive d\'istituto e il tempo libero.',
+    price: 20.00,
+    rating: 4.9,
+    reviewsCount: 15,
+    badge: 'Stile G',
+    image: '/stile-g.jpg',
+    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
+  },
+  {
+    id: 'hoodie-h',
+    name: 'Felpa Stile H',
+    tagline: 'Design Urban con Cappuccio Rinforzato',
+    description: 'Modello streetwear con cordini ad alto spessore e finiture di pregio.',
+    price: 20.00,
+    rating: 4.8,
+    reviewsCount: 22,
+    badge: 'Stile H',
+    image: '/stile-h.jpg',
+    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
+  },
+  {
+    id: 'hoodie-i',
+    name: 'Felpa Stile I',
+    tagline: 'Linea Tech con Taschino Zip',
+    description: 'Felpa funzionale con tasca con cerniera per riporre in sicurezza piccoli oggetti.',
+    price: 20.00,
+    rating: 5.0,
+    reviewsCount: 30,
+    badge: 'Stile I',
+    image: '/stile-i.jpg',
+    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
+  },
+  {
+    id: 'hoodie-j',
+    name: 'Felpa Stile J',
+    tagline: 'Modello Bicolore Contrast Edition',
+    description: 'Design moderno con contrasto di colore sulle maniche e interno del cappuccio.',
+    price: 20.00,
+    rating: 4.7,
+    reviewsCount: 19,
+    badge: 'Stile J',
+    image: '/stile-j.jpg',
+    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
+  },
+  {
+    id: 'hoodie-k',
+    name: 'Felpa Stile K',
+    tagline: 'Edizione Limitata d\'Istituto',
+    description: 'Stile esclusivo con dettagli personalizzati dedicati agli studenti e docenti del Divini.',
+    price: 20.00,
+    rating: 5.0,
+    reviewsCount: 38,
+    badge: 'Stile K',
+    image: '/stile-k.jpg',
+    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
   }
 ];
 
@@ -191,7 +251,7 @@ export default function App() {
     studentClass: '',     // per Studente (es: 5F)
     teacherSubject: '',   // per Docente (es: Matematica)
     ataOffice: '',        // per ATA (es: Segreteria Didattica)
-    phone: '',            // ora usata come Cellulare/Mail
+    phone: '',            // Cellulare / Mail
     notes: ''
   });
 
@@ -626,10 +686,10 @@ export default function App() {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 border-b border-slate-200 pb-4">
                 <div>
                   <h2 className="text-2xl font-black text-slate-900 tracking-tight">
-                    Collezione Felpe Divini (6 Stili)
+                    Collezione Felpe Divini (11 Stili)
                   </h2>
                   <p className="text-xs text-slate-500">
-                    Scegli tra lo Stile A e lo Stile F • Taglie disponibili: XS, S, M, L, XL, 2XL, 3XL
+                    Scegli tra lo Stile A e lo Stile K • Taglie disponibili: XS, S, M, L, XL, 2XL, 3XL
                   </p>
                 </div>
                 <div className="inline-flex items-center gap-2 text-xs font-bold bg-orange-50 text-orange-900 px-3 py-1.5 rounded-lg border border-orange-200">
@@ -638,7 +698,7 @@ export default function App() {
                 </div>
               </div>
 
-              {/* 6 Hoodies Grid */}
+              {/* 11 Hoodies Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {products.map((product) => {
                   const totalStock = Object.values(product.stock || {}).reduce((a, b) => a + b, 0);
@@ -1003,7 +1063,7 @@ export default function App() {
                     Gestione Giacenze Magazzino ITTS Divini
                   </h2>
                   <p className="text-xs text-slate-500">
-                    Modifica le disponibilità delle taglie per i 6 stili (da XS a 3XL).
+                    Modifica le disponibilità delle taglie per gli 11 stili (da XS a 3XL).
                   </p>
                 </div>
 
@@ -1301,7 +1361,7 @@ export default function App() {
                 <div className="text-center py-12 text-slate-400">
                   <ShoppingBag className="w-12 h-12 mx-auto mb-3 opacity-30" />
                   <p className="text-sm font-semibold">Il carrello è vuoto.</p>
-                  <p className="text-xs text-slate-400 mt-1">Scegli uno dei 6 stili per prenotare.</p>
+                  <p className="text-xs text-slate-400 mt-1">Scegli uno dei 11 stili per prenotare.</p>
                 </div>
               ) : (
                 cart.map((item, idx) => (
