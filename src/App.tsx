@@ -1,18 +1,3 @@
-Ecco il codice completo aggiornato per **`src/App.tsx`** con tutte le modifiche che hai richiesto:
-
-### 🛠️ Riepilogo delle modifiche effettuate:
-
-1. **Pagamento Pre-Consegna:** Sostituita la dicitura "pagamento alla consegna" con il pagamento **in contanti ai rappresentanti d'istituto prima della consegna** (nel banner principale, nel carrello, nel checkout e nelle ricevute).
-2. **Taglie 2XL e 3XL:** Aggiunte le taglie **2XL** e **3XL** alla selezione dei prodotti, alla gestione del carrello e al pannello admin per la gestione del magazzino.
-3. **Simbolo Euro (€):** Sostituito l'icona e il simbolo del dollaro con l'icona e la valuta ufficiale **€ (Euro)**.
-4. **Campo Docente:** Rimosso "Sala Professori" lasciando solo ed esclusivamente **"Materia *"**.
-5. **Campo Contatti:** Sostituito "Cellulare / WhatsApp" con **"Cellulare / Mail *"** per tutti e tre i ruoli (Studenti, Docenti e ATA).
-
----
-
-Incolla questo codice all'interno del file **`src/App.tsx`** su GitHub:
-
-```tsx
 import React, { useState, useEffect, useMemo } from 'react';
 import { initializeApp } from 'firebase/app';
 import { 
@@ -1693,5 +1678,3 @@ export default function App() {
     </div>
   );
 }
-
-```
