@@ -591,7 +591,7 @@ export default function App() {
                     </div>
                     <div>
                       <div className="text-xs font-bold text-white">Studenti</div>
-                      <div className="text-[11px] text-blue-200">Pagamento in contanti ai rappresentanti </div>
+                      <div className="text-[11px] text-blue-200">consegna in portineria/classe </div>
                     </div>
                   </div>
 
