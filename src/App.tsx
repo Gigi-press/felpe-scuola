@@ -134,7 +134,7 @@ export default function App() {
   // Navigation & View States
   const [currentView, setCurrentView] = useState('shop'); // 'shop' | 'admin'
   const [activeAdminTab, setActiveAdminTab] = useState('orders'); // 'orders' | 'inventory'
-
+  const [logoError, setLogoError] = useState(false);
   // Admin Authentication States
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
   const [isAdminPasswordModalOpen, setIsAdminPasswordModalOpen] = useState(false);
@@ -488,18 +488,19 @@ export default function App() {
           {/* Center/Right Navigation & School Logo Placeholder */}
           <div className="flex items-center gap-3 sm:gap-4">
             
-            {/* PLACEHOLDER LOGO SCUOLA / LISTA RAPPRESENTANTI */}
-            <div className="hidden md:flex items-center gap-2 border border-blue-800/80 bg-blue-900/40 backdrop-blur px-3 py-1.5 rounded-xl text-blue-200 text-xs">
-              <div className="w-8 h-8 rounded-lg bg-orange-500/20 border border-orange-500/30 flex items-center justify-center text-orange-400 font-bold overflow-hidden">
-                <img 
-                  src="/logo-lista.png" 
-                  alt="Logo Scuola / Lista" 
-                  className="w-full h-full object-contain"
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                  }}
-                />
-                <ImageIcon className="w-4 h-4 text-orange-400" />
+           {/* LOGO SCUOLA / LISTA RAPPRESENTANTI */}
+            <div className="hidden md:flex items-center gap-2.5 border border-blue-800/80 bg-blue-900/40 backdrop-blur px-3 py-1.5 rounded-xl text-blue-200 text-xs">
+              <div className="w-9 h-9 rounded-lg bg-white p-0.5 border border-white/20 flex items-center justify-center overflow-hidden shrink-0 shadow-sm">
+                {!logoError ? (
+                  <img 
+                    src="/logo-lista.png" 
+                    alt="Logo Lista Divini" 
+                    className="w-full h-full object-contain rounded-md"
+                    onError={() => setLogoError(true)}
+                  />
+                ) : (
+                  <ImageIcon className="w-5 h-5 text-orange-400" />
+                )}
               </div>
               <div className="text-left leading-tight">
                 <div className="font-extrabold text-white text-[11px]">Rappresentanti Divini</div>
