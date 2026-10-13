@@ -20,43 +20,31 @@ import {
 import { 
   ShoppingBag, 
   ShoppingCart, 
-  User, 
   GraduationCap, 
-  Briefcase, 
-  Wrench, 
   Search, 
-  Filter, 
   CheckCircle, 
-  Clock, 
-  XCircle, 
-  Plus, 
-  Minus, 
   Trash2, 
   Printer, 
-  Phone, 
   School, 
   Package, 
   Euro, 
-  Check, 
   ChevronRight, 
   Sparkles, 
   ShieldCheck, 
   AlertCircle, 
   X, 
-  RefreshCw,
-  SlidersHorizontal,
-  Info,
-  Building2,
-  BookOpen,
-  Lock,
-  Key,
-  LogOut,
-  Eye,
-  EyeOff,
-  Mail
+  SlidersHorizontal, 
+  Building2, 
+  BookOpen, 
+  Lock, 
+  Key, 
+  LogOut, 
+  Mail,
+  Tag,
+  Image as ImageIcon
 } from 'lucide-react';
 
-// Configuration Config di Firebase dal tuo progetto felpescarti-as26-27
+// Firebase Config del progetto felpescarti-as26-27
 const firebaseConfig = {
   apiKey: "AIzaSyBWM8Ik7WWlYjn7XRW5hQnKptm4OrBVszo",
   authDomain: "felpescarti-as26-27.firebaseapp.com",
@@ -79,16 +67,19 @@ try {
 
 const ALL_SIZES = ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL'];
 
-// Catalogo Ufficiale 11 Stili Felpe ITTS "E. Divini" (Tutte a 20€)
+// Descrizione Universale per tutte le felpe
+const UNIVERSAL_TAGLINE = "Felpa ufficiale d'istituto unisex con cappuccio e tasca a marsupio";
+const UNIVERSAL_DESCRIPTION = "Felpa unisex in cotone morbido e resistente con cappuccio e tasca frontale a marsupio. Design esclusivo caratterizzato dallo stemma ufficiale Divini sul petto e dall'iconica maxi-grafica verticale \"DIVINI\" stampata sulla schiena. Vestibilità comoda, ideale sia per la scuola che per il tempo libero.";
+
+// Catalogo 6 Stili Felpe Attivi - Divini (Prezzo 20€ scontato da 25€)
 const INITIAL_PRODUCTS = [
   {
     id: 'hoodie-a',
     name: 'Felpa Stile A',
-    tagline: 'Lo stile iconico d\'istituto con logo ufficiale',
-    description: 'Felpa unisex in cotone pettinato pesante. Interno garzato caldo e morbido con stemma ufficiale ITTS E. Divini sul petto.',
+    tagline: UNIVERSAL_TAGLINE,
+    description: UNIVERSAL_DESCRIPTION,
+    originalPrice: 25.00,
     price: 20.00,
-    rating: 5.0,
-    reviewsCount: 42,
     badge: 'Stile A',
     image: '/stile-a.jpg',
     stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
@@ -96,11 +87,10 @@ const INITIAL_PRODUCTS = [
   {
     id: 'hoodie-b',
     name: 'Felpa Stile B',
-    tagline: 'Ispirazione campus con dettagli bicolore',
-    description: 'Design dinamico stile universitario con rifiniture a contrasto. Perfetta per rappresentare la scuola con stile.',
+    tagline: UNIVERSAL_TAGLINE,
+    description: UNIVERSAL_DESCRIPTION,
+    originalPrice: 25.00,
     price: 20.00,
-    rating: 4.9,
-    reviewsCount: 29,
     badge: 'Stile B',
     image: '/stile-b.jpg',
     stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
@@ -108,11 +98,10 @@ const INITIAL_PRODUCTS = [
   {
     id: 'hoodie-c',
     name: 'Felpa Stile C',
-    tagline: 'Linea pulita ed essenziale con micro-logo',
-    description: 'Design sobrio ed elegante, amato sia dagli studenti che dai docenti. Tessuto traspirante con cappuccio strutturato.',
+    tagline: UNIVERSAL_TAGLINE,
+    description: UNIVERSAL_DESCRIPTION,
+    originalPrice: 25.00,
     price: 20.00,
-    rating: 4.8,
-    reviewsCount: 35,
     badge: 'Stile C',
     image: '/stile-c.jpg',
     stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
@@ -120,11 +109,10 @@ const INITIAL_PRODUCTS = [
   {
     id: 'hoodie-d',
     name: 'Felpa Stile D',
-    tagline: 'Taglio oversize moderno a spalle scivolate',
-    description: 'Vestibilità comoda e di tendenza per il tempo libero e per le giornate a scuola. Tessuto calandrato anti-pilling.',
+    tagline: UNIVERSAL_TAGLINE,
+    description: UNIVERSAL_DESCRIPTION,
+    originalPrice: 25.00,
     price: 20.00,
-    rating: 4.9,
-    reviewsCount: 18,
     badge: 'Stile D',
     image: '/stile-d.jpg',
     stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
@@ -132,11 +120,10 @@ const INITIAL_PRODUCTS = [
   {
     id: 'hoodie-e',
     name: 'Felpa Stile E',
-    tagline: 'Effetto retrò con tasca a marsupio anatomica',
-    description: 'Particolare lavorazione del tessuto per un affascinante effetto vintage. Bordo e polsini a coste rinforzate.',
+    tagline: UNIVERSAL_TAGLINE,
+    description: UNIVERSAL_DESCRIPTION,
+    originalPrice: 25.00,
     price: 20.00,
-    rating: 4.7,
-    reviewsCount: 24,
     badge: 'Stile E',
     image: '/stile-e.jpg',
     stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
@@ -144,73 +131,12 @@ const INITIAL_PRODUCTS = [
   {
     id: 'hoodie-f',
     name: 'Felpa Stile F',
-    tagline: 'Massima praticità con zip metallica ad alta resistenza',
-    description: 'Versione con cerniera integrale, ideale per le mezze stagioni. Tasche frontali capienti e cuciture a triplo ago.',
+    tagline: UNIVERSAL_TAGLINE,
+    description: UNIVERSAL_DESCRIPTION,
+    originalPrice: 25.00,
     price: 20.00,
-    rating: 5.0,
-    reviewsCount: 51,
     badge: 'Stile F',
     image: '/stile-f.jpg',
-    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
-  },
-  {
-    id: 'hoodie-g',
-    name: 'Felpa Stile G',
-    tagline: 'Edizione Speciale Divini Sport',
-    description: 'Felpa tecnica ad alta vestibilità per le attività sportive d\'istituto e il tempo libero.',
-    price: 20.00,
-    rating: 4.9,
-    reviewsCount: 15,
-    badge: 'Stile G',
-    image: '/stile-g.jpg',
-    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
-  },
-  {
-    id: 'hoodie-h',
-    name: 'Felpa Stile H',
-    tagline: 'Design Urban con Cappuccio Rinforzato',
-    description: 'Modello streetwear con cordini ad alto spessore e finiture di pregio.',
-    price: 20.00,
-    rating: 4.8,
-    reviewsCount: 22,
-    badge: 'Stile H',
-    image: '/stile-h.jpg',
-    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
-  },
-  {
-    id: 'hoodie-i',
-    name: 'Felpa Stile I',
-    tagline: 'Linea Tech con Taschino Zip',
-    description: 'Felpa funzionale con tasca con cerniera per riporre in sicurezza piccoli oggetti.',
-    price: 20.00,
-    rating: 5.0,
-    reviewsCount: 30,
-    badge: 'Stile I',
-    image: '/stile-i.jpg',
-    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
-  },
-  {
-    id: 'hoodie-j',
-    name: 'Felpa Stile J',
-    tagline: 'Modello Bicolore Contrast Edition',
-    description: 'Design moderno con contrasto di colore sulle maniche e interno del cappuccio.',
-    price: 20.00,
-    rating: 4.7,
-    reviewsCount: 19,
-    badge: 'Stile J',
-    image: '/stile-j.jpg',
-    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
-  },
-  {
-    id: 'hoodie-k',
-    name: 'Felpa Stile K',
-    tagline: 'Edizione Limitata d\'Istituto',
-    description: 'Stile esclusivo con dettagli personalizzati dedicati agli studenti e docenti del Divini.',
-    price: 20.00,
-    rating: 5.0,
-    reviewsCount: 38,
-    badge: 'Stile K',
-    image: '/stile-k.jpg',
     stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
   }
 ];
@@ -248,10 +174,10 @@ export default function App() {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
-    studentClass: '',     // per Studente (es: 5F)
-    teacherSubject: '',   // per Docente (es: Matematica)
-    ataOffice: '',        // per ATA (es: Segreteria Didattica)
-    phone: '',            // Cellulare / Mail
+    studentClass: '',
+    teacherSubject: '',
+    ataOffice: '',
+    phone: '',
     notes: ''
   });
 
@@ -343,7 +269,9 @@ export default function App() {
     const unsubProducts = onSnapshot(productsRef, (snapshot) => {
       if (!snapshot.empty) {
         const loadedProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setProducts(loadedProducts);
+        // Filtriamo solo i 6 stili principali A-F per nascondere i vecchi
+        const activeSix = loadedProducts.filter(p => ['hoodie-a', 'hoodie-b', 'hoodie-c', 'hoodie-d', 'hoodie-e', 'hoodie-f'].includes(p.id));
+        setProducts(activeSix.length > 0 ? activeSix : INITIAL_PRODUCTS);
       } else {
         INITIAL_PRODUCTS.forEach(async (p) => {
           await setDoc(doc(productsRef, p.id), p);
@@ -549,31 +477,55 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans flex flex-col antialiased">
       
-      {/* HEADER NAV - PALETTE ITTS E. DIVINI */}
+      {/* HEADER NAV - PALETTE DIVINI */}
       <header className="sticky top-0 z-40 bg-blue-950 text-white shadow-xl border-b border-blue-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
           
           {/* Logo & Divini Title */}
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => setCurrentView('shop')}>
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-orange-500 to-orange-400 flex items-center justify-center shadow-md">
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-orange-500 to-orange-400 flex items-center justify-center shadow-md">
               <School className="w-6 h-6 text-blue-950" />
             </div>
             <div>
-              <span className="text-xl font-black tracking-tight text-white">
-                ITTS "E. DIVINI"
+              <span className="text-xl sm:text-2xl font-black tracking-tight text-white block leading-tight">
+                FELPE DIVINI
               </span>
-              <span className="block text-[10px] font-bold tracking-wider text-orange-400 uppercase">
-                Felpe Ufficiali d'Istituto • 20€
+              <span className="text-[10px] sm:text-xs font-bold tracking-wider text-orange-400 uppercase flex items-center gap-1.5">
+                <span className="line-through text-blue-300">25€</span>
+                <span className="bg-orange-500 text-white px-1.5 py-0.5 rounded text-[10px] font-black">PROMO 20€</span>
               </span>
             </div>
           </div>
 
-          {/* Navigation Controls */}
-          <div className="flex items-center gap-3">
+          {/* Center/Right Navigation & School Logo Placeholder */}
+          <div className="flex items-center gap-3 sm:gap-4">
+            
+            {/* PLACEHOLDER LOGO SCUOLA / LISTA RAPPRESENTANTI */}
+            <div className="hidden md:flex items-center gap-2 border border-blue-800/80 bg-blue-900/40 backdrop-blur px-3 py-1.5 rounded-xl text-blue-200 text-xs">
+              {/* Sostituisci il tag sottostante con l'immagine reale del tuo logo */}
+              <div className="w-8 h-8 rounded-lg bg-orange-500/20 border border-orange-500/30 flex items-center justify-center text-orange-400 font-bold overflow-hidden">
+                <img 
+                  src="/logo-lista.png" 
+                  alt="Logo Scuola / Lista" 
+                  className="w-full h-full object-contain"
+                  onError={(e) => {
+                    // Fallback se l'immagine non viene trovata
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+                <ImageIcon className="w-4 h-4 text-orange-400" />
+              </div>
+              <div className="text-left leading-tight">
+                <div className="font-extrabold text-white text-[11px]">Rappresentanti Divini</div>
+                <div className="text-[9px] text-orange-300 uppercase font-semibold">Merchandising Ufficiale</div>
+              </div>
+            </div>
+
+            {/* Navigation Buttons */}
             <div className="bg-blue-900/80 p-1 rounded-xl border border-blue-800 flex items-center">
               <button
                 onClick={() => setCurrentView('shop')}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                   currentView === 'shop'
                     ? 'bg-orange-500 text-blue-950 shadow-md'
                     : 'text-slate-300 hover:text-white'
@@ -584,14 +536,14 @@ export default function App() {
               </button>
               <button
                 onClick={handleOpenAdmin}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                   currentView === 'admin'
                     ? 'bg-orange-500 text-blue-950 shadow-md'
                     : 'text-slate-300 hover:text-white'
                 }`}
               >
                 <SlidersHorizontal className="w-3.5 h-3.5" />
-                Pannello Admin
+                <span className="hidden sm:inline">Pannello</span> Admin
                 {isAdminAuthenticated ? (
                   <span className="w-2 h-2 rounded-full bg-emerald-400" title="Autenticato" />
                 ) : (
@@ -606,7 +558,7 @@ export default function App() {
             {currentView === 'shop' && (
               <button
                 onClick={() => setIsCartOpen(true)}
-                className="relative flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl text-xs shadow-md transition-all active:scale-95"
+                className="relative flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3.5 py-2 rounded-xl text-xs shadow-md transition-all active:scale-95"
               >
                 <ShoppingCart className="w-4 h-4" />
                 <span className="hidden sm:inline">Carrello</span>
@@ -627,21 +579,21 @@ export default function App() {
         {currentView === 'shop' ? (
           <div>
             
-            {/* HERO BANNER - ITTS E. DIVINI */}
+            {/* HERO BANNER - DIVINI */}
             <section className="relative bg-gradient-to-b from-blue-950 via-blue-900 to-slate-900 text-white py-12 px-4 sm:px-6 lg:px-8 overflow-hidden">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(249,115,22,0.15),transparent_50%)]" />
               <div className="max-w-7xl mx-auto relative z-10 text-center">
                 
-                <div className="inline-flex items-center gap-2 bg-orange-500/20 border border-orange-500/30 px-3 py-1.5 rounded-full text-orange-300 text-xs font-bold mb-4">
+                <div className="inline-flex items-center gap-2 bg-orange-500/20 border border-orange-500/30 px-3.5 py-1.5 rounded-full text-orange-300 text-xs font-bold mb-4">
                   <Sparkles className="w-3.5 h-3.5 text-orange-400" />
-                  Prenotazione Felpe Ufficiali ITTS "E. Divini"
+                  Prenotazione Felpe Ufficiali "Divini"
                 </div>
 
-                <h1 className="text-3xl sm:text-5xl font-black tracking-tight mb-4">
+                <h1 className="text-3xl sm:text-5xl font-black tracking-tight mb-3">
                   Indossa l'Orgoglio del Divini.
                 </h1>
                 <p className="max-w-2xl mx-auto text-slate-200 text-sm sm:text-base mb-6">
-                  Ordina online, effettua il <strong className="text-orange-400 font-bold">pagamento ai rappresentanti d'istituto prima della consegna (20€)</strong> e ritira la tua felpa a scuola.
+                  Ordina online al prezzo speciale promozionale di <strong className="text-orange-400 font-bold">20€ (invece di 25€)</strong>. Pagamento ai rappresentanti prima della consegna e ritiro comodo a scuola.
                 </p>
 
                 {/* Info Badges */}
@@ -662,7 +614,7 @@ export default function App() {
                     </div>
                     <div>
                       <div className="text-xs font-bold text-white">Docenti</div>
-                      <div className="text-[11px] text-blue-200">Consegna in Sala Professori</div>
+                      <div className="text-[11px] text-blue-200">Consegna dedicata per i docenti</div>
                     </div>
                   </div>
 
@@ -686,19 +638,20 @@ export default function App() {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 border-b border-slate-200 pb-4">
                 <div>
                   <h2 className="text-2xl font-black text-slate-900 tracking-tight">
-                    Collezione Felpe Divini (11 Stili)
+                    Nuova Collezione Felpe Divini
                   </h2>
                   <p className="text-xs text-slate-500">
-                    Scegli tra lo Stile A e lo Stile K • Taglie disponibili: XS, S, M, L, XL, 2XL, 3XL
+                    Scegli tra i 6 stili ufficiali • Taglie disponibili: XS, S, M, L, XL, 2XL, 3XL
                   </p>
                 </div>
-                <div className="inline-flex items-center gap-2 text-xs font-bold bg-orange-50 text-orange-900 px-3 py-1.5 rounded-lg border border-orange-200">
-                  <Euro className="w-4 h-4 text-orange-600" />
-                  Prezzo Unico: 20,00€ (Pagamento ai Rappresentanti)
+                
+                <div className="inline-flex items-center gap-2 text-xs font-bold bg-orange-50 text-orange-950 px-3.5 py-2 rounded-xl border border-orange-200 shadow-sm">
+                  <Tag className="w-4 h-4 text-orange-600" />
+                  <span>Prezzo Scontato: <strong className="line-through text-slate-400 font-semibold mr-1">25€</strong> <strong className="text-orange-600 font-black text-sm">20,00€</strong></span>
                 </div>
               </div>
 
-              {/* 11 Hoodies Grid */}
+              {/* 6 Hoodies Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {products.map((product) => {
                   const totalStock = Object.values(product.stock || {}).reduce((a, b) => a + b, 0);
@@ -719,10 +672,11 @@ export default function App() {
                             {product.badge}
                           </span>
                         </div>
-                        <div className="absolute top-3 right-3">
-                          <span className="bg-orange-500 text-white font-black text-xs px-3 py-1 rounded-full shadow">
-                            €20,00
-                          </span>
+                        
+                        {/* Discount Ribbon */}
+                        <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-orange-500 text-white font-black text-xs px-3 py-1 rounded-full shadow">
+                          <span className="line-through text-orange-200 text-[10px] font-semibold">€25</span>
+                          <span>€20,00</span>
                         </div>
                       </div>
 
@@ -739,7 +693,7 @@ export default function App() {
                             {product.tagline}
                           </p>
 
-                          <p className="text-xs text-slate-600 line-clamp-2 mb-4">
+                          <p className="text-xs text-slate-600 line-clamp-3 mb-4 leading-relaxed">
                             {product.description}
                           </p>
                         </div>
@@ -809,7 +763,7 @@ export default function App() {
               <div className="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-blue-900 gap-4">
                 <div>
                   <div className="flex items-center gap-2 text-orange-400 text-xs font-bold uppercase tracking-wider mb-1">
-                    <ShieldCheck className="w-4 h-4" /> Gestione ITTS "E. Divini"
+                    <ShieldCheck className="w-4 h-4" /> Gestione Divini
                   </div>
                   <h1 className="text-2xl font-black">Pannello Gestione Ordini & Incassi</h1>
                   {auth?.currentUser?.email && (
@@ -1060,10 +1014,10 @@ export default function App() {
               <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
                 <div className="mb-6 pb-4 border-b border-slate-100">
                   <h2 className="text-lg font-extrabold text-slate-900">
-                    Gestione Giacenze Magazzino ITTS Divini
+                    Gestione Giacenze Magazzino Divini
                   </h2>
                   <p className="text-xs text-slate-500">
-                    Modifica le disponibilità delle taglie per gli 11 stili (da XS a 3XL).
+                    Modifica le disponibilità delle taglie per i 6 stili (da XS a 3XL).
                   </p>
                 </div>
 
@@ -1076,7 +1030,10 @@ export default function App() {
                           <img src={product.image} alt={product.name} className="w-12 h-12 rounded-lg object-cover border" />
                           <div>
                             <h3 className="font-extrabold text-slate-900 text-base">{product.name}</h3>
-                            <span className="text-xs font-bold text-orange-600">€20,00</span>
+                            <span className="text-xs font-bold text-orange-600">
+                              <span className="line-through text-slate-400 mr-1">€25,00</span>
+                              €20,00
+                            </span>
                           </div>
                         </div>
 
@@ -1141,7 +1098,7 @@ export default function App() {
             <div className="w-16 h-16 bg-slate-200 text-slate-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <Lock className="w-8 h-8" />
             </div>
-            <h2 className="text-xl font-black text-slate-900 mb-2">Accesso Riservato ITTS Divini</h2>
+            <h2 className="text-xl font-black text-slate-900 mb-2">Accesso Riservato Divini</h2>
             <p className="text-xs text-slate-500 mb-6">
               Devi inserire le credenziali da amministratore per accedere a questa sezione.
             </p>
@@ -1171,7 +1128,7 @@ export default function App() {
             </div>
 
             <h3 className="text-xl font-black text-slate-900 mb-1">
-              Login Admin ITTS Divini
+              Login Admin Divini
             </h3>
             <p className="text-xs text-slate-500 mb-6">
               Inserisci Email e Password configurate nella tua console Firebase.
@@ -1225,7 +1182,7 @@ export default function App() {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
                   >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {showPassword ? <X className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
                   </button>
                 </div>
 
@@ -1284,13 +1241,16 @@ export default function App() {
                 <h3 className="font-extrabold text-slate-900 text-lg mt-1">
                   {selectedProductModal.name}
                 </h3>
-                <span className="text-lg font-black text-blue-950">
-                  €20,00
-                </span>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <span className="text-xs line-through text-slate-400 font-semibold">€25,00</span>
+                  <span className="text-lg font-black text-blue-950">
+                    €20,00
+                  </span>
+                </div>
               </div>
             </div>
 
-            <p className="text-xs text-slate-600 mb-5">
+            <p className="text-xs text-slate-600 mb-5 leading-relaxed">
               {selectedProductModal.description}
             </p>
 
@@ -1346,7 +1306,7 @@ export default function App() {
             <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-blue-950 text-white">
               <div className="flex items-center gap-2">
                 <ShoppingCart className="w-5 h-5 text-orange-400" />
-                <h2 className="font-extrabold text-base">Carrello ITTS Divini</h2>
+                <h2 className="font-extrabold text-base">Carrello Felpe Divini</h2>
               </div>
               <button
                 onClick={() => setIsCartOpen(false)}
@@ -1361,7 +1321,7 @@ export default function App() {
                 <div className="text-center py-12 text-slate-400">
                   <ShoppingBag className="w-12 h-12 mx-auto mb-3 opacity-30" />
                   <p className="text-sm font-semibold">Il carrello è vuoto.</p>
-                  <p className="text-xs text-slate-400 mt-1">Scegli uno dei 11 stili per prenotare.</p>
+                  <p className="text-xs text-slate-400 mt-1">Scegli uno dei 6 stili per prenotare.</p>
                 </div>
               ) : (
                 cart.map((item, idx) => (
@@ -1412,7 +1372,7 @@ export default function App() {
             {cart.length > 0 && (
               <div className="p-5 border-t border-slate-100 bg-slate-50 space-y-3">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="font-bold text-slate-600">Totale Contanti:</span>
+                  <span className="font-bold text-slate-600">Totale Promozionale:</span>
                   <span className="text-2xl font-black text-slate-900">€{cartTotal.toFixed(2)}</span>
                 </div>
 
@@ -1451,10 +1411,10 @@ export default function App() {
 
             <div className="flex items-center gap-2 mb-1">
               <School className="w-5 h-5 text-blue-950" />
-              <h2 className="text-xl font-black text-slate-900">Checkout Ordine ITTS "E. Divini"</h2>
+              <h2 className="text-xl font-black text-slate-900">Checkout Ordine Divini</h2>
             </div>
             <p className="text-xs text-slate-500 mb-6">
-              Inserisci i tuoi dati per il ritiro e la consegna a scuola.
+              Inserisci i tuoi dati per la prenotazione e il ritiro a scuola.
             </p>
 
             <form onSubmit={handlePlaceOrder} className="space-y-5">
@@ -1644,7 +1604,7 @@ export default function App() {
               Ordine Registrato!
             </h3>
             <p className="text-xs text-slate-500 mb-4">
-              La tua prenotazione per l'ITTS "E. Divini" è stata salvata con successo.
+              La tua prenotazione per la felpa Divini è stata salvata con successo.
             </p>
 
             <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl text-left space-y-2 mb-6">
@@ -1690,7 +1650,7 @@ export default function App() {
 
             <div className="flex items-center justify-between mb-6 pb-4 border-b">
               <div>
-                <h3 className="text-xl font-black text-slate-900">Lista Consegne ITTS "E. Divini"</h3>
+                <h3 className="text-xl font-black text-slate-900">Lista Consegne Divini</h3>
                 <p className="text-xs text-slate-500">Stampa per la gestione incassi dei rappresentanti e consegne.</p>
               </div>
               <button
@@ -1727,10 +1687,10 @@ export default function App() {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <School className="w-4 h-4 text-orange-400" />
-            <span className="font-bold text-white">ITTS "E. Divini" • Merchandising Ufficiale</span>
+            <span className="font-bold text-white">Scuola Divini • Merchandising Ufficiale</span>
           </div>
           <div>
-            A.S. 2025/2026 • Ordini gestiti dai Rappresentanti d'Istituto.
+            A.S. 2025/2026 • Ordini e consegne gestiti dai Rappresentanti d'Istituto.
           </div>
         </div>
       </footer>
