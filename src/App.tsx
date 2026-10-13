@@ -71,7 +71,7 @@ const ALL_SIZES = ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL'];
 const UNIVERSAL_TAGLINE = "Felpa ufficiale d'istituto unisex con cappuccio e tasca a marsupio";
 const UNIVERSAL_DESCRIPTION = "Felpa unisex in cotone morbido e resistente con cappuccio e tasca frontale a marsupio. Design esclusivo caratterizzato dallo stemma ufficiale Divini sul petto e dall'iconica maxi-grafica verticale \"DIVINI\" stampata sulla schiena. Vestibilità comoda, ideale sia per la scuola che per il tempo libero.";
 
-// Catalogo 5 Nuovi Stili Attivi (Da Stile G a Stile K) - Prezzo 20€ (da 25€)
+// Catalogo 5 Nuovi Stili Attivi (Da Stile G a Stile K) - Prezzo 20€ (scontato da 25€)
 const INITIAL_PRODUCTS = [
   {
     id: 'hoodie-g',
@@ -135,6 +135,7 @@ export default function App() {
   const [currentView, setCurrentView] = useState('shop'); // 'shop' | 'admin'
   const [activeAdminTab, setActiveAdminTab] = useState('orders'); // 'orders' | 'inventory'
   const [logoError, setLogoError] = useState(false);
+
   // Admin Authentication States
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
   const [isAdminPasswordModalOpen, setIsAdminPasswordModalOpen] = useState(false);
@@ -463,33 +464,33 @@ export default function App() {
   }, [orders, roleFilter, statusFilter, searchQuery]);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans flex flex-col antialiased">
+    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans flex flex-col antialiased overflow-x-hidden">
       
-      {/* HEADER NAV - PALETTE DIVINI */}
+      {/* HEADER NAV - RESPONSIVE MOBILE */}
       <header className="sticky top-0 z-40 bg-blue-950 text-white shadow-xl border-b border-blue-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-0 sm:h-20 flex items-center justify-between gap-2 sm:gap-4">
           
           {/* Logo & Divini Title */}
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => setCurrentView('shop')}>
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-orange-500 to-orange-400 flex items-center justify-center shadow-md">
-              <School className="w-6 h-6 text-blue-950" />
+          <div className="flex items-center gap-2 sm:gap-3 cursor-pointer shrink-0" onClick={() => setCurrentView('shop')}>
+            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-tr from-orange-500 to-orange-400 flex items-center justify-center shadow-md shrink-0">
+              <School className="w-5 h-5 sm:w-6 sm:h-6 text-blue-950" />
             </div>
             <div>
-              <span className="text-xl sm:text-2xl font-black tracking-tight text-white block leading-tight">
+              <span className="text-base sm:text-2xl font-black tracking-tight text-white block leading-tight">
                 FELPE DIVINI
               </span>
-              <span className="text-[10px] sm:text-xs font-bold tracking-wider text-orange-400 uppercase flex items-center gap-1.5">
+              <span className="text-[9px] sm:text-xs font-bold tracking-wider text-orange-400 uppercase flex items-center gap-1">
                 <span className="line-through text-blue-300">25€</span>
-                <span className="bg-orange-500 text-white px-1.5 py-0.5 rounded text-[10px] font-black">PROMO 20€</span>
+                <span className="bg-orange-500 text-white px-1 rounded text-[9px] font-black">PROMO 20€</span>
               </span>
             </div>
           </div>
 
           {/* Center/Right Navigation & School Logo Placeholder */}
-          <div className="flex items-center gap-3 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             
-           {/* LOGO SCUOLA / LISTA RAPPRESENTANTI */}
-            <div className="hidden md:flex items-center gap-2.5 border border-blue-800/80 bg-blue-900/40 backdrop-blur px-3 py-1.5 rounded-xl text-blue-200 text-xs">
+            {/* LOGO SCUOLA / LISTA RAPPRESENTANTI */}
+            <div className="hidden lg:flex items-center gap-2.5 border border-blue-800/80 bg-blue-900/40 backdrop-blur px-3 py-1.5 rounded-xl text-blue-200 text-xs">
               <div className="w-9 h-9 rounded-lg bg-white p-0.5 border border-white/20 flex items-center justify-center overflow-hidden shrink-0 shadow-sm">
                 {!logoError ? (
                   <img 
@@ -509,28 +510,28 @@ export default function App() {
             </div>
 
             {/* Navigation Buttons */}
-            <div className="bg-blue-900/80 p-1 rounded-xl border border-blue-800 flex items-center">
+            <div className="bg-blue-900/80 p-0.5 sm:p-1 rounded-xl border border-blue-800 flex items-center shrink-0">
               <button
                 onClick={() => setCurrentView('shop')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
                   currentView === 'shop'
                     ? 'bg-orange-500 text-blue-950 shadow-md'
                     : 'text-slate-300 hover:text-white'
                 }`}
               >
                 <ShoppingBag className="w-3.5 h-3.5" />
-                Negozio
+                <span className="hidden xs:inline">Negozio</span>
               </button>
               <button
                 onClick={handleOpenAdmin}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
                   currentView === 'admin'
                     ? 'bg-orange-500 text-blue-950 shadow-md'
                     : 'text-slate-300 hover:text-white'
                 }`}
               >
                 <SlidersHorizontal className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Pannello</span> Admin
+                <span>Admin</span>
                 {isAdminAuthenticated ? (
                   <span className="w-2 h-2 rounded-full bg-emerald-400" title="Autenticato" />
                 ) : (
@@ -545,12 +546,12 @@ export default function App() {
             {currentView === 'shop' && (
               <button
                 onClick={() => setIsCartOpen(true)}
-                className="relative flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3.5 py-2 rounded-xl text-xs shadow-md transition-all active:scale-95"
+                className="relative flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 sm:py-2 rounded-xl text-xs shadow-md transition-all active:scale-95 shrink-0"
               >
                 <ShoppingCart className="w-4 h-4" />
                 <span className="hidden sm:inline">Carrello</span>
                 {cartCount > 0 && (
-                  <span className="bg-white text-emerald-950 text-[11px] font-extrabold px-2 py-0.5 rounded-full">
+                  <span className="bg-white text-emerald-950 text-[11px] font-extrabold px-1.5 py-0.5 rounded-full">
                     {cartCount}
                   </span>
                 )}
@@ -567,36 +568,36 @@ export default function App() {
           <div>
             
             {/* HERO BANNER - DIVINI */}
-            <section className="relative bg-gradient-to-b from-blue-950 via-blue-900 to-slate-900 text-white py-12 px-4 sm:px-6 lg:px-8 overflow-hidden">
+            <section className="relative bg-gradient-to-b from-blue-950 via-blue-900 to-slate-900 text-white py-8 sm:py-12 px-4 sm:px-6 lg:px-8 overflow-hidden">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(249,115,22,0.15),transparent_50%)]" />
               <div className="max-w-7xl mx-auto relative z-10 text-center">
                 
-                <div className="inline-flex items-center gap-2 bg-orange-500/20 border border-orange-500/30 px-3.5 py-1.5 rounded-full text-orange-300 text-xs font-bold mb-4">
+                <div className="inline-flex items-center gap-2 bg-orange-500/20 border border-orange-500/30 px-3 py-1 rounded-full text-orange-300 text-xs font-bold mb-3">
                   <Sparkles className="w-3.5 h-3.5 text-orange-400" />
                   Prenotazione Felpe Ufficiali "Divini"
                 </div>
 
-                <h1 className="text-3xl sm:text-5xl font-black tracking-tight mb-3">
+                <h1 className="text-2xl sm:text-5xl font-black tracking-tight mb-2 sm:mb-3">
                   Indossa l'Orgoglio del Divini.
                 </h1>
-                <p className="max-w-2xl mx-auto text-slate-200 text-sm sm:text-base mb-6">
-                  Ordina online al prezzo speciale promozionale di <strong className="text-orange-400 font-bold">20€ (invece di 25€)</strong>. Pagamento ai rappresentanti prima della consegna e ritiro comodo a scuola.
+                <p className="max-w-2xl mx-auto text-slate-200 text-xs sm:text-base mb-6 px-2">
+                  Ordina online al prezzo promozionale di <strong className="text-orange-400 font-bold">20€ (invece di 25€)</strong>. Pagamento ai rappresentanti prima della consegna e ritiro comodo a scuola.
                 </p>
 
                 {/* Info Badges */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-3xl mx-auto text-left">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3 max-w-3xl mx-auto text-left">
                   <div className="bg-blue-900/60 backdrop-blur border border-blue-700/80 p-3 rounded-xl flex items-center gap-3">
-                    <div className="p-2 bg-orange-500/20 text-orange-400 rounded-lg">
+                    <div className="p-2 bg-orange-500/20 text-orange-400 rounded-lg shrink-0">
                       <GraduationCap className="w-5 h-5" />
                     </div>
                     <div>
                       <div className="text-xs font-bold text-white">Studenti</div>
-                      <div className="text-[11px] text-blue-200">consegna in portineria/classe </div>
+                      <div className="text-[11px] text-blue-200">Pagamento ai rappresentanti in classe</div>
                     </div>
                   </div>
 
                   <div className="bg-blue-900/60 backdrop-blur border border-blue-700/80 p-3 rounded-xl flex items-center gap-3">
-                    <div className="p-2 bg-orange-500/20 text-orange-400 rounded-lg">
+                    <div className="p-2 bg-orange-500/20 text-orange-400 rounded-lg shrink-0">
                       <BookOpen className="w-5 h-5" />
                     </div>
                     <div>
@@ -606,7 +607,7 @@ export default function App() {
                   </div>
 
                   <div className="bg-blue-900/60 backdrop-blur border border-blue-700/80 p-3 rounded-xl flex items-center gap-3">
-                    <div className="p-2 bg-orange-500/20 text-orange-400 rounded-lg">
+                    <div className="p-2 bg-orange-500/20 text-orange-400 rounded-lg shrink-0">
                       <Building2 className="w-5 h-5" />
                     </div>
                     <div>
@@ -620,26 +621,26 @@ export default function App() {
             </section>
 
             {/* PRODUCT CATALOG GRID */}
-            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
               
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 border-b border-slate-200 pb-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 sm:mb-8 gap-3 border-b border-slate-200 pb-4">
                 <div>
-                  <h2 className="text-2xl font-black text-slate-900 tracking-tight">
+                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
                     Nuova Collezione Felpe Divini
                   </h2>
                   <p className="text-xs text-slate-500">
-                    Scegli tra i 5 nuovi stili ufficiali (G, H, I, J, K) • Taglie: XS, S, M, L, XL, 2XL, 3XL
+                    Scegli tra i 5 nuovi stili ufficiali (G, H, I, J, K) • Taglie: XS - 3XL
                   </p>
                 </div>
                 
-                <div className="inline-flex items-center gap-2 text-xs font-bold bg-orange-50 text-orange-950 px-3.5 py-2 rounded-xl border border-orange-200 shadow-sm">
-                  <Tag className="w-4 h-4 text-orange-600" />
+                <div className="inline-flex items-center gap-2 text-xs font-bold bg-orange-50 text-orange-950 px-3 py-1.5 rounded-xl border border-orange-200 shadow-sm self-start sm:self-auto">
+                  <Tag className="w-4 h-4 text-orange-600 shrink-0" />
                   <span>Prezzo Scontato: <strong className="line-through text-slate-400 font-semibold mr-1">25€</strong> <strong className="text-orange-600 font-black text-sm">20,00€</strong></span>
                 </div>
               </div>
 
               {/* 5 Hoodies Grid (G - K) */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
                 {products.map((product) => {
                   const totalStock = Object.values(product.stock || {}).reduce((a, b) => a + b, 0);
                   return (
@@ -661,17 +662,17 @@ export default function App() {
                         </div>
                         
                         {/* Discount Ribbon */}
-                        <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-orange-500 text-white font-black text-xs px-3 py-1 rounded-full shadow">
+                        <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-orange-500 text-white font-black text-xs px-2.5 py-1 rounded-full shadow">
                           <span className="line-through text-orange-200 text-[10px] font-semibold">€25</span>
                           <span>€20,00</span>
                         </div>
                       </div>
 
                       {/* Content */}
-                      <div className="p-5 flex-1 flex flex-col justify-between">
+                      <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between">
                         <div>
                           <div className="flex items-center justify-between mb-1">
-                            <h3 className="font-extrabold text-slate-900 text-lg group-hover:text-blue-900 transition-colors">
+                            <h3 className="font-extrabold text-slate-900 text-base sm:text-lg group-hover:text-blue-900 transition-colors">
                               {product.name}
                             </h3>
                           </div>
@@ -687,21 +688,21 @@ export default function App() {
 
                         {/* Size availability indicators */}
                         <div className="border-t border-slate-100 pt-3">
-                          <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 flex justify-between">
+                          <div className="text-[10px] sm:text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 flex justify-between">
                             <span>Disponibilità Taglie:</span>
                             <span className={totalStock > 0 ? "text-emerald-600 font-bold" : "text-red-500 font-bold"}>
                               {totalStock > 0 ? `Disponibile` : 'Esaurito'}
                             </span>
                           </div>
 
-                          {/* Sizes Selector Pills */}
-                          <div className="flex items-center justify-between gap-1 mb-4 overflow-x-auto">
+                          {/* Sizes Selector Pills - Grid per Mobile */}
+                          <div className="grid grid-cols-7 gap-1 mb-4">
                             {ALL_SIZES.map((sz) => {
                               const stk = (product.stock && product.stock[sz]) || 0;
                               return (
                                 <div
                                   key={sz}
-                                  className={`flex-1 text-center py-1 min-w-[28px] rounded border text-[10px] font-bold transition-all ${
+                                  className={`text-center py-1 rounded border text-[9px] sm:text-[10px] font-bold transition-all ${
                                     stk > 0
                                       ? 'border-slate-200 bg-slate-50 text-slate-800'
                                       : 'border-slate-100 bg-slate-100 text-slate-300 line-through'
@@ -743,16 +744,16 @@ export default function App() {
 
           </div>
         ) : isAdminAuthenticated ? (
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-8">
             
             {/* ADMIN HEADER & STATS BAR */}
-            <div className="bg-blue-950 text-white rounded-2xl p-6 shadow-xl mb-8 border border-blue-900">
+            <div className="bg-blue-950 text-white rounded-2xl p-4 sm:p-6 shadow-xl mb-6 sm:mb-8 border border-blue-900">
               <div className="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-blue-900 gap-4">
                 <div>
                   <div className="flex items-center gap-2 text-orange-400 text-xs font-bold uppercase tracking-wider mb-1">
                     <ShieldCheck className="w-4 h-4" /> Gestione Divini
                   </div>
-                  <h1 className="text-2xl font-black">Pannello Gestione Ordini & Incassi</h1>
+                  <h1 className="text-xl sm:text-2xl font-black">Pannello Gestione Ordini & Incassi</h1>
                   {auth?.currentUser?.email && (
                     <p className="text-xs text-blue-300 mt-1">
                       Connesso come Admin: <span className="text-orange-400 font-semibold">{auth.currentUser.email}</span>
@@ -760,35 +761,35 @@ export default function App() {
                   )}
                 </div>
 
-                <div className="flex flex-wrap items-center gap-3">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                   <div className="flex items-center bg-blue-900 p-1 rounded-xl border border-blue-800">
                     <button
                       onClick={() => setActiveAdminTab('orders')}
-                      className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${
+                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
                         activeAdminTab === 'orders'
                           ? 'bg-orange-500 text-blue-950 shadow-md'
                           : 'text-blue-200 hover:text-white'
                       }`}
                     >
                       <Package className="w-4 h-4" />
-                      Gestione Ordini ({orders.length})
+                      Ordini ({orders.length})
                     </button>
                     <button
                       onClick={() => setActiveAdminTab('inventory')}
-                      className={`px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${
+                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
                         activeAdminTab === 'inventory'
                           ? 'bg-orange-500 text-blue-950 shadow-md'
                           : 'text-blue-200 hover:text-white'
                       }`}
                     >
                       <SlidersHorizontal className="w-4 h-4" />
-                      Gestione Scorte
+                      Scorte
                     </button>
                   </div>
 
                   <button
                     onClick={handleAdminLogout}
-                    className="flex items-center gap-1.5 bg-red-600/20 hover:bg-red-600 text-red-300 hover:text-white border border-red-500/30 px-3 py-2 rounded-xl text-xs font-bold transition-all"
+                    className="flex items-center gap-1.5 bg-red-600/20 hover:bg-red-600 text-red-300 hover:text-white border border-red-500/30 px-3 py-1.5 rounded-xl text-xs font-bold transition-all"
                   >
                     <LogOut className="w-4 h-4" />
                     Esci
@@ -797,30 +798,30 @@ export default function App() {
               </div>
 
               {/* STATS CARDS */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-6">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 pt-4 sm:pt-6">
                 
-                <div className="bg-blue-900/80 p-4 rounded-xl border border-blue-800">
-                  <div className="text-blue-300 text-xs font-medium">Totale Ordini</div>
-                  <div className="text-2xl font-black text-white mt-1">{adminStats.totalOrdersCount}</div>
-                  <div className="text-[10px] text-orange-400 mt-1">studenti, prof e ATA</div>
+                <div className="bg-blue-900/80 p-3 sm:p-4 rounded-xl border border-blue-800">
+                  <div className="text-blue-300 text-[11px] sm:text-xs font-medium">Totale Ordini</div>
+                  <div className="text-xl sm:text-2xl font-black text-white mt-1">{adminStats.totalOrdersCount}</div>
+                  <div className="text-[9px] sm:text-[10px] text-orange-400 mt-0.5">studenti, prof e ATA</div>
                 </div>
 
-                <div className="bg-blue-900/80 p-4 rounded-xl border border-blue-800">
-                  <div className="text-blue-300 text-xs font-medium">Contanti Incassati</div>
-                  <div className="text-2xl font-black text-emerald-400 mt-1">€{adminStats.collectedCash.toFixed(2)}</div>
-                  <div className="text-[10px] text-emerald-300 mt-1">ordini consegnati</div>
+                <div className="bg-blue-900/80 p-3 sm:p-4 rounded-xl border border-blue-800">
+                  <div className="text-blue-300 text-[11px] sm:text-xs font-medium">Contanti Incassati</div>
+                  <div className="text-xl sm:text-2xl font-black text-emerald-400 mt-1">€{adminStats.collectedCash.toFixed(2)}</div>
+                  <div className="text-[9px] sm:text-[10px] text-emerald-300 mt-0.5">ordini consegnati</div>
                 </div>
 
-                <div className="bg-blue-900/80 p-4 rounded-xl border border-blue-800">
-                  <div className="text-blue-300 text-xs font-medium">Contanti da Incassare</div>
-                  <div className="text-2xl font-black text-orange-400 mt-1">€{adminStats.pendingCash.toFixed(2)}</div>
-                  <div className="text-[10px] text-orange-300 mt-1">in attesa di consegna</div>
+                <div className="bg-blue-900/80 p-3 sm:p-4 rounded-xl border border-blue-800">
+                  <div className="text-blue-300 text-[11px] sm:text-xs font-medium">Da Incassare</div>
+                  <div className="text-xl sm:text-2xl font-black text-orange-400 mt-1">€{adminStats.pendingCash.toFixed(2)}</div>
+                  <div className="text-[9px] sm:text-[10px] text-orange-300 mt-0.5">in attesa di consegna</div>
                 </div>
 
-                <div className="bg-blue-900/80 p-4 rounded-xl border border-blue-800">
-                  <div className="text-blue-300 text-xs font-medium">Felpe Prenotate</div>
-                  <div className="text-2xl font-black text-white mt-1">{adminStats.totalHoodiesSold}</div>
-                  <div className="text-[10px] text-blue-300 mt-1">unità totali</div>
+                <div className="bg-blue-900/80 p-3 sm:p-4 rounded-xl border border-blue-800">
+                  <div className="text-blue-300 text-[11px] sm:text-xs font-medium">Felpe Prenotate</div>
+                  <div className="text-xl sm:text-2xl font-black text-white mt-1">{adminStats.totalHoodiesSold}</div>
+                  <div className="text-[9px] sm:text-[10px] text-blue-300 mt-0.5">unità totali</div>
                 </div>
 
               </div>
@@ -828,11 +829,11 @@ export default function App() {
 
             {/* TAB 1: ORDERS MANAGEMENT */}
             {activeAdminTab === 'orders' && (
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6">
                 
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-6 border-b border-slate-100">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-6 pb-6 border-b border-slate-100">
                   
-                  <div className="relative flex-1 max-w-md">
+                  <div className="relative flex-1">
                     <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                     <input
                       type="text"
@@ -843,15 +844,14 @@ export default function App() {
                     />
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-3">
+                  <div className="flex flex-wrap items-center gap-2">
                     
-                    <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl text-xs font-medium">
-                      <span className="text-slate-400 text-[10px] uppercase font-bold px-2">Ruolo:</span>
+                    <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-xs font-medium overflow-x-auto max-w-full">
                       {['all', 'studente', 'docente', 'ata'].map((r) => (
                         <button
                           key={r}
                           onClick={() => setRoleFilter(r)}
-                          className={`px-2.5 py-1 rounded-lg capitalize text-xs font-bold transition-all ${
+                          className={`px-2 py-1 rounded-lg capitalize text-[11px] sm:text-xs font-bold transition-all shrink-0 ${
                             roleFilter === r
                               ? 'bg-white text-slate-900 shadow-sm'
                               : 'text-slate-600 hover:text-slate-900'
@@ -865,7 +865,7 @@ export default function App() {
                     <select
                       value={statusFilter}
                       onChange={(e) => setStatusFilter(e.target.value)}
-                      className="bg-slate-100 border border-slate-200 text-xs font-bold rounded-xl px-3 py-2 text-slate-700 focus:outline-none"
+                      className="bg-slate-100 border border-slate-200 text-xs font-bold rounded-xl px-2.5 py-2 text-slate-700 focus:outline-none"
                     >
                       <option value="all">Tutti gli Stati</option>
                       <option value="In attesa">In attesa</option>
@@ -876,10 +876,10 @@ export default function App() {
 
                     <button
                       onClick={() => setPrintOrdersModal(true)}
-                      className="flex items-center gap-1.5 bg-blue-950 hover:bg-blue-900 text-white font-bold text-xs px-3 py-2 rounded-xl transition-all shadow-sm"
+                      className="flex items-center gap-1 bg-blue-950 hover:bg-blue-900 text-white font-bold text-xs px-3 py-2 rounded-xl transition-all shadow-sm shrink-0"
                     >
                       <Printer className="w-3.5 h-3.5 text-orange-400" />
-                      Stampa Lista
+                      Stampa
                     </button>
 
                   </div>
@@ -893,7 +893,7 @@ export default function App() {
                     <p className="text-sm font-semibold">Nessun ordine trovato con questi filtri.</p>
                   </div>
                 ) : (
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     {filteredOrders.map((order) => {
                       let roleBadgeClass = "bg-blue-100 text-blue-900 border-blue-200";
                       let RoleIcon = GraduationCap;
@@ -913,20 +913,20 @@ export default function App() {
                       return (
                         <div
                           key={order.orderCode}
-                          className="border border-slate-200 rounded-xl p-5 hover:border-blue-300 transition-all bg-white shadow-sm"
+                          className="border border-slate-200 rounded-xl p-3.5 sm:p-5 hover:border-blue-300 transition-all bg-white shadow-sm"
                         >
-                          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+                          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-3 border-b border-slate-100">
                             
-                            <div className="flex items-start gap-3">
-                              <div className={`p-2.5 rounded-xl border ${roleBadgeClass}`}>
-                                <RoleIcon className="w-5 h-5" />
+                            <div className="flex items-start gap-2.5">
+                              <div className={`p-2 rounded-xl border ${roleBadgeClass} shrink-0`}>
+                                <RoleIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                               </div>
                               <div>
-                                <div className="flex items-center gap-2">
-                                  <h3 className="font-extrabold text-slate-900 text-base">
+                                <div className="flex flex-wrap items-center gap-1.5">
+                                  <h3 className="font-extrabold text-slate-900 text-sm sm:text-base">
                                     {order.customer.firstName} {order.customer.lastName}
                                   </h3>
-                                  <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md border ${roleBadgeClass}`}>
+                                  <span className={`text-[9px] sm:text-[10px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md border ${roleBadgeClass}`}>
                                     {order.customer.role}
                                   </span>
                                   <span className="text-xs font-extrabold text-slate-500">
@@ -934,7 +934,7 @@ export default function App() {
                                   </span>
                                 </div>
 
-                                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-600 mt-1">
+                                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-600 mt-1">
                                   <span className="font-bold text-slate-800 flex items-center gap-1">
                                     <School className="w-3.5 h-3.5 text-blue-900" />
                                     {order.customer.location || 'N/D'}
@@ -945,23 +945,20 @@ export default function App() {
                                       {order.customer.phone}
                                     </span>
                                   )}
-                                  <span className="text-slate-400">
-                                    {new Date(order.createdAt).toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
-                                  </span>
                                 </div>
                               </div>
                             </div>
 
-                            <div className="flex items-center gap-3">
-                              <div className="text-right">
-                                <span className="block text-[10px] text-slate-400 font-bold uppercase">Totale Contanti</span>
-                                <span className="text-lg font-black text-emerald-600">€{order.totalAmount.toFixed(2)}</span>
+                            <div className="flex items-center justify-between lg:justify-end gap-3 pt-2 lg:pt-0 border-t lg:border-t-0 border-slate-100">
+                              <div className="text-left lg:text-right">
+                                <span className="block text-[9px] text-slate-400 font-bold uppercase">Totale Contanti</span>
+                                <span className="text-base sm:text-lg font-black text-emerald-600">€{order.totalAmount.toFixed(2)}</span>
                               </div>
 
                               <select
                                 value={order.status}
                                 onChange={(e) => handleUpdateOrderStatus(order, e.target.value)}
-                                className={`text-xs font-bold rounded-xl px-3 py-2 border shadow-sm focus:outline-none ${statusBadge}`}
+                                className={`text-xs font-bold rounded-xl px-2.5 py-1.5 border shadow-sm focus:outline-none ${statusBadge}`}
                               >
                                 <option value="In attesa">⏳ In attesa</option>
                                 <option value="Pronto per consegna">📦 Pronto per consegna</option>
@@ -972,10 +969,10 @@ export default function App() {
 
                           </div>
 
-                          <div className="pt-3 flex flex-wrap items-center justify-between gap-2 text-xs">
-                            <div className="flex flex-wrap gap-2">
+                          <div className="pt-2.5 flex flex-wrap items-center justify-between gap-2 text-xs">
+                            <div className="flex flex-wrap gap-1.5">
                               {order.items.map((item, idx) => (
-                                <span key={idx} className="bg-slate-100 text-slate-800 px-2.5 py-1 rounded-lg border border-slate-200 font-medium">
+                                <span key={idx} className="bg-slate-100 text-slate-800 px-2 py-0.5 rounded-lg border border-slate-200 text-[11px] font-medium">
                                   <strong>{item.quantity}x</strong> {item.productName} <span className="text-blue-900 font-bold">({item.size})</span>
                                 </span>
                               ))}
@@ -998,7 +995,7 @@ export default function App() {
 
             {/* TAB 2: INVENTORY */}
             {activeAdminTab === 'inventory' && (
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6">
                 <div className="mb-6 pb-4 border-b border-slate-100">
                   <h2 className="text-lg font-extrabold text-slate-900">
                     Gestione Giacenze Magazzino Divini
@@ -1008,15 +1005,15 @@ export default function App() {
                   </p>
                 </div>
 
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   {products.map((product) => (
-                    <div key={product.id} className="border border-slate-200 rounded-xl p-5 bg-slate-50/50">
+                    <div key={product.id} className="border border-slate-200 rounded-xl p-3.5 sm:p-5 bg-slate-50/50">
                       
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
                         <div className="flex items-center gap-3">
-                          <img src={product.image} alt={product.name} className="w-12 h-12 rounded-lg object-cover border" />
+                          <img src={product.image} alt={product.name} className="w-10 h-10 rounded-lg object-cover border" />
                           <div>
-                            <h3 className="font-extrabold text-slate-900 text-base">{product.name}</h3>
+                            <h3 className="font-extrabold text-slate-900 text-sm sm:text-base">{product.name}</h3>
                             <span className="text-xs font-bold text-orange-600">
                               <span className="line-through text-slate-400 mr-1">€25,00</span>
                               €20,00
@@ -1024,30 +1021,28 @@ export default function App() {
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => {
-                              ALL_SIZES.forEach(sz => {
-                                handleUpdateStock(product.id, sz, ((product.stock && product.stock[sz]) || 0) + 5);
-                              });
-                            }}
-                            className="bg-blue-50 hover:bg-blue-100 text-blue-900 font-bold text-xs px-2.5 py-1 rounded-lg border border-blue-200"
-                          >
-                            +5 su tutte
-                          </button>
-                        </div>
+                        <button
+                          onClick={() => {
+                            ALL_SIZES.forEach(sz => {
+                              handleUpdateStock(product.id, sz, ((product.stock && product.stock[sz]) || 0) + 5);
+                            });
+                          }}
+                          className="bg-blue-50 hover:bg-blue-100 text-blue-900 font-bold text-xs px-2.5 py-1 rounded-lg border border-blue-200 self-start sm:self-auto"
+                        >
+                          +5 su tutte
+                        </button>
                       </div>
 
-                      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-3">
+                      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2">
                         {ALL_SIZES.map((size) => {
                           const qty = (product.stock && product.stock[size]) || 0;
                           return (
-                            <div key={size} className="bg-white p-3 rounded-xl border border-slate-200 shadow-sm flex flex-col items-center">
-                              <span className="text-xs font-black text-slate-700 uppercase mb-1">{size}</span>
-                              <div className="flex items-center gap-1.5 my-1">
+                            <div key={size} className="bg-white p-2 rounded-xl border border-slate-200 shadow-sm flex flex-col items-center">
+                              <span className="text-[11px] font-black text-slate-700 uppercase">{size}</span>
+                              <div className="flex items-center gap-1 my-1">
                                 <button
                                   onClick={() => handleUpdateStock(product.id, size, qty - 1)}
-                                  className="w-6 h-6 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700 text-xs"
+                                  className="w-5 h-5 rounded bg-slate-100 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700 text-xs"
                                 >
                                   -
                                 </button>
@@ -1055,16 +1050,16 @@ export default function App() {
                                   type="number"
                                   value={qty}
                                   onChange={(e) => handleUpdateStock(product.id, size, e.target.value)}
-                                  className="w-10 text-center text-xs font-extrabold border border-slate-200 rounded-lg py-0.5"
+                                  className="w-8 text-center text-xs font-extrabold border border-slate-200 rounded py-0.5"
                                 />
                                 <button
                                   onClick={() => handleUpdateStock(product.id, size, qty + 1)}
-                                  className="w-6 h-6 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700 text-xs"
+                                  className="w-5 h-5 rounded bg-slate-100 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700 text-xs"
                                 >
                                   +
                                 </button>
                               </div>
-                              <span className={`text-[10px] font-bold ${qty > 0 ? 'text-emerald-600' : 'text-red-500'}`}>
+                              <span className={`text-[9px] font-bold ${qty > 0 ? 'text-emerald-600' : 'text-red-500'}`}>
                                 {qty > 0 ? 'In Stock' : 'Esaurito'}
                               </span>
                             </div>
@@ -1081,7 +1076,7 @@ export default function App() {
 
           </div>
         ) : (
-          <div className="max-w-md mx-auto px-4 py-20 text-center">
+          <div className="max-w-md mx-auto px-4 py-16 text-center">
             <div className="w-16 h-16 bg-slate-200 text-slate-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <Lock className="w-8 h-8" />
             </div>
@@ -1101,8 +1096,8 @@ export default function App() {
 
       {/* MODAL: ADMIN FIREBASE AUTHENTICATION */}
       {isAdminPasswordModalOpen && (
-        <div className="fixed inset-0 z-50 bg-blue-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 relative animate-in fade-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-50 bg-blue-950/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-2xl border border-slate-100 relative animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto my-auto">
             <button
               onClick={() => setIsAdminPasswordModalOpen(false)}
               className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1"
@@ -1114,16 +1109,16 @@ export default function App() {
               <Lock className="w-6 h-6" />
             </div>
 
-            <h3 className="text-xl font-black text-slate-900 mb-1">
+            <h3 className="text-lg sm:text-xl font-black text-slate-900 mb-1">
               Login Admin Divini
             </h3>
-            <p className="text-xs text-slate-500 mb-6">
+            <p className="text-xs text-slate-500 mb-5">
               Inserisci Email e Password configurate nella tua console Firebase.
             </p>
 
             <form onSubmit={handleAdminPasswordSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                   Email Admin
                 </label>
                 <div className="relative">
@@ -1137,14 +1132,14 @@ export default function App() {
                       setAdminEmailInput(e.target.value);
                       setAdminPasswordError('');
                     }}
-                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-900"
+                    className="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-900"
                   />
                   <Mail className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                   Password Admin
                 </label>
                 <div className="relative">
@@ -1157,7 +1152,7 @@ export default function App() {
                       setAdminPasswordInput(e.target.value);
                       setAdminPasswordError('');
                     }}
-                    className={`w-full pl-10 pr-10 py-2.5 bg-slate-50 border rounded-xl text-sm font-medium focus:outline-none focus:ring-2 ${
+                    className={`w-full pl-9 pr-10 py-2.5 bg-slate-50 border rounded-xl text-sm font-medium focus:outline-none focus:ring-2 ${
                       adminPasswordError
                         ? 'border-red-400 focus:ring-red-400'
                         : 'border-slate-200 focus:ring-blue-900'
@@ -1206,8 +1201,8 @@ export default function App() {
 
       {/* MODAL: SIZE SELECTION */}
       {selectedProductModal && (
-        <div className="fixed inset-0 z-50 bg-blue-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 relative animate-in fade-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-50 bg-blue-950/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-2xl border border-slate-100 relative animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto my-auto">
             <button
               onClick={() => setSelectedProductModal(null)}
               className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1"
@@ -1215,33 +1210,33 @@ export default function App() {
               <X className="w-5 h-5" />
             </button>
 
-            <div className="flex items-center gap-4 mb-4">
+            <div className="flex items-center gap-3 sm:gap-4 mb-3">
               <img
                 src={selectedProductModal.image}
                 alt={selectedProductModal.name}
-                className="w-20 h-20 rounded-xl object-cover border"
+                className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border shrink-0"
               />
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-orange-600 bg-orange-50 px-2 py-0.5 rounded border border-orange-200">
                   {selectedProductModal.badge}
                 </span>
-                <h3 className="font-extrabold text-slate-900 text-lg mt-1">
+                <h3 className="font-extrabold text-slate-900 text-base sm:text-lg mt-0.5">
                   {selectedProductModal.name}
                 </h3>
                 <div className="flex items-center gap-2 mt-0.5">
                   <span className="text-xs line-through text-slate-400 font-semibold">€25,00</span>
-                  <span className="text-lg font-black text-blue-950">
+                  <span className="text-base sm:text-lg font-black text-blue-950">
                     €20,00
                   </span>
                 </div>
               </div>
             </div>
 
-            <p className="text-xs text-slate-600 mb-5 leading-relaxed">
+            <p className="text-xs text-slate-600 mb-4 leading-relaxed">
               {selectedProductModal.description}
             </p>
 
-            <div className="mb-6">
+            <div className="mb-5">
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
                 Seleziona Taglia:
               </label>
@@ -1276,7 +1271,7 @@ export default function App() {
                 addToCart(selectedProductModal, modalSize, 1);
                 setSelectedProductModal(null);
               }}
-              className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-sm"
+              className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-xs sm:text-sm"
             >
               <ShoppingCart className="w-4 h-4" />
               Aggiungi al Carrello (Taglia {modalSize} - 20€)
@@ -1290,7 +1285,7 @@ export default function App() {
         <div className="fixed inset-0 z-50 bg-blue-950/80 backdrop-blur-sm flex justify-end">
           <div className="bg-white w-full max-w-md h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
             
-            <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-blue-950 text-white">
+            <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between bg-blue-950 text-white">
               <div className="flex items-center gap-2">
                 <ShoppingCart className="w-5 h-5 text-orange-400" />
                 <h2 className="font-extrabold text-base">Carrello Felpe Divini</h2>
@@ -1303,7 +1298,7 @@ export default function App() {
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-5 space-y-4">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3">
               {cart.length === 0 ? (
                 <div className="text-center py-12 text-slate-400">
                   <ShoppingBag className="w-12 h-12 mx-auto mb-3 opacity-30" />
@@ -1316,7 +1311,7 @@ export default function App() {
                     <img
                       src={item.product.image}
                       alt={item.product.name}
-                      className="w-16 h-16 rounded-lg object-cover border"
+                      className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg object-cover border shrink-0"
                     />
                     <div className="flex-1">
                       <h4 className="font-bold text-slate-900 text-sm">{item.product.name}</h4>
@@ -1357,10 +1352,10 @@ export default function App() {
             </div>
 
             {cart.length > 0 && (
-              <div className="p-5 border-t border-slate-100 bg-slate-50 space-y-3">
+              <div className="p-4 sm:p-5 border-t border-slate-100 bg-slate-50 space-y-3">
                 <div className="flex items-center justify-between text-sm">
                   <span className="font-bold text-slate-600">Totale Promozionale:</span>
-                  <span className="text-2xl font-black text-slate-900">€{cartTotal.toFixed(2)}</span>
+                  <span className="text-xl sm:text-2xl font-black text-slate-900">€{cartTotal.toFixed(2)}</span>
                 </div>
 
                 <div className="bg-orange-50 border border-orange-200 p-2.5 rounded-xl text-orange-900 text-[11px] flex items-center gap-2">
@@ -1387,8 +1382,8 @@ export default function App() {
 
       {/* CHECKOUT MODAL */}
       {isCheckoutOpen && (
-        <div className="fixed inset-0 z-50 bg-blue-950/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100 my-8 relative animate-in fade-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-50 bg-blue-950/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-4 sm:p-6 shadow-2xl border border-slate-100 my-auto relative animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
             <button
               onClick={() => setIsCheckoutOpen(false)}
               className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1"
@@ -1397,14 +1392,14 @@ export default function App() {
             </button>
 
             <div className="flex items-center gap-2 mb-1">
-              <School className="w-5 h-5 text-blue-950" />
-              <h2 className="text-xl font-black text-slate-900">Checkout Ordine Divini</h2>
+              <School className="w-5 h-5 text-blue-950 shrink-0" />
+              <h2 className="text-lg sm:text-xl font-black text-slate-900">Checkout Ordine Divini</h2>
             </div>
-            <p className="text-xs text-slate-500 mb-6">
+            <p className="text-xs text-slate-500 mb-5">
               Inserisci i tuoi dati per la prenotazione e il ritiro a scuola.
             </p>
 
-            <form onSubmit={handlePlaceOrder} className="space-y-5">
+            <form onSubmit={handlePlaceOrder} className="space-y-4">
               
               <div>
                 <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
@@ -1416,47 +1411,47 @@ export default function App() {
                   <button
                     type="button"
                     onClick={() => setRole('studente')}
-                    className={`p-3 rounded-xl border text-left transition-all flex flex-col items-center justify-center gap-1.5 ${
+                    className={`p-2.5 sm:p-3 rounded-xl border text-left transition-all flex flex-col items-center justify-center gap-1 ${
                       role === 'studente'
                         ? 'border-blue-900 bg-blue-50 text-blue-950 ring-2 ring-blue-900/20'
                         : 'border-slate-200 hover:border-slate-300 text-slate-700'
                     }`}
                   >
-                    <GraduationCap className="w-5 h-5 text-blue-900" />
-                    <span className="text-xs font-extrabold">Studente</span>
+                    <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 text-blue-900" />
+                    <span className="text-[11px] sm:text-xs font-extrabold">Studente</span>
                   </button>
 
                   <button
                     type="button"
                     onClick={() => setRole('docente')}
-                    className={`p-3 rounded-xl border text-left transition-all flex flex-col items-center justify-center gap-1.5 ${
+                    className={`p-2.5 sm:p-3 rounded-xl border text-left transition-all flex flex-col items-center justify-center gap-1 ${
                       role === 'docente'
                         ? 'border-purple-600 bg-purple-50 text-purple-900 ring-2 ring-purple-500/20'
                         : 'border-slate-200 hover:border-slate-300 text-slate-700'
                     }`}
                   >
-                    <BookOpen className="w-5 h-5 text-purple-600" />
-                    <span className="text-xs font-extrabold">Docente</span>
+                    <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" />
+                    <span className="text-[11px] sm:text-xs font-extrabold">Docente</span>
                   </button>
 
                   <button
                     type="button"
                     onClick={() => setRole('ata')}
-                    className={`p-3 rounded-xl border text-left transition-all flex flex-col items-center justify-center gap-1.5 ${
+                    className={`p-2.5 sm:p-3 rounded-xl border text-left transition-all flex flex-col items-center justify-center gap-1 ${
                       role === 'ata'
                         ? 'border-orange-600 bg-orange-50 text-orange-900 ring-2 ring-orange-500/20'
                         : 'border-slate-200 hover:border-slate-300 text-slate-700'
                     }`}
                   >
-                    <Building2 className="w-5 h-5 text-orange-600" />
-                    <span className="text-xs font-extrabold">Personale ATA</span>
+                    <Building2 className="w-4 h-4 sm:w-5 sm:h-5 text-orange-600" />
+                    <span className="text-[11px] sm:text-xs font-extrabold">Personale ATA</span>
                   </button>
 
                 </div>
               </div>
 
               <div className="space-y-3">
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-2.5">
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1">Nome *</label>
                     <input
@@ -1558,7 +1553,7 @@ export default function App() {
 
               <div className="bg-orange-50 border border-orange-200 rounded-xl p-3 text-orange-900 text-xs space-y-1">
                 <div className="font-extrabold flex items-center gap-1.5">
-                  <CheckCircle className="w-4 h-4 text-orange-600" />
+                  <CheckCircle className="w-4 h-4 text-orange-600 shrink-0" />
                   Pagamento: In contanti ai Rappresentanti
                 </div>
                 <p className="text-[11px] text-orange-800">
@@ -1580,30 +1575,30 @@ export default function App() {
 
       {/* CONFIRMATION MODAL */}
       {completedOrder && (
-        <div className="fixed inset-0 z-50 bg-blue-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 text-center relative animate-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-50 bg-blue-950/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-2xl border border-slate-100 text-center relative animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto my-auto">
             
-            <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
-              <CheckCircle className="w-10 h-10" />
+            <div className="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3">
+              <CheckCircle className="w-8 h-8" />
             </div>
 
-            <h3 className="text-2xl font-black text-slate-900 mb-1">
+            <h3 className="text-xl sm:text-2xl font-black text-slate-900 mb-1">
               Ordine Registrato!
             </h3>
             <p className="text-xs text-slate-500 mb-4">
               La tua prenotazione per la felpa Divini è stata salvata con successo.
             </p>
 
-            <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl text-left space-y-2 mb-6">
-              <div className="flex justify-between items-center text-xs border-b pb-2">
+            <div className="bg-slate-50 border border-slate-200 p-3.5 rounded-xl text-left space-y-2 mb-5">
+              <div className="flex justify-between items-center text-xs border-b pb-1.5">
                 <span className="text-slate-500 font-semibold">Codice Ordine:</span>
                 <span className="font-extrabold text-blue-950 text-sm">{completedOrder.orderCode}</span>
               </div>
-              <div className="flex justify-between items-center text-xs border-b pb-2">
+              <div className="flex justify-between items-center text-xs border-b pb-1.5">
                 <span className="text-slate-500 font-semibold">Cliente:</span>
                 <span className="font-bold text-slate-800">{completedOrder.customer.firstName} ({completedOrder.customer.role})</span>
               </div>
-              <div className="flex justify-between items-center text-xs border-b pb-2">
+              <div className="flex justify-between items-center text-xs border-b pb-1.5">
                 <span className="text-slate-500 font-semibold">Consegna presso:</span>
                 <span className="font-bold text-slate-800">{completedOrder.customer.location}</span>
               </div>
@@ -1626,8 +1621,8 @@ export default function App() {
 
       {/* PRINTABLE ORDERS LIST */}
       {printOrdersModal && (
-        <div className="fixed inset-0 z-50 bg-blue-950/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl my-8 relative">
+        <div className="fixed inset-0 z-50 bg-blue-950/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-2xl w-full p-5 sm:p-6 shadow-2xl my-auto relative max-h-[90vh] overflow-y-auto">
             <button
               onClick={() => setPrintOrdersModal(false)}
               className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1"
@@ -1635,22 +1630,22 @@ export default function App() {
               <X className="w-5 h-5" />
             </button>
 
-            <div className="flex items-center justify-between mb-6 pb-4 border-b">
+            <div className="flex items-center justify-between mb-4 pb-3 border-b gap-2">
               <div>
-                <h3 className="text-xl font-black text-slate-900">Lista Consegne Divini</h3>
+                <h3 className="text-lg sm:text-xl font-black text-slate-900">Lista Consegne Divini</h3>
                 <p className="text-xs text-slate-500">Stampa per la gestione incassi dei rappresentanti e consegne.</p>
               </div>
               <button
                 onClick={() => window.print()}
-                className="bg-blue-950 text-white text-xs font-bold px-3 py-2 rounded-xl flex items-center gap-1.5 shadow"
+                className="bg-blue-950 text-white text-xs font-bold px-3 py-2 rounded-xl flex items-center gap-1.5 shadow shrink-0"
               >
-                <Printer className="w-4 h-4 text-orange-400" /> Stampa Foglio
+                <Printer className="w-4 h-4 text-orange-400" /> Stampa
               </button>
             </div>
 
-            <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+            <div className="space-y-3 max-h-[50vh] overflow-y-auto pr-1">
               {filteredOrders.map((o) => (
-                <div key={o.orderCode} className="border p-3 rounded-lg text-xs space-y-1">
+                <div key={o.orderCode} className="border p-2.5 rounded-lg text-xs space-y-1">
                   <div className="flex justify-between font-bold text-slate-900">
                     <span>#{o.orderCode} - {o.customer.firstName} {o.customer.lastName} ({o.customer.role.toUpperCase()})</span>
                     <span className="text-emerald-600">€{o.totalAmount.toFixed(2)}</span>
@@ -1670,13 +1665,13 @@ export default function App() {
       )}
 
       {/* FOOTER */}
-      <footer className="bg-blue-950 text-blue-200 border-t border-blue-900 py-8 px-4 text-center text-xs">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <footer className="bg-blue-950 text-blue-200 border-t border-blue-900 py-6 px-4 text-center text-xs">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <School className="w-4 h-4 text-orange-400" />
             <span className="font-bold text-white">Scuola Divini • Merchandising Ufficiale</span>
           </div>
-          <div>
+          <div className="text-[11px] text-blue-300">
             A.S. 2025/2026 • Ordini e consegne gestiti dai Rappresentanti d'Istituto.
           </div>
         </div>
