@@ -592,7 +592,7 @@ export default function App() {
                     </div>
                     <div>
                       <div className="text-xs font-bold text-white">Studenti</div>
-                      <div className="text-[11px] text-blue-200">Pagamento ai rappresentanti in classe</div>
+                      <div className="text-[11px] text-blue-200">Consegna in portineria</div>
                     </div>
                   </div>
 
@@ -602,7 +602,7 @@ export default function App() {
                     </div>
                     <div>
                       <div className="text-xs font-bold text-white">Docenti</div>
-                      <div className="text-[11px] text-blue-200">Consegna dedicata per i docenti</div>
+                      <div className="text-[11px] text-blue-200">Consegna in sala professori</div>
                     </div>
                   </div>
 
