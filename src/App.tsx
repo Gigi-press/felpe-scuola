@@ -626,7 +626,7 @@ export default function App() {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 sm:mb-8 gap-3 border-b border-slate-200 pb-4">
                 <div>
                   <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-                    Nuova Collezione Felpe Divini
+                    Nuova Collezione Felpe Divini - Pezzi limitati!
                   </h2>
                   <p className="text-xs text-slate-500">
                     Scegli tra i 5 nuovi stili ufficiali (G, H, I, J, K) • Taglie: XS - 3XL
