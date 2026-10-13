@@ -67,76 +67,65 @@ try {
 
 const ALL_SIZES = ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL'];
 
-// Descrizione Universale per tutte le felpe
+// Descrizione Universale per tutti gli stili
 const UNIVERSAL_TAGLINE = "Felpa ufficiale d'istituto unisex con cappuccio e tasca a marsupio";
 const UNIVERSAL_DESCRIPTION = "Felpa unisex in cotone morbido e resistente con cappuccio e tasca frontale a marsupio. Design esclusivo caratterizzato dallo stemma ufficiale Divini sul petto e dall'iconica maxi-grafica verticale \"DIVINI\" stampata sulla schiena. Vestibilità comoda, ideale sia per la scuola che per il tempo libero.";
 
-// Catalogo 6 Stili Felpe Attivi - Divini (Prezzo 20€ scontato da 25€)
+// Catalogo 5 Nuovi Stili Attivi (Da Stile G a Stile K) - Prezzo 20€ (da 25€)
 const INITIAL_PRODUCTS = [
   {
-    id: 'hoodie-a',
-    name: 'Felpa Stile A',
+    id: 'hoodie-g',
+    name: 'Felpa Stile G',
     tagline: UNIVERSAL_TAGLINE,
     description: UNIVERSAL_DESCRIPTION,
     originalPrice: 25.00,
     price: 20.00,
-    badge: 'Stile A',
-    image: '/stile-a.jpg',
+    badge: 'Stile G',
+    image: '/stile-g.jpg',
     stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
   },
   {
-    id: 'hoodie-b',
-    name: 'Felpa Stile B',
+    id: 'hoodie-h',
+    name: 'Felpa Stile H',
     tagline: UNIVERSAL_TAGLINE,
     description: UNIVERSAL_DESCRIPTION,
     originalPrice: 25.00,
     price: 20.00,
-    badge: 'Stile B',
-    image: '/stile-b.jpg',
+    badge: 'Stile H',
+    image: '/stile-h.jpg',
     stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
   },
   {
-    id: 'hoodie-c',
-    name: 'Felpa Stile C',
+    id: 'hoodie-i',
+    name: 'Felpa Stile I',
     tagline: UNIVERSAL_TAGLINE,
     description: UNIVERSAL_DESCRIPTION,
     originalPrice: 25.00,
     price: 20.00,
-    badge: 'Stile C',
-    image: '/stile-c.jpg',
+    badge: 'Stile I',
+    image: '/stile-i.jpg',
     stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
   },
   {
-    id: 'hoodie-d',
-    name: 'Felpa Stile D',
+    id: 'hoodie-j',
+    name: 'Felpa Stile J',
     tagline: UNIVERSAL_TAGLINE,
     description: UNIVERSAL_DESCRIPTION,
     originalPrice: 25.00,
     price: 20.00,
-    badge: 'Stile D',
-    image: '/stile-d.jpg',
+    badge: 'Stile J',
+    image: '/stile-j.jpg',
     stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
   },
   {
-    id: 'hoodie-e',
-    name: 'Felpa Stile E',
+    id: 'hoodie-k',
+    name: 'Felpa Stile K',
     tagline: UNIVERSAL_TAGLINE,
     description: UNIVERSAL_DESCRIPTION,
     originalPrice: 25.00,
     price: 20.00,
-    badge: 'Stile E',
-    image: '/stile-e.jpg',
-    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
-  },
-  {
-    id: 'hoodie-f',
-    name: 'Felpa Stile F',
-    tagline: UNIVERSAL_TAGLINE,
-    description: UNIVERSAL_DESCRIPTION,
-    originalPrice: 25.00,
-    price: 20.00,
-    badge: 'Stile F',
-    image: '/stile-f.jpg',
+    badge: 'Stile K',
+    image: '/stile-k.jpg',
     stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
   }
 ];
@@ -265,13 +254,12 @@ export default function App() {
     const productsRef = collection(db, 'products');
     const ordersRef = collection(db, 'orders');
 
-    // Subscribe to products
+    // Subscribe to products (mostriamo solo gli stili nuovi G - K)
     const unsubProducts = onSnapshot(productsRef, (snapshot) => {
       if (!snapshot.empty) {
         const loadedProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        // Filtriamo solo i 6 stili principali A-F per nascondere i vecchi
-        const activeSix = loadedProducts.filter(p => ['hoodie-a', 'hoodie-b', 'hoodie-c', 'hoodie-d', 'hoodie-e', 'hoodie-f'].includes(p.id));
-        setProducts(activeSix.length > 0 ? activeSix : INITIAL_PRODUCTS);
+        const activeNewStyles = loadedProducts.filter(p => ['hoodie-g', 'hoodie-h', 'hoodie-i', 'hoodie-j', 'hoodie-k'].includes(p.id));
+        setProducts(activeNewStyles.length > 0 ? activeNewStyles : INITIAL_PRODUCTS);
       } else {
         INITIAL_PRODUCTS.forEach(async (p) => {
           await setDoc(doc(productsRef, p.id), p);
@@ -502,14 +490,12 @@ export default function App() {
             
             {/* PLACEHOLDER LOGO SCUOLA / LISTA RAPPRESENTANTI */}
             <div className="hidden md:flex items-center gap-2 border border-blue-800/80 bg-blue-900/40 backdrop-blur px-3 py-1.5 rounded-xl text-blue-200 text-xs">
-              {/* Sostituisci il tag sottostante con l'immagine reale del tuo logo */}
               <div className="w-8 h-8 rounded-lg bg-orange-500/20 border border-orange-500/30 flex items-center justify-center text-orange-400 font-bold overflow-hidden">
                 <img 
                   src="/logo-lista.png" 
                   alt="Logo Scuola / Lista" 
                   className="w-full h-full object-contain"
                   onError={(e) => {
-                    // Fallback se l'immagine non viene trovata
                     e.currentTarget.style.display = 'none';
                   }}
                 />
@@ -641,7 +627,7 @@ export default function App() {
                     Nuova Collezione Felpe Divini
                   </h2>
                   <p className="text-xs text-slate-500">
-                    Scegli tra i 6 stili ufficiali • Taglie disponibili: XS, S, M, L, XL, 2XL, 3XL
+                    Scegli tra i 5 nuovi stili ufficiali (G, H, I, J, K) • Taglie: XS, S, M, L, XL, 2XL, 3XL
                   </p>
                 </div>
                 
@@ -651,7 +637,7 @@ export default function App() {
                 </div>
               </div>
 
-              {/* 6 Hoodies Grid */}
+              {/* 5 Hoodies Grid (G - K) */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {products.map((product) => {
                   const totalStock = Object.values(product.stock || {}).reduce((a, b) => a + b, 0);
@@ -1017,7 +1003,7 @@ export default function App() {
                     Gestione Giacenze Magazzino Divini
                   </h2>
                   <p className="text-xs text-slate-500">
-                    Modifica le disponibilità delle taglie per i 6 stili (da XS a 3XL).
+                    Modifica le disponibilità delle taglie per i 5 stili attivi (da Stile G a Stile K).
                   </p>
                 </div>
 
@@ -1321,7 +1307,7 @@ export default function App() {
                 <div className="text-center py-12 text-slate-400">
                   <ShoppingBag className="w-12 h-12 mx-auto mb-3 opacity-30" />
                   <p className="text-sm font-semibold">Il carrello è vuoto.</p>
-                  <p className="text-xs text-slate-400 mt-1">Scegli uno dei 6 stili per prenotare.</p>
+                  <p className="text-xs text-slate-400 mt-1">Scegli uno dei 5 stili per prenotare.</p>
                 </div>
               ) : (
                 cart.map((item, idx) => (
