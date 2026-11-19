@@ -7,18 +7,21 @@ export type OrderStatus =
   | 'Annullato';
 
 export type View = 'shop' | 'admin';
-export type AdminTab = 'orders' | 'inventory';
+export type AdminTab = 'orders' | 'inventory' | 'catalog';
 
 export interface Product {
   id: string;
   name: string;
   tagline: string;
   description: string;
-  originalPrice: number;
+  /** Prezzo pieno barrato. I prodotti vecchi su Firestore non lo hanno (si usa 25€). */
+  originalPrice?: number;
   price: number;
   badge: string;
   image: string;
   stock: Record<string, number>;
+  /** Visibile nel negozio. Se manca, vale la lista ACTIVE_PRODUCT_IDS (prodotti vecchi). */
+  active?: boolean;
 }
 
 export interface CartItem {

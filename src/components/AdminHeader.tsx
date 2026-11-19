@@ -1,4 +1,4 @@
-import { ShieldCheck, Package, SlidersHorizontal, LogOut } from 'lucide-react';
+import { ShieldCheck, Package, SlidersHorizontal, LogOut, LayoutGrid } from 'lucide-react';
 import { auth } from '../firebase';
 import type { AdminStats, AdminTab, Order } from '../types';
 
@@ -49,6 +49,17 @@ export default function AdminHeader({ activeAdminTab, setActiveAdminTab, orders,
             >
               <SlidersHorizontal className="w-4 h-4" />
               Scorte
+            </button>
+            <button
+              onClick={() => setActiveAdminTab('catalog')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+                activeAdminTab === 'catalog'
+                  ? 'bg-orange-500 text-blue-950 shadow-md'
+                  : 'text-blue-200 hover:text-white'
+              }`}
+            >
+              <LayoutGrid className="w-4 h-4" />
+              Catalogo
             </button>
           </div>
 

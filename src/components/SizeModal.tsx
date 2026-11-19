@@ -1,5 +1,5 @@
 import { X, ShoppingCart } from 'lucide-react';
-import { ALL_SIZES } from '../constants';
+import { ALL_SIZES, formatPrice, getOriginalPrice } from '../constants';
 import type { Product } from '../types';
 
 interface SizeModalProps {
@@ -35,9 +35,13 @@ export default function SizeModal({ selectedProductModal, setSelectedProductModa
               {selectedProductModal.name}
             </h3>
             <div className="flex items-center gap-2 mt-0.5">
-              <span className="text-xs line-through text-slate-400 font-semibold">€25,00</span>
+              {getOriginalPrice(selectedProductModal) > selectedProductModal.price && (
+                <span className="text-xs line-through text-slate-400 font-semibold">
+                  {formatPrice(getOriginalPrice(selectedProductModal))}
+                </span>
+              )}
               <span className="text-base sm:text-lg font-black text-blue-950">
-                €20,00
+                {formatPrice(selectedProductModal.price)}
               </span>
             </div>
           </div>
@@ -85,7 +89,7 @@ export default function SizeModal({ selectedProductModal, setSelectedProductModa
           className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-xs sm:text-sm"
         >
           <ShoppingCart className="w-4 h-4" />
-          Aggiungi al Carrello (Taglia {modalSize} - 20€)
+          Aggiungi al Carrello (Taglia {modalSize} - {formatPrice(selectedProductModal.price)})
         </button>
       </div>
     </div>

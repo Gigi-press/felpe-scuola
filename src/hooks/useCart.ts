@@ -1,9 +1,23 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { CartItem, Product } from '../types';
 
 export function useCart(products: Product[]) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+
+  // Se l'admin cambia prezzo o dati di un prodotto, aggiorna anche quelli nel carrello
+  useEffect(() => {
+    setCart(prev => {
+      let changed = false;
+      const next = prev.map(item => {
+        const latest = products.find(p => p.id === item.product.id);
+        if (!latest || latest === item.product) return item;
+        changed = true;
+        return { ...item, product: latest };
+      });
+      return changed ? next : prev;
+    });
+  }, [products]);
 
   const addToCart = (product: Product, size: string, quantity = 1) => {
     const currentStock = product.stock[size] || 0;

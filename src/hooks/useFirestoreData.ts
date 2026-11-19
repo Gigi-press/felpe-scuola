@@ -1,18 +1,21 @@
 import { useEffect, useState } from 'react';
 import { collection, doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { db } from '../firebase';
-import { ACTIVE_PRODUCT_IDS, INITIAL_PRODUCTS, IS_TEST_MODE, TEST_PRODUCT, TEST_PRODUCT_ID } from '../constants';
+import { INITIAL_PRODUCTS, IS_TEST_MODE, TEST_PRODUCT, TEST_PRODUCT_ID, isProductActive } from '../constants';
 import type { Order, Product } from '../types';
 
 /**
  * Sincronizza prodotti e ordini con Firestore.
- * I prodotti sono pubblici; gli ordini (dati personali) vengono letti solo dagli admin.
+ * - `products`: quelli visibili nel negozio (attivi, + prodotto test in modalità test)
+ * - `allProducts`: tutto il catalogo su Firestore, per la sezione Catalogo dell'admin
+ * Gli ordini (dati personali) vengono letti solo dagli admin.
  */
 export function useFirestoreData(isAdmin: boolean) {
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
+  const [allProducts, setAllProducts] = useState<Product[]>(INITIAL_PRODUCTS);
   const [orders, setOrders] = useState<Order[]>([]);
 
-  // Prodotti (mostriamo solo gli stili attivi)
+  // Prodotti
   useEffect(() => {
     if (!db) return;
     const productsRef = collection(db, 'products');
@@ -20,12 +23,13 @@ export function useFirestoreData(isAdmin: boolean) {
     const unsubProducts = onSnapshot(productsRef, (snapshot) => {
       if (!snapshot.empty) {
         const loadedProducts = snapshot.docs.map(d => ({ id: d.id, ...d.data() })) as Product[];
-        const activeNewStyles = loadedProducts.filter(p => ACTIVE_PRODUCT_IDS.includes(p.id));
-        const shown = activeNewStyles.length > 0 ? activeNewStyles : INITIAL_PRODUCTS;
+        setAllProducts(loadedProducts);
+
+        const visible = loadedProducts.filter(p => p.id !== TEST_PRODUCT_ID && isProductActive(p));
 
         // Modalità test: aggiunge il prodotto di prova in cima (se esiste su Firestore)
         const testProduct = loadedProducts.find(p => p.id === TEST_PRODUCT_ID);
-        setProducts(IS_TEST_MODE && testProduct ? [testProduct, ...shown] : shown);
+        setProducts(IS_TEST_MODE && testProduct ? [testProduct, ...visible] : visible);
 
         // Un admin in modalità test crea il prodotto di prova se manca
         if (IS_TEST_MODE && isAdmin && !testProduct) {
@@ -35,7 +39,8 @@ export function useFirestoreData(isAdmin: boolean) {
       } else if (isAdmin) {
         // Catalogo vuoto: solo un admin può crearlo (le regole lo impediscono agli altri)
         INITIAL_PRODUCTS.forEach(p => {
-          setDoc(doc(productsRef, p.id), p).catch(err => console.warn("Seed error:", err));
+          setDoc(doc(productsRef, p.id), { ...p, active: true })
+            .catch(err => console.warn("Seed error:", err));
         });
       }
     }, (err) => console.warn("Products sync error:", err));
@@ -60,5 +65,5 @@ export function useFirestoreData(isAdmin: boolean) {
     return () => unsubOrders();
   }, [isAdmin]);
 
-  return { products, setProducts, orders, setOrders };
+  return { products, setProducts, allProducts, setAllProducts, orders, setOrders };
 }

@@ -1,4 +1,5 @@
 import { ShoppingCart, X, ShoppingBag, Trash2, Euro, ChevronRight } from 'lucide-react';
+import { formatPrice } from '../constants';
 import type { CartItem } from '../types';
 
 interface CartDrawerProps {
@@ -32,7 +33,7 @@ export default function CartDrawer({ setIsCartOpen, cart, updateCartQty, cartTot
             <div className="text-center py-12 text-slate-400">
               <ShoppingBag className="w-12 h-12 mx-auto mb-3 opacity-30" />
               <p className="text-sm font-semibold">Il carrello è vuoto.</p>
-              <p className="text-xs text-slate-400 mt-1">Scegli uno dei 5 stili per prenotare.</p>
+              <p className="text-xs text-slate-400 mt-1">Scegli uno degli stili per prenotare.</p>
             </div>
           ) : (
             cart.map((item, idx) => (
@@ -47,7 +48,7 @@ export default function CartDrawer({ setIsCartOpen, cart, updateCartQty, cartTot
                   <div className="flex items-center gap-2 text-xs text-slate-500 my-1">
                     <span>Taglia: <strong className="text-blue-900 uppercase font-black">{item.size}</strong></span>
                     <span>•</span>
-                    <span className="font-bold text-slate-900">€20,00</span>
+                    <span className="font-bold text-slate-900">{formatPrice(item.product.price)}</span>
                   </div>
 
                   <div className="flex items-center justify-between mt-2">

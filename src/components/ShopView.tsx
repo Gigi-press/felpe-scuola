@@ -1,5 +1,5 @@
 import { Sparkles, GraduationCap, BookOpen, Building2, Tag, ShoppingCart } from 'lucide-react';
-import { ALL_SIZES } from '../constants';
+import { ALL_SIZES, formatPrice, getOriginalPrice } from '../constants';
 import type { Product } from '../types';
 
 interface ShopViewProps {
@@ -73,7 +73,7 @@ export default function ShopView({ products, setSelectedProductModal, setModalSi
               Nuova Collezione Felpe Divini - Pezzi limitati!
             </h2>
             <p className="text-xs text-slate-500">
-              Scegli tra i 5 nuovi stili ufficiali (G, H, I, J, K) • Taglie: XS - 3XL
+              Scegli tra {products.length === 1 ? '1 stile ufficiale' : `${products.length} stili ufficiali`} • Taglie: XS - 3XL
             </p>
           </div>
 
@@ -83,7 +83,14 @@ export default function ShopView({ products, setSelectedProductModal, setModalSi
           </div>
         </div>
 
-        {/* 5 Hoodies Grid (G - K) */}
+        {products.length === 0 && (
+          <div className="text-center py-16 text-slate-500">
+            <p className="text-sm font-bold">Al momento non ci sono felpe disponibili.</p>
+            <p className="text-xs mt-1">Torna a trovarci presto!</p>
+          </div>
+        )}
+
+        {/* Griglia felpe */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
           {products.map((product) => {
             const totalStock = Object.values(product.stock || {}).reduce((a, b) => a + b, 0);
@@ -107,8 +114,10 @@ export default function ShopView({ products, setSelectedProductModal, setModalSi
 
                   {/* Discount Ribbon */}
                   <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-orange-500 text-white font-black text-xs px-2.5 py-1 rounded-full shadow">
-                    <span className="line-through text-orange-200 text-[10px] font-semibold">€25</span>
-                    <span>€20,00</span>
+                    {getOriginalPrice(product) > product.price && (
+                      <span className="line-through text-orange-200 text-[10px] font-semibold">{formatPrice(getOriginalPrice(product))}</span>
+                    )}
+                    <span>{formatPrice(product.price)}</span>
                   </div>
                 </div>
 
@@ -173,7 +182,7 @@ export default function ShopView({ products, setSelectedProductModal, setModalSi
                       }`}
                     >
                       <ShoppingCart className="w-4 h-4 text-orange-400" />
-                      {totalStock > 0 ? 'Scegli Taglia e Ordina (20€)' : 'Esaurito'}
+                      {totalStock > 0 ? `Scegli Taglia e Ordina (${formatPrice(product.price)})` : 'Esaurito'}
                     </button>
 
                   </div>

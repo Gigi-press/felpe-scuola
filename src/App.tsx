@@ -9,6 +9,8 @@ import ShopView from './components/ShopView';
 import AdminHeader from './components/AdminHeader';
 import OrdersTab from './components/OrdersTab';
 import InventoryTab from './components/InventoryTab';
+import CatalogTab from './components/CatalogTab';
+import { useCatalogAdmin } from './hooks/useCatalogAdmin';
 import AdminLocked from './components/AdminLocked';
 import AdminLoginModal from './components/AdminLoginModal';
 import SizeModal from './components/SizeModal';
@@ -50,7 +52,10 @@ export default function App() {
   } = useAdminAuth(setCurrentView);
 
   // Dati (prodotti e ordini sincronizzati con Firestore)
-  const { products, setProducts, orders, setOrders } = useFirestoreData(isAdminAuthenticated);
+  const { products, setProducts, allProducts, setAllProducts, orders, setOrders } = useFirestoreData(isAdminAuthenticated);
+
+  // Catalogo (aggiungi / nascondi / elimina prodotti)
+  const { addProduct, setProductActive, updateProductPrice, deleteProduct } = useCatalogAdmin(allProducts, setAllProducts, setProducts);
 
   // Carrello
   const {
@@ -77,7 +82,7 @@ export default function App() {
     filteredOrders,
     handleUpdateOrderStatus,
     handleUpdateStock,
-  } = useAdminData(orders, products, setOrders, setProducts);
+  } = useAdminData(orders, allProducts, setOrders, setAllProducts, setProducts);
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans flex flex-col antialiased overflow-x-hidden">
@@ -136,7 +141,20 @@ export default function App() {
             )}
 
             {activeAdminTab === 'inventory' && (
-              <InventoryTab products={products} handleUpdateStock={handleUpdateStock} />
+              <InventoryTab
+                allProducts={allProducts}
+                handleUpdateStock={handleUpdateStock}
+                updateProductPrice={updateProductPrice}
+              />
+            )}
+
+            {activeAdminTab === 'catalog' && (
+              <CatalogTab
+                allProducts={allProducts}
+                addProduct={addProduct}
+                setProductActive={setProductActive}
+                deleteProduct={deleteProduct}
+              />
             )}
           </div>
         ) : (

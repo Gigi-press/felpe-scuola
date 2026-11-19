@@ -2,8 +2,29 @@ import type { Product } from './types';
 
 export const ALL_SIZES = ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL'];
 
-// Stili attualmente in vendita (gli altri restano su Firestore ma non vengono mostrati)
+// Stili in vendita per i prodotti che non hanno ancora il campo "active"
+// (quelli creati prima della sezione Catalogo). Dal pannello admin si può cambiare.
 export const ACTIVE_PRODUCT_IDS = ['hoodie-g', 'hoodie-h', 'hoodie-i', 'hoodie-j', 'hoodie-k'];
+
+/** Il prodotto è visibile nel negozio? (il prodotto test è gestito a parte) */
+export function isProductActive(p: Product): boolean {
+  return p.active ?? ACTIVE_PRODUCT_IDS.includes(p.id);
+}
+
+// Prezzo pieno usato per i prodotti vecchi che non hanno "originalPrice"
+const LEGACY_ORIGINAL_PRICE = 25;
+
+export function getOriginalPrice(p: Product): number {
+  return p.originalPrice ?? LEGACY_ORIGINAL_PRICE;
+}
+
+/** 20 → "€20,00" */
+export function formatPrice(n: number): string {
+  return '€' + n.toFixed(2).replace('.', ',');
+}
+
+// Immagini già presenti nella cartella public/ (selezionabili quando si crea un prodotto)
+export const AVAILABLE_IMAGES = 'abcdefghijk'.split('').map(l => `/stile-${l}.jpg`);
 
 // Modalità test: si attiva aprendo il sito con ?test=1 (es. https://tuosito/?test=1)
 export const IS_TEST_MODE =
@@ -25,8 +46,8 @@ export const TEST_PRODUCT: Product = {
 };
 
 // Descrizione Universale per tutti gli stili
-const UNIVERSAL_TAGLINE = "Felpa ufficiale d'istituto unisex con cappuccio e tasca a marsupio";
-const UNIVERSAL_DESCRIPTION = "Felpa unisex in cotone morbido e resistente con cappuccio e tasca frontale a marsupio. Design esclusivo caratterizzato dallo stemma ufficiale Divini sul petto e dall'iconica maxi-grafica verticale \"DIVINI\" stampata sulla schiena. Vestibilità comoda, ideale sia per la scuola che per il tempo libero.";
+export const UNIVERSAL_TAGLINE = "Felpa ufficiale d'istituto unisex con cappuccio e tasca a marsupio";
+export const UNIVERSAL_DESCRIPTION = "Felpa unisex in cotone morbido e resistente con cappuccio e tasca frontale a marsupio. Design esclusivo caratterizzato dallo stemma ufficiale Divini sul petto e dall'iconica maxi-grafica verticale \"DIVINI\" stampata sulla schiena. Vestibilità comoda, ideale sia per la scuola che per il tempo libero.";
 
 // Catalogo 5 Nuovi Stili Attivi (Da Stile G a Stile K) - Prezzo 20€ (scontato da 25€)
 export const INITIAL_PRODUCTS: Product[] = [

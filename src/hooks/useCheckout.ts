@@ -114,6 +114,13 @@ export function useCheckout({
               throw new CheckoutError('Un prodotto nel carrello non è più disponibile.');
             }
             const data = snap.data() as Product;
+            // Il prezzo potrebbe essere stato cambiato dall'admin mentre il cliente ordinava
+            const cartPrice = cart.find(ci => ci.product.id === productIds[i])?.product.price;
+            if (cartPrice !== undefined && data.price !== cartPrice) {
+              throw new CheckoutError(
+                `Il prezzo di ${data.name} è cambiato (ora ${data.price.toFixed(2).replace('.', ',')}€). Controlla il totale e riprova.`
+              );
+            }
             const stock = { ...(data.stock || {}) };
             for (const [size, qty] of Object.entries(requested[productIds[i]])) {
               const available = stock[size] || 0;

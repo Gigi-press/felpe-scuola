@@ -7,8 +7,9 @@ import type { AdminStats, Order, Product } from '../types';
 /** Filtri, statistiche e azioni del pannello admin (ordini e scorte). */
 export function useAdminData(
   orders: Order[],
-  products: Product[],
+  allProducts: Product[],
   setOrders: React.Dispatch<React.SetStateAction<Order[]>>,
+  setAllProducts: React.Dispatch<React.SetStateAction<Product[]>>,
   setProducts: React.Dispatch<React.SetStateAction<Product[]>>,
 ) {
   const [roleFilter, setRoleFilter] = useState('all');
@@ -26,18 +27,18 @@ export function useAdminData(
 
   const handleUpdateStock = async (productId: string, size: string, newQty: number | string) => {
     const qty = Math.max(0, parseInt(String(newQty)) || 0);
-    const updated = products.map(p => {
-      if (p.id === productId) {
-        const newStock = { ...p.stock, [size]: qty };
-        if (db) {
-          const prodDoc = doc(db, 'products', p.id);
-          updateDoc(prodDoc, { stock: newStock }).catch(e => console.warn(e));
-        }
-        return { ...p, stock: newStock };
-      }
-      return p;
-    });
-    setProducts(updated);
+    // Cerca in tutto il catalogo, così funziona anche per i prodotti nascosti
+    const product = allProducts.find(p => p.id === productId);
+    if (!product) return;
+    const newStock = { ...product.stock, [size]: qty };
+
+    if (db) {
+      updateDoc(doc(db, 'products', productId), { stock: newStock }).catch(e => console.warn(e));
+    }
+    // Aggiornamento immediato a schermo (poi arriva la conferma da Firestore)
+    const patch = (list: Product[]) => list.map(p => p.id === productId ? { ...p, stock: newStock } : p);
+    setAllProducts(patch);
+    setProducts(patch);
   };
 
   // Admin Analytics Computation
