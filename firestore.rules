@@ -1,0 +1,86 @@
+rules_version = '2';
+
+// Regole di sicurezza Firestore per il negozio felpe.
+// Da incollare in Firebase Console > Firestore Database > Regole, poi "Pubblica".
+//
+// Admin = utente che ha un documento in /admins/{uid}.
+// Per aggiungere un admin: Firebase Console > Authentication > copia l'UID dell'utente,
+// poi Firestore > crea la collezione "admins" con un documento con ID = quell'UID
+// (il contenuto può essere qualsiasi, es. { nome: "Mario Rossi" }).
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    // Ogni taglia può solo restare uguale o diminuire, mai sotto zero.
+    function sizeDecreasedOrSame(size) {
+      return !(size in request.resource.data.stock)
+        || (request.resource.data.stock[size] is int
+            && request.resource.data.stock[size] >= 0
+            && request.resource.data.stock[size] <= resource.data.stock.get(size, 0));
+    }
+
+    // Un cliente (anche anonimo) può solo scalare le scorte durante un ordine.
+    function isValidStockDecrease() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['stock'])
+        && request.resource.data.stock.keys().hasOnly(['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL'])
+        && sizeDecreasedOrSame('XS')
+        && sizeDecreasedOrSame('S')
+        && sizeDecreasedOrSame('M')
+        && sizeDecreasedOrSame('L')
+        && sizeDecreasedOrSame('XL')
+        && sizeDecreasedOrSame('2XL')
+        && sizeDecreasedOrSame('3XL');
+    }
+
+    function isValidNewOrder() {
+      let o = request.resource.data;
+      return o.keys().hasOnly(['orderCode', 'customer', 'items', 'totalAmount', 'paymentMethod', 'status', 'createdAt'])
+        && o.orderCode is string && o.orderCode.size() <= 30
+        && o.status == 'In attesa'
+        && o.totalAmount is number && o.totalAmount > 0 && o.totalAmount <= 2000
+        && o.items is list && o.items.size() > 0 && o.items.size() <= 50
+        && o.customer is map
+        && o.customer.keys().hasOnly(['firstName', 'lastName', 'phone', 'role', 'location', 'notes'])
+        && o.customer.firstName is string && o.customer.firstName.size() > 0 && o.customer.firstName.size() <= 60
+        && o.customer.lastName is string && o.customer.lastName.size() > 0 && o.customer.lastName.size() <= 60
+        && o.customer.phone is string && o.customer.phone.size() > 0 && o.customer.phone.size() <= 100
+        && o.customer.role in ['studente', 'docente', 'ata']
+        && o.customer.location is string && o.customer.location.size() <= 100
+        && o.customer.notes is string && o.customer.notes.size() <= 500
+        && o.paymentMethod is string && o.paymentMethod.size() <= 100
+        && o.createdAt is int;
+    }
+
+    // Lista admin: ognuno può verificare solo se stesso; si modifica solo dalla console.
+    match /admins/{uid} {
+      allow read: if isSignedIn() && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    // Catalogo: pubblico in lettura.
+    match /products/{productId} {
+      allow read: if true;
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin() || (isSignedIn() && isValidStockDecrease());
+    }
+
+    // Ordini: contengono dati personali → leggibili e modificabili solo dagli admin.
+    match /orders/{orderId} {
+      allow read, update, delete: if isAdmin();
+      allow create: if isAdmin() || (isSignedIn() && isValidNewOrder());
+    }
+
+    // Tutto il resto è chiuso.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

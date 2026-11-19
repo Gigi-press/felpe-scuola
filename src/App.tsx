@@ -1,1681 +1,214 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { initializeApp } from 'firebase/app';
-import { 
-  getAuth, 
-  signInAnonymously, 
-  signInWithCustomToken, 
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged 
-} from 'firebase/auth';
-import { 
-  getFirestore, 
-  collection, 
-  doc, 
-  onSnapshot, 
-  setDoc, 
-  updateDoc, 
-  addDoc 
-} from 'firebase/firestore';
-import { 
-  ShoppingBag, 
-  ShoppingCart, 
-  GraduationCap, 
-  Search, 
-  CheckCircle, 
-  Trash2, 
-  Printer, 
-  School, 
-  Package, 
-  Euro, 
-  ChevronRight, 
-  Sparkles, 
-  ShieldCheck, 
-  AlertCircle, 
-  X, 
-  SlidersHorizontal, 
-  Building2, 
-  BookOpen, 
-  Lock, 
-  Key, 
-  LogOut, 
-  Mail,
-  Tag,
-  Image as ImageIcon
-} from 'lucide-react';
-
-// Firebase Config del progetto felpescarti-as26-27
-const firebaseConfig = {
-  apiKey: "AIzaSyBWM8Ik7WWlYjn7XRW5hQnKptm4OrBVszo",
-  authDomain: "felpescarti-as26-27.firebaseapp.com",
-  projectId: "felpescarti-as26-27",
-  storageBucket: "felpescarti-as26-27.firebasestorage.app",
-  messagingSenderId: "730372682315",
-  appId: "1:730372682315:web:256c227f461b1cc5b713ce",
-  measurementId: "G-7QZSSME7VB"
-};
-
-let app, auth, db;
-
-try {
-  app = initializeApp(firebaseConfig);
-  auth = getAuth(app);
-  db = getFirestore(app);
-} catch (err) {
-  console.warn("Firebase config error, using memory fallback mode:", err);
-}
-
-const ALL_SIZES = ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL'];
-
-// Descrizione Universale per tutti gli stili
-const UNIVERSAL_TAGLINE = "Felpa ufficiale d'istituto unisex con cappuccio e tasca a marsupio";
-const UNIVERSAL_DESCRIPTION = "Felpa unisex in cotone morbido e resistente con cappuccio e tasca frontale a marsupio. Design esclusivo caratterizzato dallo stemma ufficiale Divini sul petto e dall'iconica maxi-grafica verticale \"DIVINI\" stampata sulla schiena. Vestibilità comoda, ideale sia per la scuola che per il tempo libero.";
-
-// Catalogo 5 Nuovi Stili Attivi (Da Stile G a Stile K) - Prezzo 20€ (scontato da 25€)
-const INITIAL_PRODUCTS = [
-  {
-    id: 'hoodie-g',
-    name: 'Felpa Stile G',
-    tagline: UNIVERSAL_TAGLINE,
-    description: UNIVERSAL_DESCRIPTION,
-    originalPrice: 25.00,
-    price: 20.00,
-    badge: 'Stile G',
-    image: '/stile-g.jpg',
-    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
-  },
-  {
-    id: 'hoodie-h',
-    name: 'Felpa Stile H',
-    tagline: UNIVERSAL_TAGLINE,
-    description: UNIVERSAL_DESCRIPTION,
-    originalPrice: 25.00,
-    price: 20.00,
-    badge: 'Stile H',
-    image: '/stile-h.jpg',
-    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
-  },
-  {
-    id: 'hoodie-i',
-    name: 'Felpa Stile I',
-    tagline: UNIVERSAL_TAGLINE,
-    description: UNIVERSAL_DESCRIPTION,
-    originalPrice: 25.00,
-    price: 20.00,
-    badge: 'Stile I',
-    image: '/stile-i.jpg',
-    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
-  },
-  {
-    id: 'hoodie-j',
-    name: 'Felpa Stile J',
-    tagline: UNIVERSAL_TAGLINE,
-    description: UNIVERSAL_DESCRIPTION,
-    originalPrice: 25.00,
-    price: 20.00,
-    badge: 'Stile J',
-    image: '/stile-j.jpg',
-    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
-  },
-  {
-    id: 'hoodie-k',
-    name: 'Felpa Stile K',
-    tagline: UNIVERSAL_TAGLINE,
-    description: UNIVERSAL_DESCRIPTION,
-    originalPrice: 25.00,
-    price: 20.00,
-    badge: 'Stile K',
-    image: '/stile-k.jpg',
-    stock: { XS: 10, S: 20, M: 30, L: 20, XL: 10, '2XL': 10, '3XL': 10 }
-  }
-];
+import { useState } from 'react';
+import { useAdminAuth } from './hooks/useAdminAuth';
+import { useFirestoreData } from './hooks/useFirestoreData';
+import { useCart } from './hooks/useCart';
+import { useCheckout } from './hooks/useCheckout';
+import { useAdminData } from './hooks/useAdminData';
+import Header from './components/Header';
+import ShopView from './components/ShopView';
+import AdminHeader from './components/AdminHeader';
+import OrdersTab from './components/OrdersTab';
+import InventoryTab from './components/InventoryTab';
+import AdminLocked from './components/AdminLocked';
+import AdminLoginModal from './components/AdminLoginModal';
+import SizeModal from './components/SizeModal';
+import CartDrawer from './components/CartDrawer';
+import CheckoutModal from './components/CheckoutModal';
+import ConfirmationModal from './components/ConfirmationModal';
+import PrintOrdersModal from './components/PrintOrdersModal';
+import Footer from './components/Footer';
+import { IS_TEST_MODE, TEST_PRODUCT_ID } from './constants';
+import type { AdminTab, Product, View } from './types';
 
 export default function App() {
   // Navigation & View States
-  const [currentView, setCurrentView] = useState('shop'); // 'shop' | 'admin'
-  const [activeAdminTab, setActiveAdminTab] = useState('orders'); // 'orders' | 'inventory'
-  const [logoError, setLogoError] = useState(false);
+  const [currentView, setCurrentView] = useState<View>('shop');
+  const [activeAdminTab, setActiveAdminTab] = useState<AdminTab>('orders');
 
-  // Admin Authentication States
-  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
-  const [isAdminPasswordModalOpen, setIsAdminPasswordModalOpen] = useState(false);
-  const [adminEmailInput, setAdminEmailInput] = useState('');
-  const [adminPasswordInput, setAdminPasswordInput] = useState('');
-  const [adminPasswordError, setAdminPasswordError] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
-
-  // Data States
-  const [products, setProducts] = useState(INITIAL_PRODUCTS);
-  const [orders, setOrders] = useState([]);
-  const [user, setUser] = useState(null);
-
-  // Cart & UI Modals
-  const [cart, setCart] = useState([]);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [selectedProductModal, setSelectedProductModal] = useState(null);
+  // Product selection modal & print modal
+  const [selectedProductModal, setSelectedProductModal] = useState<Product | null>(null);
   const [modalSize, setModalSize] = useState('M');
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const [completedOrder, setCompletedOrder] = useState(null);
   const [printOrdersModal, setPrintOrdersModal] = useState(false);
 
-  // Checkout Form State
-  const [role, setRole] = useState('studente'); // 'studente' | 'docente' | 'ata'
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    studentClass: '',
-    teacherSubject: '',
-    ataOffice: '',
-    phone: '',
-    notes: ''
-  });
+  // Autenticazione admin
+  const {
+    isAdminAuthenticated,
+    isAdminPasswordModalOpen,
+    setIsAdminPasswordModalOpen,
+    adminEmailInput,
+    setAdminEmailInput,
+    adminPasswordInput,
+    setAdminPasswordInput,
+    adminPasswordError,
+    setAdminPasswordError,
+    showPassword,
+    setShowPassword,
+    isLoggingIn,
+    handleOpenAdmin,
+    handleAdminPasswordSubmit,
+    handleAdminLogout,
+  } = useAdminAuth(setCurrentView);
 
-  // Admin Filter States
-  const [roleFilter, setRoleFilter] = useState('all');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  // Dati (prodotti e ordini sincronizzati con Firestore)
+  const { products, setProducts, orders, setOrders } = useFirestoreData(isAdminAuthenticated);
 
-  // Admin Access Handlers
-  const handleOpenAdmin = () => {
-    if (isAdminAuthenticated) {
-      setCurrentView('admin');
-    } else {
-      setAdminPasswordError('');
-      setIsAdminPasswordModalOpen(true);
-    }
-  };
+  // Carrello
+  const {
+    cart, setCart, isCartOpen, setIsCartOpen,
+    addToCart, updateCartQty, cartTotal, cartCount,
+  } = useCart(products);
 
-  const handleAdminPasswordSubmit = async (e) => {
-    e.preventDefault();
-    if (!auth) {
-      setAdminPasswordError('Servizio Firebase non pronto. Riprova tra poco.');
-      return;
-    }
+  // Checkout
+  const {
+    isCheckoutOpen, setIsCheckoutOpen,
+    completedOrder, setCompletedOrder,
+    role, setRole,
+    formData, setFormData,
+    isSubmitting, checkoutError, setCheckoutError,
+    handlePlaceOrder,
+  } = useCheckout({ cart, cartTotal, products, setProducts, setOrders, setCart, setIsCartOpen });
 
-    setIsLoggingIn(true);
-    setAdminPasswordError('');
-
-    try {
-      await signInWithEmailAndPassword(auth, adminEmailInput, adminPasswordInput);
-      setIsAdminAuthenticated(true);
-      setIsAdminPasswordModalOpen(false);
-      setCurrentView('admin');
-      setAdminPasswordInput('');
-    } catch (err: any) {
-      console.error("Login error:", err);
-      setAdminPasswordError('Credenziali non valide! Verifica Email e Password.');
-    } finally {
-      setIsLoggingIn(false);
-    }
-  };
-
-  const handleAdminLogout = async () => {
-    if (auth) {
-      await signOut(auth);
-      try {
-        await signInAnonymously(auth);
-      } catch (err) {}
-    }
-    setIsAdminAuthenticated(false);
-    setCurrentView('shop');
-  };
-
-  useEffect(() => {
-    if (!auth) return;
-    const initAuth = async () => {
-      try {
-        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-          await signInWithCustomToken(auth, __initial_auth_token);
-        } else if (!auth.currentUser) {
-          await signInAnonymously(auth);
-        }
-      } catch (err) {
-        console.error("Auth error:", err);
-      }
-    };
-    initAuth();
-
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      if (currentUser && !currentUser.isAnonymous) {
-        setIsAdminAuthenticated(true);
-      } else {
-        setIsAdminAuthenticated(false);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  // Sync Products & Orders with Firestore
-  useEffect(() => {
-    if (!db) return;
-
-    const productsRef = collection(db, 'products');
-    const ordersRef = collection(db, 'orders');
-
-    // Subscribe to products (mostriamo solo gli stili nuovi G - K)
-    const unsubProducts = onSnapshot(productsRef, (snapshot) => {
-      if (!snapshot.empty) {
-        const loadedProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        const activeNewStyles = loadedProducts.filter(p => ['hoodie-g', 'hoodie-h', 'hoodie-i', 'hoodie-j', 'hoodie-k'].includes(p.id));
-        setProducts(activeNewStyles.length > 0 ? activeNewStyles : INITIAL_PRODUCTS);
-      } else {
-        INITIAL_PRODUCTS.forEach(async (p) => {
-          await setDoc(doc(productsRef, p.id), p);
-        });
-      }
-    }, (err) => console.warn("Products sync error:", err));
-
-    // Subscribe to orders
-    const unsubOrders = onSnapshot(ordersRef, (snapshot) => {
-      const loadedOrders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      loadedOrders.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-      setOrders(loadedOrders);
-    }, (err) => console.warn("Orders sync error:", err));
-
-    return () => {
-      unsubProducts();
-      unsubOrders();
-    };
-  }, [user]);
-
-  const addToCart = (product, size, quantity = 1) => {
-    const currentStock = product.stock[size] || 0;
-    if (currentStock <= 0) return;
-
-    setCart(prev => {
-      const existingIndex = prev.findIndex(item => item.product.id === product.id && item.size === size);
-      if (existingIndex > -1) {
-        const updated = [...prev];
-        const newQty = updated[existingIndex].quantity + quantity;
-        if (newQty > currentStock) {
-          updated[existingIndex].quantity = currentStock;
-        } else {
-          updated[existingIndex].quantity = newQty;
-        }
-        return updated;
-      } else {
-        return [...prev, { product, size, quantity: Math.min(quantity, currentStock) }];
-      }
-    });
-
-    setIsCartOpen(true);
-  };
-
-  const updateCartQty = (productId, size, delta) => {
-    setCart(prev => {
-      return prev.map(item => {
-        if (item.product.id === productId && item.size === size) {
-          const product = products.find(p => p.id === productId);
-          const maxStock = product ? product.stock[size] : 99;
-          const newQty = item.quantity + delta;
-          if (newQty <= 0) return null;
-          return { ...item, quantity: Math.min(newQty, maxStock) };
-        }
-        return item;
-      }).filter(Boolean);
-    });
-  };
-
-  const cartTotal = useMemo(() => {
-    return cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
-  }, [cart]);
-
-  const cartCount = useMemo(() => {
-    return cart.reduce((sum, item) => sum + item.quantity, 0);
-  }, [cart]);
-
-  const handlePlaceOrder = async (e) => {
-    e.preventDefault();
-    if (cart.length === 0) return;
-
-    let locationDetail = '';
-    if (role === 'studente') locationDetail = formData.studentClass;
-    else if (role === 'docente') locationDetail = formData.teacherSubject;
-    else if (role === 'ata') locationDetail = formData.ataOffice;
-
-    const orderId = 'DIVINI-' + Math.floor(1000 + Math.random() * 9000);
-    const newOrder = {
-      orderCode: orderId,
-      customer: {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        phone: formData.phone,
-        role: role,
-        location: locationDetail,
-        notes: formData.notes
-      },
-      items: cart.map(item => ({
-        productId: item.product.id,
-        productName: item.product.name,
-        price: item.product.price,
-        size: item.size,
-        quantity: item.quantity
-      })),
-      totalAmount: cartTotal,
-      paymentMethod: 'Contanti ai rappresentanti d\'istituto (Pre-consegna)',
-      status: 'In attesa',
-      createdAt: Date.now()
-    };
-
-    // Update stock locally and in Firestore
-    const updatedProducts = products.map(p => {
-      const cartItemsForProduct = cart.filter(ci => ci.product.id === p.id);
-      if (cartItemsForProduct.length === 0) return p;
-
-      const newStock = { ...p.stock };
-      cartItemsForProduct.forEach(ci => {
-        newStock[ci.size] = Math.max(0, (newStock[ci.size] || 0) - ci.quantity);
-      });
-
-      if (db) {
-        const prodDoc = doc(db, 'products', p.id);
-        updateDoc(prodDoc, { stock: newStock }).catch(err => console.warn("Stock update err:", err));
-      }
-
-      return { ...p, stock: newStock };
-    });
-
-    setProducts(updatedProducts);
-
-    if (db) {
-      try {
-        const ordersRef = collection(db, 'orders');
-        await addDoc(ordersRef, newOrder);
-      } catch (err) {
-        console.error("Order save err:", err);
-      }
-    } else {
-      setOrders(prev => [newOrder, ...prev]);
-    }
-
-    setCompletedOrder(newOrder);
-    setCart([]);
-    setIsCheckoutOpen(false);
-    setIsCartOpen(false);
-    setFormData({
-      firstName: '',
-      lastName: '',
-      studentClass: '',
-      teacherSubject: '',
-      ataOffice: '',
-      phone: '',
-      notes: ''
-    });
-  };
-
-  const handleUpdateOrderStatus = async (orderToUpdate, newStatus) => {
-    if (db && orderToUpdate.id) {
-      const orderDoc = doc(db, 'orders', orderToUpdate.id);
-      await updateDoc(orderDoc, { status: newStatus });
-    } else {
-      setOrders(prev => prev.map(o => o.orderCode === orderToUpdate.orderCode ? { ...o, status: newStatus } : o));
-    }
-  };
-
-  const handleUpdateStock = async (productId, size, newQty) => {
-    const qty = Math.max(0, parseInt(newQty) || 0);
-    const updated = products.map(p => {
-      if (p.id === productId) {
-        const newStock = { ...p.stock, [size]: qty };
-        if (db) {
-          const prodDoc = doc(db, 'products', p.id);
-          updateDoc(prodDoc, { stock: newStock }).catch(e => console.warn(e));
-        }
-        return { ...p, stock: newStock };
-      }
-      return p;
-    });
-    setProducts(updated);
-  };
-
-  // Admin Analytics Computation
-  const adminStats = useMemo(() => {
-    const totalOrdersCount = orders.length;
-    const collectedCash = orders
-      .filter(o => o.status === 'Consegnato e Incassato')
-      .reduce((acc, o) => acc + o.totalAmount, 0);
-    const pendingCash = orders
-      .filter(o => o.status === 'In attesa' || o.status === 'Pronto per consegna')
-      .reduce((acc, o) => acc + o.totalAmount, 0);
-    const totalHoodiesSold = orders
-      .filter(o => o.status !== 'Annullato')
-      .reduce((acc, o) => acc + o.items.reduce((sum, item) => sum + item.quantity, 0), 0);
-
-    return { totalOrdersCount, collectedCash, pendingCash, totalHoodiesSold };
-  }, [orders]);
-
-  // Filtered Orders for Admin View
-  const filteredOrders = useMemo(() => {
-    return orders.filter(order => {
-      if (roleFilter !== 'all' && order.customer.role !== roleFilter) return false;
-      if (statusFilter !== 'all' && order.status !== statusFilter) return false;
-      if (searchQuery.trim() !== '') {
-        const query = searchQuery.toLowerCase();
-        const fullName = `${order.customer.firstName} ${order.customer.lastName}`.toLowerCase();
-        const location = (order.customer.location || '').toLowerCase();
-        const code = (order.orderCode || '').toLowerCase();
-        return fullName.includes(query) || location.includes(query) || code.includes(query);
-      }
-      return true;
-    });
-  }, [orders, roleFilter, statusFilter, searchQuery]);
+  // Pannello admin: filtri, statistiche, azioni
+  const {
+    roleFilter, setRoleFilter,
+    statusFilter, setStatusFilter,
+    searchQuery, setSearchQuery,
+    adminStats,
+    filteredOrders,
+    handleUpdateOrderStatus,
+    handleUpdateStock,
+  } = useAdminData(orders, products, setOrders, setProducts);
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans flex flex-col antialiased overflow-x-hidden">
-      
-      {/* HEADER NAV - RESPONSIVE MOBILE */}
-      <header className="sticky top-0 z-40 bg-blue-950 text-white shadow-xl border-b border-blue-900">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-0 sm:h-20 flex items-center justify-between gap-2 sm:gap-4">
-          
-          {/* Logo & Divini Title */}
-          <div className="flex items-center gap-2 sm:gap-3 cursor-pointer shrink-0" onClick={() => setCurrentView('shop')}>
-            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-tr from-orange-500 to-orange-400 flex items-center justify-center shadow-md shrink-0">
-              <School className="w-5 h-5 sm:w-6 sm:h-6 text-blue-950" />
-            </div>
-            <div>
-              <span className="text-base sm:text-2xl font-black tracking-tight text-white block leading-tight">
-                FELPE DIVINI
-              </span>
-              <span className="text-[9px] sm:text-xs font-bold tracking-wider text-orange-400 uppercase flex items-center gap-1">
-                <span className="line-through text-blue-300">25€</span>
-                <span className="bg-orange-500 text-white px-1 rounded text-[9px] font-black">PROMO 20€</span>
-              </span>
-            </div>
-          </div>
 
-          {/* Center/Right Navigation & School Logo Placeholder */}
-          <div className="flex items-center gap-2 sm:gap-4">
-            
-            {/* LOGO SCUOLA / LISTA RAPPRESENTANTI */}
-            <div className="hidden lg:flex items-center gap-2.5 border border-blue-800/80 bg-blue-900/40 backdrop-blur px-3 py-1.5 rounded-xl text-blue-200 text-xs">
-              <div className="w-9 h-9 rounded-lg bg-white p-0.5 border border-white/20 flex items-center justify-center overflow-hidden shrink-0 shadow-sm">
-                {!logoError ? (
-                  <img 
-                    src="/logo-lista.png" 
-                    alt="Logo Lista Divini" 
-                    className="w-full h-full object-contain rounded-md"
-                    onError={() => setLogoError(true)}
-                  />
-                ) : (
-                  <ImageIcon className="w-5 h-5 text-orange-400" />
-                )}
-              </div>
-              <div className="text-left leading-tight">
-                <div className="font-extrabold text-white text-[11px]">Rappresentanti Divini</div>
-                <div className="text-[9px] text-orange-300 uppercase font-semibold">Merchandising Ufficiale</div>
-              </div>
-            </div>
+      <Header
+        currentView={currentView}
+        setCurrentView={setCurrentView}
+        handleOpenAdmin={handleOpenAdmin}
+        isAdminAuthenticated={isAdminAuthenticated}
+        orders={orders}
+        setIsCartOpen={setIsCartOpen}
+        cartCount={cartCount}
+      />
 
-            {/* Navigation Buttons */}
-            <div className="bg-blue-900/80 p-0.5 sm:p-1 rounded-xl border border-blue-800 flex items-center shrink-0">
-              <button
-                onClick={() => setCurrentView('shop')}
-                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                  currentView === 'shop'
-                    ? 'bg-orange-500 text-blue-950 shadow-md'
-                    : 'text-slate-300 hover:text-white'
-                }`}
-              >
-                <ShoppingBag className="w-3.5 h-3.5" />
-                <span className="hidden xs:inline">Negozio</span>
-              </button>
-              <button
-                onClick={handleOpenAdmin}
-                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                  currentView === 'admin'
-                    ? 'bg-orange-500 text-blue-950 shadow-md'
-                    : 'text-slate-300 hover:text-white'
-                }`}
-              >
-                <SlidersHorizontal className="w-3.5 h-3.5" />
-                <span>Admin</span>
-                {isAdminAuthenticated ? (
-                  <span className="w-2 h-2 rounded-full bg-emerald-400" title="Autenticato" />
-                ) : (
-                  orders.filter(o => o.status === 'In attesa').length > 0 && (
-                    <span className="w-2 h-2 rounded-full bg-orange-400 animate-ping" />
-                  )
-                )}
-              </button>
-            </div>
-
-            {/* Cart Button */}
-            {currentView === 'shop' && (
-              <button
-                onClick={() => setIsCartOpen(true)}
-                className="relative flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 sm:py-2 rounded-xl text-xs shadow-md transition-all active:scale-95 shrink-0"
-              >
-                <ShoppingCart className="w-4 h-4" />
-                <span className="hidden sm:inline">Carrello</span>
-                {cartCount > 0 && (
-                  <span className="bg-white text-emerald-950 text-[11px] font-extrabold px-1.5 py-0.5 rounded-full">
-                    {cartCount}
-                  </span>
-                )}
-              </button>
-            )}
-
-          </div>
+      {IS_TEST_MODE && (
+        <div role="status" className="bg-yellow-300 text-yellow-950 text-xs sm:text-sm font-bold text-center px-4 py-2 border-b border-yellow-500">
+          🧪 MODALITÀ TEST —{' '}
+          {products.some(p => p.id === TEST_PRODUCT_ID)
+            ? 'il prodotto test è in cima alla lista. Gli ordini di prova vanno annullati dal pannello admin.'
+            : 'prodotto test non ancora creato: entra come admin con questo link per crearlo.'}
         </div>
-      </header>
+      )}
 
       {/* MAIN CONTENT AREA */}
       <main className="flex-1">
         {currentView === 'shop' ? (
           <div>
-            
-            {/* HERO BANNER - DIVINI */}
-            <section className="relative bg-gradient-to-b from-blue-950 via-blue-900 to-slate-900 text-white py-8 sm:py-12 px-4 sm:px-6 lg:px-8 overflow-hidden">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(249,115,22,0.15),transparent_50%)]" />
-              <div className="max-w-7xl mx-auto relative z-10 text-center">
-                
-                <div className="inline-flex items-center gap-2 bg-orange-500/20 border border-orange-500/30 px-3 py-1 rounded-full text-orange-300 text-xs font-bold mb-3">
-                  <Sparkles className="w-3.5 h-3.5 text-orange-400" />
-                  Prenotazione Felpe Ufficiali "Divini"
-                </div>
-
-                <h1 className="text-2xl sm:text-5xl font-black tracking-tight mb-2 sm:mb-3">
-                  Indossa l'Orgoglio del Divini.
-                </h1>
-                <p className="max-w-2xl mx-auto text-slate-200 text-xs sm:text-base mb-6 px-2">
-                  Ordina online al prezzo promozionale di <strong className="text-orange-400 font-bold">20€ (invece di 25€)</strong>. Pagamento ai rappresentanti prima della consegna e ritiro comodo a scuola.
-                </p>
-
-                {/* Info Badges */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3 max-w-3xl mx-auto text-left">
-                  <div className="bg-blue-900/60 backdrop-blur border border-blue-700/80 p-3 rounded-xl flex items-center gap-3">
-                    <div className="p-2 bg-orange-500/20 text-orange-400 rounded-lg shrink-0">
-                      <GraduationCap className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <div className="text-xs font-bold text-white">Studenti</div>
-                      <div className="text-[11px] text-blue-200">Consegna in portineria</div>
-                    </div>
-                  </div>
-
-                  <div className="bg-blue-900/60 backdrop-blur border border-blue-700/80 p-3 rounded-xl flex items-center gap-3">
-                    <div className="p-2 bg-orange-500/20 text-orange-400 rounded-lg shrink-0">
-                      <BookOpen className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <div className="text-xs font-bold text-white">Docenti</div>
-                      <div className="text-[11px] text-blue-200">Consegna in sala professori</div>
-                    </div>
-                  </div>
-
-                  <div className="bg-blue-900/60 backdrop-blur border border-blue-700/80 p-3 rounded-xl flex items-center gap-3">
-                    <div className="p-2 bg-orange-500/20 text-orange-400 rounded-lg shrink-0">
-                      <Building2 className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <div className="text-xs font-bold text-white">Personale ATA</div>
-                      <div className="text-[11px] text-blue-200">Consegna in Portineria/Ufficio</div>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </section>
-
-            {/* PRODUCT CATALOG GRID */}
-            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
-              
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 sm:mb-8 gap-3 border-b border-slate-200 pb-4">
-                <div>
-                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-                    Nuova Collezione Felpe Divini - Pezzi limitati!
-                  </h2>
-                  <p className="text-xs text-slate-500">
-                    Scegli tra i 5 nuovi stili ufficiali (G, H, I, J, K) • Taglie: XS - 3XL
-                  </p>
-                </div>
-                
-                <div className="inline-flex items-center gap-2 text-xs font-bold bg-orange-50 text-orange-950 px-3 py-1.5 rounded-xl border border-orange-200 shadow-sm self-start sm:self-auto">
-                  <Tag className="w-4 h-4 text-orange-600 shrink-0" />
-                  <span>Prezzo Scontato: <strong className="line-through text-slate-400 font-semibold mr-1">25€</strong> <strong className="text-orange-600 font-black text-sm">20,00€</strong></span>
-                </div>
-              </div>
-
-              {/* 5 Hoodies Grid (G - K) */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-                {products.map((product) => {
-                  const totalStock = Object.values(product.stock || {}).reduce((a, b) => a + b, 0);
-                  return (
-                    <div
-                      key={product.id}
-                      className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col group"
-                    >
-                      {/* Image Container */}
-                      <div className="relative aspect-[4/3] bg-slate-100 overflow-hidden">
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                        <div className="absolute top-3 left-3 flex flex-col gap-1">
-                          <span className="bg-blue-950/90 backdrop-blur text-orange-400 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-md shadow border border-orange-500/30">
-                            {product.badge}
-                          </span>
-                        </div>
-                        
-                        {/* Discount Ribbon */}
-                        <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-orange-500 text-white font-black text-xs px-2.5 py-1 rounded-full shadow">
-                          <span className="line-through text-orange-200 text-[10px] font-semibold">€25</span>
-                          <span>€20,00</span>
-                        </div>
-                      </div>
-
-                      {/* Content */}
-                      <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between">
-                        <div>
-                          <div className="flex items-center justify-between mb-1">
-                            <h3 className="font-extrabold text-slate-900 text-base sm:text-lg group-hover:text-blue-900 transition-colors">
-                              {product.name}
-                            </h3>
-                          </div>
-                          
-                          <p className="text-xs font-semibold text-blue-900 mb-2">
-                            {product.tagline}
-                          </p>
-
-                          <p className="text-xs text-slate-600 line-clamp-3 mb-4 leading-relaxed">
-                            {product.description}
-                          </p>
-                        </div>
-
-                        {/* Size availability indicators */}
-                        <div className="border-t border-slate-100 pt-3">
-                          <div className="text-[10px] sm:text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 flex justify-between">
-                            <span>Disponibilità Taglie:</span>
-                            <span className={totalStock > 0 ? "text-emerald-600 font-bold" : "text-red-500 font-bold"}>
-                              {totalStock > 0 ? `Disponibile` : 'Esaurito'}
-                            </span>
-                          </div>
-
-                          {/* Sizes Selector Pills - Grid per Mobile */}
-                          <div className="grid grid-cols-7 gap-1 mb-4">
-                            {ALL_SIZES.map((sz) => {
-                              const stk = (product.stock && product.stock[sz]) || 0;
-                              return (
-                                <div
-                                  key={sz}
-                                  className={`text-center py-1 rounded border text-[9px] sm:text-[10px] font-bold transition-all ${
-                                    stk > 0
-                                      ? 'border-slate-200 bg-slate-50 text-slate-800'
-                                      : 'border-slate-100 bg-slate-100 text-slate-300 line-through'
-                                  }`}
-                                >
-                                  {sz}
-                                </div>
-                              );
-                            })}
-                          </div>
-
-                          {/* Quick Add Button */}
-                          <button
-                            onClick={() => {
-                              setSelectedProductModal(product);
-                              const firstAvailable = ALL_SIZES.find(s => (product.stock && product.stock[s] || 0) > 0) || 'M';
-                              setModalSize(firstAvailable);
-                            }}
-                            disabled={totalStock <= 0}
-                            className={`w-full py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all ${
-                              totalStock > 0
-                                ? 'bg-blue-950 hover:bg-blue-900 text-white shadow-md active:scale-95'
-                                : 'bg-slate-300 text-slate-500 cursor-not-allowed'
-                            }`}
-                          >
-                            <ShoppingCart className="w-4 h-4 text-orange-400" />
-                            {totalStock > 0 ? 'Scegli Taglia e Ordina (20€)' : 'Esaurito'}
-                          </button>
-
-                        </div>
-
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-            </section>
-
+            <ShopView
+              products={products}
+              setSelectedProductModal={setSelectedProductModal}
+              setModalSize={setModalSize}
+            />
           </div>
         ) : isAdminAuthenticated ? (
           <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-8">
-            
-            {/* ADMIN HEADER & STATS BAR */}
-            <div className="bg-blue-950 text-white rounded-2xl p-4 sm:p-6 shadow-xl mb-6 sm:mb-8 border border-blue-900">
-              <div className="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-blue-900 gap-4">
-                <div>
-                  <div className="flex items-center gap-2 text-orange-400 text-xs font-bold uppercase tracking-wider mb-1">
-                    <ShieldCheck className="w-4 h-4" /> Gestione Divini
-                  </div>
-                  <h1 className="text-xl sm:text-2xl font-black">Pannello Gestione Ordini & Incassi</h1>
-                  {auth?.currentUser?.email && (
-                    <p className="text-xs text-blue-300 mt-1">
-                      Connesso come Admin: <span className="text-orange-400 font-semibold">{auth.currentUser.email}</span>
-                    </p>
-                  )}
-                </div>
+            <AdminHeader
+              activeAdminTab={activeAdminTab}
+              setActiveAdminTab={setActiveAdminTab}
+              orders={orders}
+              handleAdminLogout={handleAdminLogout}
+              adminStats={adminStats}
+            />
 
-                <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                  <div className="flex items-center bg-blue-900 p-1 rounded-xl border border-blue-800">
-                    <button
-                      onClick={() => setActiveAdminTab('orders')}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
-                        activeAdminTab === 'orders'
-                          ? 'bg-orange-500 text-blue-950 shadow-md'
-                          : 'text-blue-200 hover:text-white'
-                      }`}
-                    >
-                      <Package className="w-4 h-4" />
-                      Ordini ({orders.length})
-                    </button>
-                    <button
-                      onClick={() => setActiveAdminTab('inventory')}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
-                        activeAdminTab === 'inventory'
-                          ? 'bg-orange-500 text-blue-950 shadow-md'
-                          : 'text-blue-200 hover:text-white'
-                      }`}
-                    >
-                      <SlidersHorizontal className="w-4 h-4" />
-                      Scorte
-                    </button>
-                  </div>
-
-                  <button
-                    onClick={handleAdminLogout}
-                    className="flex items-center gap-1.5 bg-red-600/20 hover:bg-red-600 text-red-300 hover:text-white border border-red-500/30 px-3 py-1.5 rounded-xl text-xs font-bold transition-all"
-                  >
-                    <LogOut className="w-4 h-4" />
-                    Esci
-                  </button>
-                </div>
-              </div>
-
-              {/* STATS CARDS */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 pt-4 sm:pt-6">
-                
-                <div className="bg-blue-900/80 p-3 sm:p-4 rounded-xl border border-blue-800">
-                  <div className="text-blue-300 text-[11px] sm:text-xs font-medium">Totale Ordini</div>
-                  <div className="text-xl sm:text-2xl font-black text-white mt-1">{adminStats.totalOrdersCount}</div>
-                  <div className="text-[9px] sm:text-[10px] text-orange-400 mt-0.5">studenti, prof e ATA</div>
-                </div>
-
-                <div className="bg-blue-900/80 p-3 sm:p-4 rounded-xl border border-blue-800">
-                  <div className="text-blue-300 text-[11px] sm:text-xs font-medium">Contanti Incassati</div>
-                  <div className="text-xl sm:text-2xl font-black text-emerald-400 mt-1">€{adminStats.collectedCash.toFixed(2)}</div>
-                  <div className="text-[9px] sm:text-[10px] text-emerald-300 mt-0.5">ordini consegnati</div>
-                </div>
-
-                <div className="bg-blue-900/80 p-3 sm:p-4 rounded-xl border border-blue-800">
-                  <div className="text-blue-300 text-[11px] sm:text-xs font-medium">Da Incassare</div>
-                  <div className="text-xl sm:text-2xl font-black text-orange-400 mt-1">€{adminStats.pendingCash.toFixed(2)}</div>
-                  <div className="text-[9px] sm:text-[10px] text-orange-300 mt-0.5">in attesa di consegna</div>
-                </div>
-
-                <div className="bg-blue-900/80 p-3 sm:p-4 rounded-xl border border-blue-800">
-                  <div className="text-blue-300 text-[11px] sm:text-xs font-medium">Felpe Prenotate</div>
-                  <div className="text-xl sm:text-2xl font-black text-white mt-1">{adminStats.totalHoodiesSold}</div>
-                  <div className="text-[9px] sm:text-[10px] text-blue-300 mt-0.5">unità totali</div>
-                </div>
-
-              </div>
-            </div>
-
-            {/* TAB 1: ORDERS MANAGEMENT */}
             {activeAdminTab === 'orders' && (
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6">
-                
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-6 pb-6 border-b border-slate-100">
-                  
-                  <div className="relative flex-1">
-                    <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                    <input
-                      type="text"
-                      placeholder="Cerca per Nome, Classe, Ufficio o Codice (#DIVINI)..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-900"
-                    />
-                  </div>
-
-                  <div className="flex flex-wrap items-center gap-2">
-                    
-                    <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-xs font-medium overflow-x-auto max-w-full">
-                      {['all', 'studente', 'docente', 'ata'].map((r) => (
-                        <button
-                          key={r}
-                          onClick={() => setRoleFilter(r)}
-                          className={`px-2 py-1 rounded-lg capitalize text-[11px] sm:text-xs font-bold transition-all shrink-0 ${
-                            roleFilter === r
-                              ? 'bg-white text-slate-900 shadow-sm'
-                              : 'text-slate-600 hover:text-slate-900'
-                          }`}
-                        >
-                          {r === 'all' ? 'Tutti' : r}
-                        </button>
-                      ))}
-                    </div>
-
-                    <select
-                      value={statusFilter}
-                      onChange={(e) => setStatusFilter(e.target.value)}
-                      className="bg-slate-100 border border-slate-200 text-xs font-bold rounded-xl px-2.5 py-2 text-slate-700 focus:outline-none"
-                    >
-                      <option value="all">Tutti gli Stati</option>
-                      <option value="In attesa">In attesa</option>
-                      <option value="Pronto per consegna">Pronto per consegna</option>
-                      <option value="Consegnato e Incassato">Consegnato e Incassato</option>
-                      <option value="Annullato">Annullato</option>
-                    </select>
-
-                    <button
-                      onClick={() => setPrintOrdersModal(true)}
-                      className="flex items-center gap-1 bg-blue-950 hover:bg-blue-900 text-white font-bold text-xs px-3 py-2 rounded-xl transition-all shadow-sm shrink-0"
-                    >
-                      <Printer className="w-3.5 h-3.5 text-orange-400" />
-                      Stampa
-                    </button>
-
-                  </div>
-
-                </div>
-
-                {/* Orders Table */}
-                {filteredOrders.length === 0 ? (
-                  <div className="text-center py-12 text-slate-400">
-                    <Package className="w-12 h-12 mx-auto mb-3 opacity-30" />
-                    <p className="text-sm font-semibold">Nessun ordine trovato con questi filtri.</p>
-                  </div>
-                ) : (
-                  <div className="space-y-3 sm:space-y-4">
-                    {filteredOrders.map((order) => {
-                      let roleBadgeClass = "bg-blue-100 text-blue-900 border-blue-200";
-                      let RoleIcon = GraduationCap;
-                      if (order.customer.role === 'docente') {
-                        roleBadgeClass = "bg-purple-100 text-purple-900 border-purple-200";
-                        RoleIcon = BookOpen;
-                      } else if (order.customer.role === 'ata') {
-                        roleBadgeClass = "bg-orange-100 text-orange-900 border-orange-200";
-                        RoleIcon = Building2;
-                      }
-
-                      let statusBadge = "bg-yellow-100 text-yellow-800 border-yellow-300";
-                      if (order.status === 'Pronto per consegna') statusBadge = "bg-blue-100 text-blue-800 border-blue-300";
-                      else if (order.status === 'Consegnato e Incassato') statusBadge = "bg-emerald-100 text-emerald-800 border-emerald-300";
-                      else if (order.status === 'Annullato') statusBadge = "bg-red-100 text-red-800 border-red-300";
-
-                      return (
-                        <div
-                          key={order.orderCode}
-                          className="border border-slate-200 rounded-xl p-3.5 sm:p-5 hover:border-blue-300 transition-all bg-white shadow-sm"
-                        >
-                          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pb-3 border-b border-slate-100">
-                            
-                            <div className="flex items-start gap-2.5">
-                              <div className={`p-2 rounded-xl border ${roleBadgeClass} shrink-0`}>
-                                <RoleIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-                              </div>
-                              <div>
-                                <div className="flex flex-wrap items-center gap-1.5">
-                                  <h3 className="font-extrabold text-slate-900 text-sm sm:text-base">
-                                    {order.customer.firstName} {order.customer.lastName}
-                                  </h3>
-                                  <span className={`text-[9px] sm:text-[10px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md border ${roleBadgeClass}`}>
-                                    {order.customer.role}
-                                  </span>
-                                  <span className="text-xs font-extrabold text-slate-500">
-                                    #{order.orderCode}
-                                  </span>
-                                </div>
-
-                                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-600 mt-1">
-                                  <span className="font-bold text-slate-800 flex items-center gap-1">
-                                    <School className="w-3.5 h-3.5 text-blue-900" />
-                                    {order.customer.location || 'N/D'}
-                                  </span>
-                                  {order.customer.phone && (
-                                    <span className="text-slate-600 flex items-center gap-1 font-semibold">
-                                      <Mail className="w-3.5 h-3.5 text-blue-900" />
-                                      {order.customer.phone}
-                                    </span>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="flex items-center justify-between lg:justify-end gap-3 pt-2 lg:pt-0 border-t lg:border-t-0 border-slate-100">
-                              <div className="text-left lg:text-right">
-                                <span className="block text-[9px] text-slate-400 font-bold uppercase">Totale Contanti</span>
-                                <span className="text-base sm:text-lg font-black text-emerald-600">€{order.totalAmount.toFixed(2)}</span>
-                              </div>
-
-                              <select
-                                value={order.status}
-                                onChange={(e) => handleUpdateOrderStatus(order, e.target.value)}
-                                className={`text-xs font-bold rounded-xl px-2.5 py-1.5 border shadow-sm focus:outline-none ${statusBadge}`}
-                              >
-                                <option value="In attesa">⏳ In attesa</option>
-                                <option value="Pronto per consegna">📦 Pronto per consegna</option>
-                                <option value="Consegnato e Incassato">✅ Consegnato e Incassato</option>
-                                <option value="Annullato">❌ Annullato</option>
-                              </select>
-                            </div>
-
-                          </div>
-
-                          <div className="pt-2.5 flex flex-wrap items-center justify-between gap-2 text-xs">
-                            <div className="flex flex-wrap gap-1.5">
-                              {order.items.map((item, idx) => (
-                                <span key={idx} className="bg-slate-100 text-slate-800 px-2 py-0.5 rounded-lg border border-slate-200 text-[11px] font-medium">
-                                  <strong>{item.quantity}x</strong> {item.productName} <span className="text-blue-900 font-bold">({item.size})</span>
-                                </span>
-                              ))}
-                            </div>
-                            {order.customer.notes && (
-                              <div className="text-[11px] text-slate-500 italic">
-                                Nota: "{order.customer.notes}"
-                              </div>
-                            )}
-                          </div>
-
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-
-              </div>
+              <OrdersTab
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                roleFilter={roleFilter}
+                setRoleFilter={setRoleFilter}
+                statusFilter={statusFilter}
+                setStatusFilter={setStatusFilter}
+                setPrintOrdersModal={setPrintOrdersModal}
+                filteredOrders={filteredOrders}
+                handleUpdateOrderStatus={handleUpdateOrderStatus}
+              />
             )}
 
-            {/* TAB 2: INVENTORY */}
             {activeAdminTab === 'inventory' && (
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6">
-                <div className="mb-6 pb-4 border-b border-slate-100">
-                  <h2 className="text-lg font-extrabold text-slate-900">
-                    Gestione Giacenze Magazzino Divini
-                  </h2>
-                  <p className="text-xs text-slate-500">
-                    Modifica le disponibilità delle taglie per i 5 stili attivi (da Stile G a Stile K).
-                  </p>
-                </div>
-
-                <div className="space-y-4 sm:space-y-6">
-                  {products.map((product) => (
-                    <div key={product.id} className="border border-slate-200 rounded-xl p-3.5 sm:p-5 bg-slate-50/50">
-                      
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
-                        <div className="flex items-center gap-3">
-                          <img src={product.image} alt={product.name} className="w-10 h-10 rounded-lg object-cover border" />
-                          <div>
-                            <h3 className="font-extrabold text-slate-900 text-sm sm:text-base">{product.name}</h3>
-                            <span className="text-xs font-bold text-orange-600">
-                              <span className="line-through text-slate-400 mr-1">€25,00</span>
-                              €20,00
-                            </span>
-                          </div>
-                        </div>
-
-                        <button
-                          onClick={() => {
-                            ALL_SIZES.forEach(sz => {
-                              handleUpdateStock(product.id, sz, ((product.stock && product.stock[sz]) || 0) + 5);
-                            });
-                          }}
-                          className="bg-blue-50 hover:bg-blue-100 text-blue-900 font-bold text-xs px-2.5 py-1 rounded-lg border border-blue-200 self-start sm:self-auto"
-                        >
-                          +5 su tutte
-                        </button>
-                      </div>
-
-                      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2">
-                        {ALL_SIZES.map((size) => {
-                          const qty = (product.stock && product.stock[size]) || 0;
-                          return (
-                            <div key={size} className="bg-white p-2 rounded-xl border border-slate-200 shadow-sm flex flex-col items-center">
-                              <span className="text-[11px] font-black text-slate-700 uppercase">{size}</span>
-                              <div className="flex items-center gap-1 my-1">
-                                <button
-                                  onClick={() => handleUpdateStock(product.id, size, qty - 1)}
-                                  className="w-5 h-5 rounded bg-slate-100 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700 text-xs"
-                                >
-                                  -
-                                </button>
-                                <input
-                                  type="number"
-                                  value={qty}
-                                  onChange={(e) => handleUpdateStock(product.id, size, e.target.value)}
-                                  className="w-8 text-center text-xs font-extrabold border border-slate-200 rounded py-0.5"
-                                />
-                                <button
-                                  onClick={() => handleUpdateStock(product.id, size, qty + 1)}
-                                  className="w-5 h-5 rounded bg-slate-100 hover:bg-slate-200 flex items-center justify-center font-bold text-slate-700 text-xs"
-                                >
-                                  +
-                                </button>
-                              </div>
-                              <span className={`text-[9px] font-bold ${qty > 0 ? 'text-emerald-600' : 'text-red-500'}`}>
-                                {qty > 0 ? 'In Stock' : 'Esaurito'}
-                              </span>
-                            </div>
-                          );
-                        })}
-                      </div>
-
-                    </div>
-                  ))}
-                </div>
-
-              </div>
+              <InventoryTab products={products} handleUpdateStock={handleUpdateStock} />
             )}
-
           </div>
         ) : (
-          <div className="max-w-md mx-auto px-4 py-16 text-center">
-            <div className="w-16 h-16 bg-slate-200 text-slate-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <Lock className="w-8 h-8" />
-            </div>
-            <h2 className="text-xl font-black text-slate-900 mb-2">Accesso Riservato Divini</h2>
-            <p className="text-xs text-slate-500 mb-6">
-              Devi inserire le credenziali da amministratore per accedere a questa sezione.
-            </p>
-            <button
-              onClick={handleOpenAdmin}
-              className="bg-blue-950 hover:bg-blue-900 text-white font-bold px-6 py-2.5 rounded-xl text-xs shadow-md transition-all"
-            >
-              Accedi al Pannello Admin
-            </button>
-          </div>
+          <AdminLocked handleOpenAdmin={handleOpenAdmin} />
         )}
       </main>
 
-      {/* MODAL: ADMIN FIREBASE AUTHENTICATION */}
       {isAdminPasswordModalOpen && (
-        <div className="fixed inset-0 z-50 bg-blue-950/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-2xl border border-slate-100 relative animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto my-auto">
-            <button
-              onClick={() => setIsAdminPasswordModalOpen(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="w-12 h-12 bg-blue-100 text-blue-900 rounded-2xl flex items-center justify-center mb-4">
-              <Lock className="w-6 h-6" />
-            </div>
-
-            <h3 className="text-lg sm:text-xl font-black text-slate-900 mb-1">
-              Login Admin Divini
-            </h3>
-            <p className="text-xs text-slate-500 mb-5">
-              Inserisci Email e Password configurate nella tua console Firebase.
-            </p>
-
-            <form onSubmit={handleAdminPasswordSubmit} className="space-y-4">
-              <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                  Email Admin
-                </label>
-                <div className="relative">
-                  <input
-                    type="email"
-                    required
-                    autoFocus
-                    placeholder="admin@scuola.it"
-                    value={adminEmailInput}
-                    onChange={(e) => {
-                      setAdminEmailInput(e.target.value);
-                      setAdminPasswordError('');
-                    }}
-                    className="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-900"
-                  />
-                  <Mail className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                  Password Admin
-                </label>
-                <div className="relative">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    required
-                    placeholder="••••••••"
-                    value={adminPasswordInput}
-                    onChange={(e) => {
-                      setAdminPasswordInput(e.target.value);
-                      setAdminPasswordError('');
-                    }}
-                    className={`w-full pl-9 pr-10 py-2.5 bg-slate-50 border rounded-xl text-sm font-medium focus:outline-none focus:ring-2 ${
-                      adminPasswordError
-                        ? 'border-red-400 focus:ring-red-400'
-                        : 'border-slate-200 focus:ring-blue-900'
-                    }`}
-                  />
-                  <Key className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
-                  >
-                    {showPassword ? <X className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
-                  </button>
-                </div>
-
-                {adminPasswordError && (
-                  <div className="flex items-center gap-1.5 text-xs text-red-600 font-bold mt-2">
-                    <AlertCircle className="w-4 h-4" />
-                    <span>{adminPasswordError}</span>
-                  </div>
-                )}
-              </div>
-
-              <div className="flex gap-2 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setIsAdminPasswordModalOpen(false)}
-                  className="flex-1 py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-600 hover:bg-slate-50 transition-all"
-                >
-                  Annulla
-                </button>
-                <button
-                  type="submit"
-                  disabled={isLoggingIn}
-                  className="flex-1 bg-blue-950 hover:bg-blue-900 text-white font-bold py-2.5 rounded-xl text-xs shadow-md transition-all flex items-center justify-center gap-2"
-                >
-                  <Key className="w-4 h-4 text-orange-400" />
-                  {isLoggingIn ? 'Verifica...' : 'Accedi'}
-                </button>
-              </div>
-            </form>
-
-          </div>
-        </div>
+        <AdminLoginModal
+          setIsAdminPasswordModalOpen={setIsAdminPasswordModalOpen}
+          handleAdminPasswordSubmit={handleAdminPasswordSubmit}
+          adminEmailInput={adminEmailInput}
+          setAdminEmailInput={setAdminEmailInput}
+          setAdminPasswordError={setAdminPasswordError}
+          adminPasswordInput={adminPasswordInput}
+          setAdminPasswordInput={setAdminPasswordInput}
+          showPassword={showPassword}
+          setShowPassword={setShowPassword}
+          adminPasswordError={adminPasswordError}
+          isLoggingIn={isLoggingIn}
+        />
       )}
 
-      {/* MODAL: SIZE SELECTION */}
       {selectedProductModal && (
-        <div className="fixed inset-0 z-50 bg-blue-950/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-2xl border border-slate-100 relative animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto my-auto">
-            <button
-              onClick={() => setSelectedProductModal(null)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="flex items-center gap-3 sm:gap-4 mb-3">
-              <img
-                src={selectedProductModal.image}
-                alt={selectedProductModal.name}
-                className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border shrink-0"
-              />
-              <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-orange-600 bg-orange-50 px-2 py-0.5 rounded border border-orange-200">
-                  {selectedProductModal.badge}
-                </span>
-                <h3 className="font-extrabold text-slate-900 text-base sm:text-lg mt-0.5">
-                  {selectedProductModal.name}
-                </h3>
-                <div className="flex items-center gap-2 mt-0.5">
-                  <span className="text-xs line-through text-slate-400 font-semibold">€25,00</span>
-                  <span className="text-base sm:text-lg font-black text-blue-950">
-                    €20,00
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <p className="text-xs text-slate-600 mb-4 leading-relaxed">
-              {selectedProductModal.description}
-            </p>
-
-            <div className="mb-5">
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                Seleziona Taglia:
-              </label>
-              <div className="grid grid-cols-4 sm:grid-cols-7 gap-1.5">
-                {ALL_SIZES.map((sz) => {
-                  const stk = (selectedProductModal.stock && selectedProductModal.stock[sz]) || 0;
-                  const isAvailable = stk > 0;
-                  const isSelected = modalSize === sz;
-
-                  return (
-                    <button
-                      key={sz}
-                      disabled={!isAvailable}
-                      onClick={() => setModalSize(sz)}
-                      className={`py-2 rounded-xl border text-xs font-bold transition-all flex flex-col items-center justify-center ${
-                        isSelected
-                          ? 'border-blue-950 bg-blue-950 text-white shadow-md scale-105'
-                          : isAvailable
-                          ? 'border-slate-200 bg-slate-50 text-slate-800 hover:border-blue-300'
-                          : 'border-slate-100 bg-slate-100 text-slate-300 cursor-not-allowed line-through'
-                      }`}
-                    >
-                      <span>{sz}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            <button
-              onClick={() => {
-                addToCart(selectedProductModal, modalSize, 1);
-                setSelectedProductModal(null);
-              }}
-              className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-xs sm:text-sm"
-            >
-              <ShoppingCart className="w-4 h-4" />
-              Aggiungi al Carrello (Taglia {modalSize} - 20€)
-            </button>
-          </div>
-        </div>
+        <SizeModal
+          selectedProductModal={selectedProductModal}
+          setSelectedProductModal={setSelectedProductModal}
+          modalSize={modalSize}
+          setModalSize={setModalSize}
+          addToCart={addToCart}
+        />
       )}
 
-      {/* CART DRAWER */}
       {isCartOpen && (
-        <div className="fixed inset-0 z-50 bg-blue-950/80 backdrop-blur-sm flex justify-end">
-          <div className="bg-white w-full max-w-md h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
-            
-            <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between bg-blue-950 text-white">
-              <div className="flex items-center gap-2">
-                <ShoppingCart className="w-5 h-5 text-orange-400" />
-                <h2 className="font-extrabold text-base">Carrello Felpe Divini</h2>
-              </div>
-              <button
-                onClick={() => setIsCartOpen(false)}
-                className="text-slate-300 hover:text-white p-1"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3">
-              {cart.length === 0 ? (
-                <div className="text-center py-12 text-slate-400">
-                  <ShoppingBag className="w-12 h-12 mx-auto mb-3 opacity-30" />
-                  <p className="text-sm font-semibold">Il carrello è vuoto.</p>
-                  <p className="text-xs text-slate-400 mt-1">Scegli uno dei 5 stili per prenotare.</p>
-                </div>
-              ) : (
-                cart.map((item, idx) => (
-                  <div key={`${item.product.id}-${item.size}`} className="flex gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
-                    <img
-                      src={item.product.image}
-                      alt={item.product.name}
-                      className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg object-cover border shrink-0"
-                    />
-                    <div className="flex-1">
-                      <h4 className="font-bold text-slate-900 text-sm">{item.product.name}</h4>
-                      <div className="flex items-center gap-2 text-xs text-slate-500 my-1">
-                        <span>Taglia: <strong className="text-blue-900 uppercase font-black">{item.size}</strong></span>
-                        <span>•</span>
-                        <span className="font-bold text-slate-900">€20,00</span>
-                      </div>
-
-                      <div className="flex items-center justify-between mt-2">
-                        <div className="flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-2 py-0.5">
-                          <button
-                            onClick={() => updateCartQty(item.product.id, item.size, -1)}
-                            className="text-slate-600 font-bold hover:text-red-600"
-                          >
-                            -
-                          </button>
-                          <span className="text-xs font-bold text-slate-900">{item.quantity}</span>
-                          <button
-                            onClick={() => updateCartQty(item.product.id, item.size, 1)}
-                            className="text-slate-600 font-bold hover:text-blue-900"
-                          >
-                            +
-                          </button>
-                        </div>
-
-                        <button
-                          onClick={() => updateCartQty(item.product.id, item.size, -item.quantity)}
-                          className="text-slate-400 hover:text-red-500 text-xs flex items-center gap-1"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-
-            {cart.length > 0 && (
-              <div className="p-4 sm:p-5 border-t border-slate-100 bg-slate-50 space-y-3">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="font-bold text-slate-600">Totale Promozionale:</span>
-                  <span className="text-xl sm:text-2xl font-black text-slate-900">€{cartTotal.toFixed(2)}</span>
-                </div>
-
-                <div className="bg-orange-50 border border-orange-200 p-2.5 rounded-xl text-orange-900 text-[11px] flex items-center gap-2">
-                  <Euro className="w-4 h-4 text-orange-600 shrink-0" />
-                  <span>Pagamento in contanti ai rappresentanti d'istituto prima della consegna.</span>
-                </div>
-
-                <button
-                  onClick={() => {
-                    setIsCartOpen(false);
-                    setIsCheckoutOpen(true);
-                  }}
-                  className="w-full bg-blue-950 hover:bg-blue-900 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-sm"
-                >
-                  Procedi all'Ordine
-                  <ChevronRight className="w-4 h-4 text-orange-400" />
-                </button>
-              </div>
-            )}
-
-          </div>
-        </div>
+        <CartDrawer
+          setIsCartOpen={setIsCartOpen}
+          cart={cart}
+          updateCartQty={updateCartQty}
+          cartTotal={cartTotal}
+          setIsCheckoutOpen={setIsCheckoutOpen}
+        />
       )}
 
-      {/* CHECKOUT MODAL */}
       {isCheckoutOpen && (
-        <div className="fixed inset-0 z-50 bg-blue-950/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-4 sm:p-6 shadow-2xl border border-slate-100 my-auto relative animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
-            <button
-              onClick={() => setIsCheckoutOpen(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="flex items-center gap-2 mb-1">
-              <School className="w-5 h-5 text-blue-950 shrink-0" />
-              <h2 className="text-lg sm:text-xl font-black text-slate-900">Checkout Ordine Divini</h2>
-            </div>
-            <p className="text-xs text-slate-500 mb-5">
-              Inserisci i tuoi dati per la prenotazione e il ritiro a scuola.
-            </p>
-
-            <form onSubmit={handlePlaceOrder} className="space-y-4">
-              
-              <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                  1. Seleziona Ruolo:
-                </label>
-
-                <div className="grid grid-cols-3 gap-2">
-                  
-                  <button
-                    type="button"
-                    onClick={() => setRole('studente')}
-                    className={`p-2.5 sm:p-3 rounded-xl border text-left transition-all flex flex-col items-center justify-center gap-1 ${
-                      role === 'studente'
-                        ? 'border-blue-900 bg-blue-50 text-blue-950 ring-2 ring-blue-900/20'
-                        : 'border-slate-200 hover:border-slate-300 text-slate-700'
-                    }`}
-                  >
-                    <GraduationCap className="w-4 h-4 sm:w-5 sm:h-5 text-blue-900" />
-                    <span className="text-[11px] sm:text-xs font-extrabold">Studente</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setRole('docente')}
-                    className={`p-2.5 sm:p-3 rounded-xl border text-left transition-all flex flex-col items-center justify-center gap-1 ${
-                      role === 'docente'
-                        ? 'border-purple-600 bg-purple-50 text-purple-900 ring-2 ring-purple-500/20'
-                        : 'border-slate-200 hover:border-slate-300 text-slate-700'
-                    }`}
-                  >
-                    <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" />
-                    <span className="text-[11px] sm:text-xs font-extrabold">Docente</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setRole('ata')}
-                    className={`p-2.5 sm:p-3 rounded-xl border text-left transition-all flex flex-col items-center justify-center gap-1 ${
-                      role === 'ata'
-                        ? 'border-orange-600 bg-orange-50 text-orange-900 ring-2 ring-orange-500/20'
-                        : 'border-slate-200 hover:border-slate-300 text-slate-700'
-                    }`}
-                  >
-                    <Building2 className="w-4 h-4 sm:w-5 sm:h-5 text-orange-600" />
-                    <span className="text-[11px] sm:text-xs font-extrabold">Personale ATA</span>
-                  </button>
-
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <div className="grid grid-cols-2 gap-2.5">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Nome *</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="es. Mario"
-                      value={formData.firstName}
-                      onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-900"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Cognome *</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="es. Rossi"
-                      value={formData.lastName}
-                      onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-900"
-                    />
-                  </div>
-                </div>
-
-                {role === 'studente' && (
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">
-                      Classe e Sezione * (es. 5F)
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="es. 5F Informatica"
-                      value={formData.studentClass}
-                      onChange={(e) => setFormData({ ...formData, studentClass: e.target.value })}
-                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-900"
-                    />
-                  </div>
-                )}
-
-                {role === 'docente' && (
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">
-                      Materia *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="es. Matematica"
-                      value={formData.teacherSubject}
-                      onChange={(e) => setFormData({ ...formData, teacherSubject: e.target.value })}
-                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-purple-500"
-                    />
-                  </div>
-                )}
-
-                {role === 'ata' && (
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">
-                      Ufficio / Postazione *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="es. Portineria Principale / Segreteria"
-                      value={formData.ataOffice}
-                      onChange={(e) => setFormData({ ...formData, ataOffice: e.target.value })}
-                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-orange-500"
-                    />
-                  </div>
-                )}
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
-                    Cellulare / Mail * (per la consegna)
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="es. 333 1234567 oppure email@divini.org"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-900"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Note Opzionali</label>
-                  <input
-                    type="text"
-                    placeholder="es. Preferenza orario o altre indicazioni"
-                    value={formData.notes}
-                    onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-900"
-                  />
-                </div>
-
-              </div>
-
-              <div className="bg-orange-50 border border-orange-200 rounded-xl p-3 text-orange-900 text-xs space-y-1">
-                <div className="font-extrabold flex items-center gap-1.5">
-                  <CheckCircle className="w-4 h-4 text-orange-600 shrink-0" />
-                  Pagamento: In contanti ai Rappresentanti
-                </div>
-                <p className="text-[11px] text-orange-800">
-                  Importo totale di <strong>€{cartTotal.toFixed(2)}</strong> da consegnare in contanti ai rappresentanti d'istituto per confermare la prenotazione.
-                </p>
-              </div>
-
-              <button
-                type="submit"
-                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-3.5 rounded-xl shadow-lg transition-all text-sm flex items-center justify-center gap-2"
-              >
-                Conferma e Invia Ordine
-              </button>
-
-            </form>
-          </div>
-        </div>
+        <CheckoutModal
+          setIsCheckoutOpen={(open) => { setIsCheckoutOpen(open); setCheckoutError(''); }}
+          handlePlaceOrder={handlePlaceOrder}
+          isSubmitting={isSubmitting}
+          checkoutError={checkoutError}
+          role={role}
+          setRole={setRole}
+          formData={formData}
+          setFormData={setFormData}
+          cartTotal={cartTotal}
+        />
       )}
 
-      {/* CONFIRMATION MODAL */}
       {completedOrder && (
-        <div className="fixed inset-0 z-50 bg-blue-950/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-2xl border border-slate-100 text-center relative animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto my-auto">
-            
-            <div className="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3">
-              <CheckCircle className="w-8 h-8" />
-            </div>
-
-            <h3 className="text-xl sm:text-2xl font-black text-slate-900 mb-1">
-              Ordine Registrato!
-            </h3>
-            <p className="text-xs text-slate-500 mb-4">
-              La tua prenotazione per la felpa Divini è stata salvata con successo.
-            </p>
-
-            <div className="bg-slate-50 border border-slate-200 p-3.5 rounded-xl text-left space-y-2 mb-5">
-              <div className="flex justify-between items-center text-xs border-b pb-1.5">
-                <span className="text-slate-500 font-semibold">Codice Ordine:</span>
-                <span className="font-extrabold text-blue-950 text-sm">{completedOrder.orderCode}</span>
-              </div>
-              <div className="flex justify-between items-center text-xs border-b pb-1.5">
-                <span className="text-slate-500 font-semibold">Cliente:</span>
-                <span className="font-bold text-slate-800">{completedOrder.customer.firstName} ({completedOrder.customer.role})</span>
-              </div>
-              <div className="flex justify-between items-center text-xs border-b pb-1.5">
-                <span className="text-slate-500 font-semibold">Consegna presso:</span>
-                <span className="font-bold text-slate-800">{completedOrder.customer.location}</span>
-              </div>
-              <div className="flex justify-between items-center text-xs">
-                <span className="text-slate-500 font-semibold">Importo pre-consegna:</span>
-                <span className="font-black text-emerald-600 text-base">€{completedOrder.totalAmount.toFixed(2)}</span>
-              </div>
-            </div>
-
-            <button
-              onClick={() => setCompletedOrder(null)}
-              className="w-full bg-blue-950 hover:bg-blue-900 text-white font-bold py-3 rounded-xl shadow transition-all text-xs"
-            >
-              Torna al Negozio
-            </button>
-
-          </div>
-        </div>
+        <ConfirmationModal
+          completedOrder={completedOrder}
+          setCompletedOrder={setCompletedOrder}
+        />
       )}
 
-      {/* PRINTABLE ORDERS LIST */}
       {printOrdersModal && (
-        <div className="fixed inset-0 z-50 bg-blue-950/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl max-w-2xl w-full p-5 sm:p-6 shadow-2xl my-auto relative max-h-[90vh] overflow-y-auto">
-            <button
-              onClick={() => setPrintOrdersModal(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="flex items-center justify-between mb-4 pb-3 border-b gap-2">
-              <div>
-                <h3 className="text-lg sm:text-xl font-black text-slate-900">Lista Consegne Divini</h3>
-                <p className="text-xs text-slate-500">Stampa per la gestione incassi dei rappresentanti e consegne.</p>
-              </div>
-              <button
-                onClick={() => window.print()}
-                className="bg-blue-950 text-white text-xs font-bold px-3 py-2 rounded-xl flex items-center gap-1.5 shadow shrink-0"
-              >
-                <Printer className="w-4 h-4 text-orange-400" /> Stampa
-              </button>
-            </div>
-
-            <div className="space-y-3 max-h-[50vh] overflow-y-auto pr-1">
-              {filteredOrders.map((o) => (
-                <div key={o.orderCode} className="border p-2.5 rounded-lg text-xs space-y-1">
-                  <div className="flex justify-between font-bold text-slate-900">
-                    <span>#{o.orderCode} - {o.customer.firstName} {o.customer.lastName} ({o.customer.role.toUpperCase()})</span>
-                    <span className="text-emerald-600">€{o.totalAmount.toFixed(2)}</span>
-                  </div>
-                  <div className="text-slate-600">
-                    📍 Posizione: <strong>{o.customer.location}</strong> | Contatto: {o.customer.phone}
-                  </div>
-                  <div className="text-slate-500">
-                    📦 Capi: {o.items.map(i => `${i.quantity}x ${i.productName} (${i.size})`).join(', ')}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-          </div>
-        </div>
+        <PrintOrdersModal
+          setPrintOrdersModal={setPrintOrdersModal}
+          filteredOrders={filteredOrders}
+        />
       )}
 
-      {/* FOOTER */}
-      <footer className="bg-blue-950 text-blue-200 border-t border-blue-900 py-6 px-4 text-center text-xs">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <School className="w-4 h-4 text-orange-400" />
-            <span className="font-bold text-white">Scuola Divini • Merchandising Ufficiale</span>
-          </div>
-          <div className="text-[11px] text-blue-300">
-            A.S. 2025/2026 • Ordini e consegne gestiti dai Rappresentanti d'Istituto.
-          </div>
-        </div>
-      </footer>
+      <Footer />
 
     </div>
   );

@@ -1,0 +1,71 @@
+export type Role = 'studente' | 'docente' | 'ata';
+
+export type OrderStatus =
+  | 'In attesa'
+  | 'Pronto per consegna'
+  | 'Consegnato e Incassato'
+  | 'Annullato';
+
+export type View = 'shop' | 'admin';
+export type AdminTab = 'orders' | 'inventory';
+
+export interface Product {
+  id: string;
+  name: string;
+  tagline: string;
+  description: string;
+  originalPrice: number;
+  price: number;
+  badge: string;
+  image: string;
+  stock: Record<string, number>;
+}
+
+export interface CartItem {
+  product: Product;
+  size: string;
+  quantity: number;
+}
+
+export interface OrderItem {
+  productId: string;
+  productName: string;
+  price: number;
+  size: string;
+  quantity: number;
+}
+
+export interface Order {
+  id?: string;
+  orderCode: string;
+  customer: {
+    firstName: string;
+    lastName: string;
+    phone: string;
+    role: Role;
+    location: string;
+    notes: string;
+  };
+  items: OrderItem[];
+  totalAmount: number;
+  paymentMethod: string;
+  status: OrderStatus | string;
+  createdAt: number;
+}
+
+export interface CheckoutFormData {
+  firstName: string;
+  lastName: string;
+  studentClass: string;
+  teacherSubject: string;
+  ataOffice: string;
+  phone: string;
+  notes: string;
+}
+
+export interface AdminStats {
+  totalOrdersCount: number;
+  collectedCash: number;
+  pendingCash: number;
+  totalHoodiesSold: number;
+}
