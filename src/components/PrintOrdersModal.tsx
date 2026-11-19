@@ -38,7 +38,8 @@ export default function PrintOrdersModal({ setPrintOrdersModal, filteredOrders }
                 <span className="text-emerald-600">€{o.totalAmount.toFixed(2)}</span>
               </div>
               <div className="text-slate-600">
-                📍 Posizione: <strong>{o.customer.location}</strong> | Contatto: {o.customer.phone}
+                📍 Posizione: <strong>{o.customer.location || (o.customer.role === 'esterno' ? 'Esterno' : 'N/D')}</strong>
+                {' '}| Contatto: {[o.customer.email, o.customer.phone].filter(Boolean).join(' • ')}
               </div>
               <div className="text-slate-500">
                 📦 Capi: {o.items.map(i => `${i.quantity}x ${i.productName} (${i.size})`).join(', ')}

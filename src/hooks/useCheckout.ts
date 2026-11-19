@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type React from 'react';
 import { collection, doc, runTransaction } from 'firebase/firestore';
 import { db } from '../firebase';
+import { SCHOOL_EMAIL_DOMAIN, isSchoolEmail, isValidEmail } from '../constants';
 import type { CartItem, CheckoutFormData, Order, Product, Role } from '../types';
 
 const EMPTY_FORM: CheckoutFormData = {
@@ -10,6 +11,7 @@ const EMPTY_FORM: CheckoutFormData = {
   studentClass: '',
   teacherSubject: '',
   ataOffice: '',
+  email: '',
   phone: '',
   notes: ''
 };
@@ -60,7 +62,9 @@ export function useCheckout({
       customer: {
         firstName: formData.firstName.trim(),
         lastName: formData.lastName.trim(),
-        phone: formData.phone.trim(),
+        email: formData.email.trim().toLowerCase(),
+        // Il telefono si chiede solo agli esterni
+        phone: role === 'esterno' ? formData.phone.trim() : '',
         role: role,
         location: locationDetail.trim(),
         notes: formData.notes.trim()
@@ -92,6 +96,21 @@ export function useCheckout({
   const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     if (cart.length === 0 || isSubmitting) return;
+
+    // Controllo dei contatti
+    if (role === 'esterno') {
+      if (!isValidEmail(formData.email)) {
+        setCheckoutError('Inserisci un indirizzo email valido.');
+        return;
+      }
+      if (formData.phone.replace(/\D/g, '').length < 6) {
+        setCheckoutError('Inserisci un numero di telefono valido.');
+        return;
+      }
+    } else if (!isSchoolEmail(formData.email)) {
+      setCheckoutError(`Usa la tua email d'istituto (che finisce con @${SCHOOL_EMAIL_DOMAIN}).`);
+      return;
+    }
 
     setIsSubmitting(true);
     setCheckoutError('');

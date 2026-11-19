@@ -1,4 +1,4 @@
-export type Role = 'studente' | 'docente' | 'ata';
+export type Role = 'studente' | 'docente' | 'ata' | 'esterno';
 
 export type OrderStatus =
   | 'In attesa'
@@ -44,6 +44,9 @@ export interface Order {
   customer: {
     firstName: string;
     lastName: string;
+    /** Email (d'istituto per studenti/docenti/ATA). Manca negli ordini vecchi. */
+    email?: string;
+    /** Telefono: solo per gli esterni. Negli ordini vecchi contiene "cellulare o mail". */
     phone: string;
     role: Role;
     location: string;
@@ -62,6 +65,7 @@ export interface CheckoutFormData {
   studentClass: string;
   teacherSubject: string;
   ataOffice: string;
+  email: string;
   phone: string;
   notes: string;
 }

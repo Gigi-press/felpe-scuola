@@ -1,5 +1,6 @@
-import { X, School, GraduationCap, BookOpen, Building2, CheckCircle } from 'lucide-react';
+import { X, School, GraduationCap, BookOpen, Building2, CheckCircle, UserRound } from 'lucide-react';
 import type React from 'react';
+import { SCHOOL_EMAIL_DOMAIN } from '../constants';
 import type { CheckoutFormData, Role } from '../types';
 
 interface CheckoutModalProps {
@@ -40,7 +41,7 @@ export default function CheckoutModal({ setIsCheckoutOpen, handlePlaceOrder, rol
               1. Seleziona Ruolo:
             </label>
 
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
 
               <button
                 type="button"
@@ -79,6 +80,19 @@ export default function CheckoutModal({ setIsCheckoutOpen, handlePlaceOrder, rol
               >
                 <Building2 className="w-4 h-4 sm:w-5 sm:h-5 text-orange-600" />
                 <span className="text-[11px] sm:text-xs font-extrabold">Personale ATA</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setRole('esterno')}
+                className={`p-2.5 sm:p-3 rounded-xl border text-left transition-all flex flex-col items-center justify-center gap-1 ${
+                  role === 'esterno'
+                    ? 'border-teal-600 bg-teal-50 text-teal-900 ring-2 ring-teal-500/20'
+                    : 'border-slate-200 hover:border-slate-300 text-slate-700'
+                }`}
+              >
+                <UserRound className="w-4 h-4 sm:w-5 sm:h-5 text-teal-600" />
+                <span className="text-[11px] sm:text-xs font-extrabold">Esterno</span>
               </button>
 
             </div>
@@ -158,19 +172,53 @@ export default function CheckoutModal({ setIsCheckoutOpen, handlePlaceOrder, rol
               </div>
             )}
 
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
-                Cellulare / Mail * (per la consegna)
-              </label>
-              <input
-                type="text"
-                required
-                placeholder="es. 333 1234567 oppure email@divini.org"
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-900"
-              />
-            </div>
+            {role !== 'esterno' ? (
+              <div>
+                <label htmlFor="checkout-email" className="block text-xs font-bold text-slate-700 mb-1">
+                  Email d'istituto * (per la consegna)
+                </label>
+                <input
+                  id="checkout-email"
+                  type="email"
+                  required
+                  autoComplete="email"
+                  placeholder={`es. nome.cognome@${SCHOOL_EMAIL_DOMAIN}`}
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-900"
+                />
+                <p className="text-[10px] text-slate-500 mt-1">Solo email che finiscono con @{SCHOOL_EMAIL_DOMAIN}</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <div>
+                  <label htmlFor="checkout-email" className="block text-xs font-bold text-slate-700 mb-1">Email *</label>
+                  <input
+                    id="checkout-email"
+                    type="email"
+                    required
+                    autoComplete="email"
+                    placeholder="es. mario.rossi@gmail.com"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="checkout-phone" className="block text-xs font-bold text-slate-700 mb-1">Telefono *</label>
+                  <input
+                    id="checkout-phone"
+                    type="tel"
+                    required
+                    autoComplete="tel"
+                    placeholder="es. 333 1234567"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  />
+                </div>
+              </div>
+            )}
 
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">Note Opzionali</label>

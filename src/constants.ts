@@ -18,6 +18,15 @@ export function getOriginalPrice(p: Product): number {
   return p.originalPrice ?? LEGACY_ORIGINAL_PRICE;
 }
 
+// Email d'istituto: nome@divini.org (accetta anche sottodomini, es. @studenti.divini.org)
+export const SCHOOL_EMAIL_DOMAIN = 'divini.org';
+export function isSchoolEmail(email: string): boolean {
+  return /^[^\s@]+@([a-z0-9-]+\.)*divini\.org$/i.test(email.trim());
+}
+export function isValidEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim());
+}
+
 /** 20 → "€20,00" */
 export function formatPrice(n: number): string {
   return '€' + n.toFixed(2).replace('.', ',');

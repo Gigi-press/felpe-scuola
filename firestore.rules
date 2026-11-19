@@ -40,6 +40,21 @@ service cloud.firestore {
         && sizeDecreasedOrSame('3XL');
     }
 
+    // Contatti del cliente:
+    // - studenti/docenti/ATA: email d'istituto (…@divini.org o sottodominio), niente telefono
+    // - esterni: email qualsiasi + telefono
+    // Gli ordini creati con la versione precedente (solo "phone") restano accettati.
+    function isValidContact(c) {
+      let hasEmail = ('email' in c) && c.email is string && c.email.size() > 0;
+      let emailOk = !hasEmail || (
+        c.email.size() <= 100
+        && ((c.role == 'esterno' && c.email.matches('^[^@ ]+@[^@ ]+[.][^@ ]+$'))
+            || (c.role != 'esterno' && c.email.matches('^[^@ ]+@([a-z0-9-]+[.])*divini[.]org$')))
+      );
+      let esternoOk = c.role != 'esterno' || (hasEmail && c.phone.size() >= 6);
+      return emailOk && esternoOk && (hasEmail || c.phone.size() > 0);
+    }
+
     function isValidNewOrder() {
       let o = request.resource.data;
       return o.keys().hasOnly(['orderCode', 'customer', 'items', 'totalAmount', 'paymentMethod', 'status', 'createdAt'])
@@ -48,11 +63,12 @@ service cloud.firestore {
         && o.totalAmount is number && o.totalAmount > 0 && o.totalAmount <= 2000
         && o.items is list && o.items.size() > 0 && o.items.size() <= 50
         && o.customer is map
-        && o.customer.keys().hasOnly(['firstName', 'lastName', 'phone', 'role', 'location', 'notes'])
+        && o.customer.keys().hasOnly(['firstName', 'lastName', 'email', 'phone', 'role', 'location', 'notes'])
         && o.customer.firstName is string && o.customer.firstName.size() > 0 && o.customer.firstName.size() <= 60
         && o.customer.lastName is string && o.customer.lastName.size() > 0 && o.customer.lastName.size() <= 60
-        && o.customer.phone is string && o.customer.phone.size() > 0 && o.customer.phone.size() <= 100
-        && o.customer.role in ['studente', 'docente', 'ata']
+        && o.customer.phone is string && o.customer.phone.size() <= 100
+        && o.customer.role in ['studente', 'docente', 'ata', 'esterno']
+        && isValidContact(o.customer)
         && o.customer.location is string && o.customer.location.size() <= 100
         && o.customer.notes is string && o.customer.notes.size() <= 500
         && o.paymentMethod is string && o.paymentMethod.size() <= 100

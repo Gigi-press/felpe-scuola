@@ -1,4 +1,4 @@
-import { Search, Printer, Package, GraduationCap, BookOpen, Building2, School, Mail } from 'lucide-react';
+import { Search, Printer, Package, GraduationCap, BookOpen, Building2, School, Mail, Phone, UserRound } from 'lucide-react';
 import type { Order } from '../types';
 
 interface OrdersTabProps {
@@ -33,7 +33,7 @@ export default function OrdersTab({ searchQuery, setSearchQuery, roleFilter, set
         <div className="flex flex-wrap items-center gap-2">
 
           <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-xs font-medium overflow-x-auto max-w-full">
-            {['all', 'studente', 'docente', 'ata'].map((r) => (
+            {['all', 'studente', 'docente', 'ata', 'esterno'].map((r) => (
               <button
                 key={r}
                 onClick={() => setRoleFilter(r)}
@@ -89,6 +89,9 @@ export default function OrdersTab({ searchQuery, setSearchQuery, roleFilter, set
             } else if (order.customer.role === 'ata') {
               roleBadgeClass = "bg-orange-100 text-orange-900 border-orange-200";
               RoleIcon = Building2;
+            } else if (order.customer.role === 'esterno') {
+              roleBadgeClass = "bg-teal-100 text-teal-900 border-teal-200";
+              RoleIcon = UserRound;
             }
 
             let statusBadge = "bg-yellow-100 text-yellow-800 border-yellow-300";
@@ -123,11 +126,20 @@ export default function OrdersTab({ searchQuery, setSearchQuery, roleFilter, set
                       <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-600 mt-1">
                         <span className="font-bold text-slate-800 flex items-center gap-1">
                           <School className="w-3.5 h-3.5 text-blue-900" />
-                          {order.customer.location || 'N/D'}
+                          {order.customer.location || (order.customer.role === 'esterno' ? 'Esterno' : 'N/D')}
                         </span>
+                        {order.customer.email && (
+                          <a href={`mailto:${order.customer.email}`} className="text-slate-600 hover:text-blue-900 flex items-center gap-1 font-semibold">
+                            <Mail className="w-3.5 h-3.5 text-blue-900" />
+                            {order.customer.email}
+                          </a>
+                        )}
                         {order.customer.phone && (
                           <span className="text-slate-600 flex items-center gap-1 font-semibold">
-                            <Mail className="w-3.5 h-3.5 text-blue-900" />
+                            {/* Negli ordini vecchi "phone" può contenere anche una mail */}
+                            {order.customer.email || !order.customer.phone.includes('@')
+                              ? <Phone className="w-3.5 h-3.5 text-blue-900" />
+                              : <Mail className="w-3.5 h-3.5 text-blue-900" />}
                             {order.customer.phone}
                           </span>
                         )}

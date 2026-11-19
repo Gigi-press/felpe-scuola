@@ -67,7 +67,8 @@ export function useAdminData(
         const fullName = `${order.customer.firstName} ${order.customer.lastName}`.toLowerCase();
         const location = (order.customer.location || '').toLowerCase();
         const code = (order.orderCode || '').toLowerCase();
-        return fullName.includes(query) || location.includes(query) || code.includes(query);
+        const contact = `${order.customer.email || ''} ${order.customer.phone || ''}`.toLowerCase();
+        return fullName.includes(query) || location.includes(query) || code.includes(query) || contact.includes(query);
       }
       return true;
     });

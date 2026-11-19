@@ -79,7 +79,7 @@ export default function AdminHeader({ activeAdminTab, setActiveAdminTab, orders,
         <div className="bg-blue-900/80 p-3 sm:p-4 rounded-xl border border-blue-800">
           <div className="text-blue-300 text-[11px] sm:text-xs font-medium">Totale Ordini</div>
           <div className="text-xl sm:text-2xl font-black text-white mt-1">{adminStats.totalOrdersCount}</div>
-          <div className="text-[9px] sm:text-[10px] text-orange-400 mt-0.5">studenti, prof e ATA</div>
+          <div className="text-[9px] sm:text-[10px] text-orange-400 mt-0.5">studenti, prof, ATA ed esterni</div>
         </div>
 
         <div className="bg-blue-900/80 p-3 sm:p-4 rounded-xl border border-blue-800">
