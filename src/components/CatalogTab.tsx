@@ -6,6 +6,7 @@ import {
   formatPrice, getOriginalPrice, isProductActive,
 } from '../constants';
 import type { NewProductInput } from '../hooks/useCatalogAdmin';
+import { useConfirm } from './ConfirmDialog';
 import type { Product } from '../types';
 
 interface CatalogTabProps {
@@ -37,6 +38,7 @@ export default function CatalogTab({ allProducts, addProduct, setProductActive, 
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'ok' | 'error'; text: string } | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [confirmDialog, ask] = useConfirm();
 
   // Attivi prima, poi in ordine alfabetico; il prodotto test in fondo
   const sorted = [...allProducts].sort((a, b) => {
@@ -100,12 +102,17 @@ export default function CatalogTab({ allProducts, addProduct, setProductActive, 
   };
 
   const handleDelete = async (product: Product) => {
-    const ok = window.confirm(
-      `Eliminare definitivamente "${product.name}"?\n\n` +
-      `Le scorte di questo prodotto andranno perse (gli ordini già fatti restano).\n` +
-      `Se vuoi solo toglierlo dal negozio, usa "Nascondi".`
-    );
-    if (!ok) return;
+    const choice = await ask({
+      title: `Eliminare "${product.name}"?`,
+      message: (
+        <>
+          <p>L'eliminazione è <strong>definitiva</strong>: le scorte di questo prodotto andranno perse. Gli ordini già fatti restano.</p>
+          <p>Se vuoi solo toglierlo dal negozio, usa "Nascondi".</p>
+        </>
+      ),
+      actions: [{ value: 'delete', label: 'Elimina prodotto', tone: 'danger' }],
+    });
+    if (!choice) return;
     setBusyId(product.id);
     setMessage(null);
     try {
@@ -121,6 +128,7 @@ export default function CatalogTab({ allProducts, addProduct, setProductActive, 
 
   return (
     <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6">
+      {confirmDialog}
       <div className="mb-5 pb-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 className="text-lg font-extrabold text-slate-900">Catalogo Prodotti</h2>

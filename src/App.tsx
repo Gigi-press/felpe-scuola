@@ -81,6 +81,7 @@ export default function App() {
     adminStats,
     filteredOrders,
     handleUpdateOrderStatus,
+    handleDeleteOrder,
     handleUpdateStock,
   } = useAdminData(orders, allProducts, setOrders, setAllProducts, setProducts);
 
@@ -137,6 +138,7 @@ export default function App() {
                 setPrintOrdersModal={setPrintOrdersModal}
                 filteredOrders={filteredOrders}
                 handleUpdateOrderStatus={handleUpdateOrderStatus}
+                handleDeleteOrder={handleDeleteOrder}
               />
             )}
 

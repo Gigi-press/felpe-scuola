@@ -1,4 +1,6 @@
-import { Search, Printer, Package, GraduationCap, BookOpen, Building2, School, Mail, Phone, UserRound } from 'lucide-react';
+import { useState } from 'react';
+import { Search, Printer, Package, GraduationCap, BookOpen, Building2, School, Mail, Phone, UserRound, Trash2 } from 'lucide-react';
+import { useConfirm } from './ConfirmDialog';
 import type { Order } from '../types';
 
 interface OrdersTabProps {
@@ -11,11 +13,73 @@ interface OrdersTabProps {
   setPrintOrdersModal: (open: boolean) => void;
   filteredOrders: Order[];
   handleUpdateOrderStatus: (order: Order, newStatus: string) => void;
+  handleDeleteOrder: (order: Order, restoreStock: boolean) => Promise<void>;
 }
 
-export default function OrdersTab({ searchQuery, setSearchQuery, roleFilter, setRoleFilter, statusFilter, setStatusFilter, setPrintOrdersModal, filteredOrders, handleUpdateOrderStatus }: OrdersTabProps) {
+export default function OrdersTab({ searchQuery, setSearchQuery, roleFilter, setRoleFilter, statusFilter, setStatusFilter, setPrintOrdersModal, filteredOrders, handleUpdateOrderStatus, handleDeleteOrder }: OrdersTabProps) {
+  const [deletingCode, setDeletingCode] = useState<string | null>(null);
+  const [message, setMessage] = useState<{ type: 'ok' | 'error'; text: string } | null>(null);
+
+  const [confirmDialog, ask] = useConfirm();
+
+  const handleDelete = async (order: Order) => {
+    const who = `${order.customer.firstName} ${order.customer.lastName}`.trim();
+    const pieces = order.items.map(i => `${i.quantity}x ${i.productName} (${i.size})`).join(', ');
+    // Se i pezzi non sono stati consegnati e l'ordine non era già annullato, si possono rimettere in magazzino
+    const canRestore = order.status !== 'Annullato' && order.status !== 'Consegnato e Incassato';
+
+    const choice = await ask({
+      title: `Eliminare l'ordine #${order.orderCode}?`,
+      message: (
+        <>
+          <p><strong>{who}</strong> · €{order.totalAmount.toFixed(2)} · {order.status}</p>
+          <p className="text-xs text-slate-500">{pieces}</p>
+          <p>L'eliminazione è <strong>definitiva</strong>. Se vuoi solo tenerne traccia, usa lo stato "Annullato".</p>
+          {canRestore && <p>Vuoi anche rimettere questi pezzi in magazzino?</p>}
+        </>
+      ),
+      actions: canRestore
+        ? [
+            { value: 'restore', label: 'Elimina e rimetti in magazzino', tone: 'danger' },
+            { value: 'keep', label: 'Elimina senza toccare le scorte', tone: 'neutral' },
+          ]
+        : [{ value: 'keep', label: 'Elimina ordine', tone: 'danger' }],
+    });
+    if (!choice) return;
+    const restoreStock = choice === 'restore';
+
+    setDeletingCode(order.orderCode);
+    setMessage(null);
+    try {
+      await handleDeleteOrder(order, restoreStock);
+      setMessage({
+        type: 'ok',
+        text: `Ordine #${order.orderCode} eliminato${restoreStock ? ' e pezzi rimessi in magazzino' : ''}.`,
+      });
+    } catch (err) {
+      console.error('Delete order error:', err);
+      setMessage({ type: 'error', text: `Eliminazione dell'ordine #${order.orderCode} non riuscita. Riprova.` });
+    } finally {
+      setDeletingCode(null);
+    }
+  };
+
   return (
     <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6">
+      {confirmDialog}
+
+      {message && (
+        <div
+          role={message.type === 'error' ? 'alert' : 'status'}
+          className={`mb-4 rounded-xl p-3 text-xs font-semibold border ${
+            message.type === 'ok'
+              ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+              : 'bg-red-50 border-red-200 text-red-800'
+          }`}
+        >
+          {message.text}
+        </div>
+      )}
 
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-6 pb-6 border-b border-slate-100">
 
@@ -163,6 +227,16 @@ export default function OrdersTab({ searchQuery, setSearchQuery, roleFilter, set
                       <option value="Consegnato e Incassato">✅ Consegnato e Incassato</option>
                       <option value="Annullato">❌ Annullato</option>
                     </select>
+
+                    <button
+                      onClick={() => handleDelete(order)}
+                      disabled={deletingCode === order.orderCode}
+                      aria-label={`Elimina ordine ${order.orderCode}`}
+                      title="Elimina ordine"
+                      className="p-2 rounded-xl border border-red-200 bg-white text-red-600 hover:bg-red-50 disabled:opacity-50 shrink-0"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
                   </div>
 
                 </div>

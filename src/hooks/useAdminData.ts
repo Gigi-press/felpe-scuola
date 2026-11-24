@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import type React from 'react';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, runTransaction, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import type { AdminStats, Order, Product } from '../types';
 
@@ -23,6 +23,40 @@ export function useAdminData(
     } else {
       setOrders(prev => prev.map(o => o.orderCode === orderToUpdate.orderCode ? { ...o, status: newStatus } : o));
     }
+  };
+
+  /**
+   * Elimina definitivamente un ordine. Con `restoreStock` rimette in magazzino
+   * i pezzi dell'ordine (tutto in un'unica transazione: o tutto o niente).
+   */
+  const handleDeleteOrder = async (order: Order, restoreStock: boolean) => {
+    if (db && order.id) {
+      await runTransaction(db, async (tx) => {
+        const orderRef = doc(db, 'orders', order.id!);
+        if (restoreStock) {
+          // Quantità da rimettere per prodotto e taglia
+          const back: Record<string, Record<string, number>> = {};
+          order.items.forEach(it => {
+            back[it.productId] = back[it.productId] || {};
+            back[it.productId][it.size] = (back[it.productId][it.size] || 0) + it.quantity;
+          });
+          const ids = Object.keys(back);
+          const refs = ids.map(id => doc(db, 'products', id));
+          const snaps = await Promise.all(refs.map(r => tx.get(r)));
+          snaps.forEach((snap, i) => {
+            if (!snap.exists()) return; // prodotto eliminato nel frattempo: niente da rimettere
+            const stock = { ...((snap.data() as Product).stock || {}) };
+            for (const [size, qty] of Object.entries(back[ids[i]])) {
+              stock[size] = (stock[size] || 0) + qty;
+            }
+            tx.update(refs[i], { stock });
+          });
+        }
+        tx.delete(orderRef);
+      });
+    }
+    // Toglie subito l'ordine dalla lista (l'aggiornamento da Firebase può arrivare qualche secondo dopo)
+    setOrders(prev => prev.filter(o => (order.id ? o.id !== order.id : o.orderCode !== order.orderCode)));
   };
 
   const handleUpdateStock = async (productId: string, size: string, newQty: number | string) => {
@@ -81,6 +115,7 @@ export function useAdminData(
     adminStats,
     filteredOrders,
     handleUpdateOrderStatus,
+    handleDeleteOrder,
     handleUpdateStock,
   };
 }
