@@ -181,7 +181,10 @@ export function useCheckout({
       setCheckoutError(
         err instanceof CheckoutError
           ? err.message
-          : 'Non è stato possibile inviare l\'ordine. Controlla la connessione e riprova.'
+          // Il codice tecnico aiuta i rappresentanti a capire il problema da uno screenshot
+          : `Non è stato possibile inviare l'ordine. Controlla la connessione e riprova. ` +
+            `Se il problema continua, manda una foto di questo messaggio ai rappresentanti ` +
+            `(codice: ${(err as { code?: string })?.code || (err as Error)?.name || 'sconosciuto'}).`
       );
     } finally {
       setIsSubmitting(false);

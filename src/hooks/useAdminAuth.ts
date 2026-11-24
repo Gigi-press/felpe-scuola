@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import type React from 'react';
 import {
-  signInAnonymously,
   signInWithCustomToken,
   signInWithEmailAndPassword,
   signOut,
@@ -65,7 +64,6 @@ export function useAdminAuth(setCurrentView: (view: View) => void) {
       const cred = await signInWithEmailAndPassword(auth, adminEmailInput, adminPasswordInput);
       if (!(await checkIsAdmin(cred.user))) {
         await signOut(auth);
-        try { await signInAnonymously(auth); } catch (err) {}
         setAdminPasswordError('Questo account non è autorizzato come admin.');
         return;
       }
@@ -82,30 +80,19 @@ export function useAdminAuth(setCurrentView: (view: View) => void) {
   };
 
   const handleAdminLogout = async () => {
-    if (auth) {
-      await signOut(auth);
-      try {
-        await signInAnonymously(auth);
-      } catch (err) {}
-    }
+    if (auth) await signOut(auth);
     setIsAdminAuthenticated(false);
     setCurrentView('shop');
   };
 
   useEffect(() => {
     if (!auth) return;
-    const initAuth = async () => {
-      try {
-        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-          await signInWithCustomToken(auth, __initial_auth_token);
-        } else if (!auth.currentUser) {
-          await signInAnonymously(auth);
-        }
-      } catch (err) {
-        console.error("Auth error:", err);
-      }
-    };
-    initAuth();
+    // I clienti NON fanno accesso: niente login anonimo. Firebase limita i nuovi
+    // accessi anonimi per indirizzo IP, e a scuola tutti escono dallo stesso IP:
+    // superato il limite, gli ordini venivano rifiutati. Solo gli admin fanno login.
+    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+      signInWithCustomToken(auth, __initial_auth_token).catch(err => console.error("Auth error:", err));
+    }
 
     const unsubscribe = onAuthStateChanged(auth, async (currentUser: User | null) => {
       setUser(currentUser);

@@ -85,13 +85,16 @@ service cloud.firestore {
     match /products/{productId} {
       allow read: if true;
       allow create, delete: if isAdmin();
-      allow update: if isAdmin() || (isSignedIn() && isValidStockDecrease());
+      // I clienti non fanno accesso (l'accesso anonimo veniva bloccato dal limite
+      // per IP quando molti ordinano dalla stessa rete, es. il Wi-Fi della scuola):
+      // possono solo scalare le scorte.
+      allow update: if isAdmin() || isValidStockDecrease();
     }
 
     // Ordini: contengono dati personali → leggibili e modificabili solo dagli admin.
     match /orders/{orderId} {
       allow read, update, delete: if isAdmin();
-      allow create: if isAdmin() || (isSignedIn() && isValidNewOrder());
+      allow create: if isAdmin() || isValidNewOrder();
     }
 
     // Tutto il resto è chiuso.
