@@ -1,5 +1,6 @@
 import { ShieldCheck, Package, SlidersHorizontal, LogOut, LayoutGrid } from 'lucide-react';
 import { auth } from '../firebase';
+import { BUILD_INFO, GITHUB_COMMIT_URL, formatBuildDate } from '../buildInfo';
 import type { AdminStats, AdminTab, Order } from '../types';
 
 interface AdminHeaderProps {
@@ -23,6 +24,22 @@ export default function AdminHeader({ activeAdminTab, setActiveAdminTab, orders,
             <p className="text-xs text-blue-300 mt-1">
               Connesso come Admin: <span className="text-orange-400 font-semibold">{auth.currentUser.email}</span>
             </p>
+          )}
+          <p className="text-[11px] text-blue-300/80 mt-1" title={BUILD_INFO.message}>
+            Versione sito:{' '}
+            <a
+              href={GITHUB_COMMIT_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="font-mono font-semibold text-blue-100 underline decoration-dotted hover:text-white"
+            >
+              {BUILD_INFO.commit}
+            </a>
+            {' · '}pubblicata il {formatBuildDate(BUILD_INFO.builtAt)}
+            {BUILD_INFO.source === 'locale' && <span className="ml-1 text-yellow-300 font-bold">(copia locale)</span>}
+          </p>
+          {BUILD_INFO.message && (
+            <p className="text-[11px] text-blue-300/70 truncate max-w-md">Ultima modifica: {BUILD_INFO.message}</p>
           )}
         </div>
 
